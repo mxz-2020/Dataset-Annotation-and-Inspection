@@ -198,33 +198,37 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 ### 从FPKM, RPKM到TPM的转换：
 接将 Matrix_normalized这个 矩阵除以 行的和 乘上 1000 000，这样得出来的就是 TPM 矩阵了。 
 示例代码：（需要根据不同的情况变换，仅作示例）
-df_downloaded = pd.read_csv ('../downloaded_data/GSE_supplementary_data/GSE75413_genes.fpkm_table.txt.gz', sep = "\t",index_col = 0)                   #读取矩阵
-df_downloaded.head()   #显示矩阵前前5行出来看看
 
-df_norm = df_downloaded.T  #行和列交叉互换，即行变成列，列变成行
-df_norm.head()
+    df_downloaded = pd.read_csv ('../downloaded_data/GSE_supplementary_data/GSE75413_genes.fpkm_table.txt.gz', sep = "\t",index_col = 0)                  
+    #读取矩阵
+    df_downloaded.head()   
+    #显示矩阵前前5行出来看看
 
-fpkm_array = df_downloaded.T 
-b = np.sum(fpkm_array,axis=1)
-df_tpm = fpkm_array / b.values.reshape(-1,1) * 1e6          #1e6代表1 million
+    df_norm = df_downloaded.T  #行和列交叉互换，即行变成列，列变成行
+    df_norm.head()
+
+    fpkm_array = df_downloaded.T 
+    b = np.sum(fpkm_array,axis=1)
+    df_tpm = fpkm_array / b.values.reshape(-1,1) * 1e6          
+    #1e6代表1 million
 
 ## 5.	生成的其他文件：
-1）	TPM需要从rawcounts生成时，运行6.1（注意：只有当libraryPreparationMethod填写完了之后才能运行成功）
-2）	geneAnnotation文件：这个是运行代码自动生成的，在script.ipynb中的6.2可见。（注意：只有taxonomy填写了物种的编码之后才能成功生成）
-3）	当真的没有tsne和umap坐标没办法从作者那里得到回复时，可以运行我们自己的计算脚本，计算tSNE和UMAP的二维和三维， 运算脚本在script.ipynb中的6.3可见。
-4）	clustering计算，在6.4中，仅在找不到作者又未回复时使用，记得运行第二行代码来判断isbadtSNE，来判断tSNE图上的细胞簇点是否能分得开。
-5）	cellOntologyID，在6.5中运行后根据cellOntologyName自动填写
-6）	![](figure-7.png)
-7）	填写README:
-a)	第一个block里面运行的代码用来赋值和读取readme.json
-b)	第二个block里面填写信息
-Readme['author'] = ''  #填写自己的名字拼音，如 Xiaoming
-Readme['date'] = ''     #填写完成日期
-Readme['modificationDate'] = '' #填写修改日期
-Readme['unfinishedParts'] = [''] #未完成的部分，包括矩阵及cellAnno中的cluster等
-Readme['authorComments'] = '' #如果数据分成了几个part，写清楚该part代表什么类型的数据
-Readme['otherComments'] = ''
-c)	最后记得保存
+1. TPM需要从rawcounts生成时，运行6.1（注意：只有当libraryPreparationMethod填写完了之后才能运行成功）
+2. geneAnnotation文件：这个是运行代码自动生成的，在script.ipynb中的6.2可见。（注意：只有taxonomy填写了物种的编码之后才能成功生成）
+3. 当真的没有tsne和umap坐标没办法从作者那里得到回复时，可以运行我们自己的计算脚本，计算tSNE和UMAP的二维和三维， 运算脚本在script.ipynb中的6.3可见。
+4. clustering计算，在6.4中，仅在找不到作者又未回复时使用，记得运行第二行代码来判断isbadtSNE，来判断tSNE图上的细胞簇点是否能分得开。
+5. cellOntologyID，在6.5中运行后根据cellOntologyName自动填写
+6. ![](figure-7.png)
+7. 填写README:
+- 第一个block里面运行的代码用来赋值和读取readme.json
+- 第二个block里面填写信息
+    Readme['author'] = ''  #填写自己的名字拼音，如 Xiaoming
+    Readme['date'] = ''     #填写完成日期
+    Readme['modificationDate'] = '' #填写修改日期
+    Readme['unfinishedParts'] = [''] #未完成的部分，包括矩阵及cellAnno中的cluster等
+    Readme['authorComments'] = '' #如果数据分成了几个part，写清楚该part代表什么类型的数据
+    Readme['otherComments'] = ''
+- 最后记得保存
 
 ## 6.	运行检查器（之后可以让陈淳继续添加）
 运行代码my_inspector.inspect()
@@ -280,38 +284,41 @@ https://pan.baidu.com/s/1NAJ6_BVTdB1IarZXh6gHaw 提取码: hbmm
 
 
 # 实习生数据集修改指南
-## 标注数据集之后的修改注意事项从2开始，不用新建文档，在自己的代码中修改即可(新标注数据集都不需要运行downsample相关的函数！！！)
-## 回溯型数据集的修改注意事项从1开始，需要新建文档，不可以在别人的代码上修改！！（当有回溯型的数据集需要修改的时候，再放出给实习生）实习生收到修改意见后，需要另外新建一个phthon3的文件，命名为revision.ipynb，在这个文件中修改标注的数据。
+### 标注数据集之后的修改注意事项从2开始，不用新建文档，在自己的代码中修改即可(新标注数据集都不需要运行downsample相关的函数！！！)
+### 回溯型数据集的修改注意事项从1开始，需要新建文档，不可以在别人的代码上修改！！（当有回溯型的数据集需要修改的时候，再放出给实习生）实习生收到修改意见后，需要另外新建一个phthon3的文件，命名为revision.ipynb，在这个文件中修改标注的数据。
 ## 1. 以下代码是运行配置项，需要在修改数据集的时候运行
-import importlib.util
-import sys
-import os 
-import pandas as pd
-import numpy as np
-from scipy.io import mmread, mmwrite
-import scanpy as sc
-import anndata as an
-import louvain
-sys.path.append('/home/biodb/data/abio_database_pipeline_new/') #注意如果是在阿里云服务器上，该地址改为：'/home/ztr/abio_database_pipeline_new/'
-from pipeline.datasets_curation import datasetBuilder
-from pipeline.datasets_curation import inspector
-from pipeline.datasets_curation import downsample
-starting_dir = '/home/biodb/data/user_33/No_1/part_1' #根据自己更改的数据集更换路径
-my_inspector = inspector.Inspector(starting_dir)
-my_builder = datasetBuilder.DatasetBuilder(starting_dir)
-my_downsample = downsample.Downsample(starting_dir)
+    import importlib.util
+    import sys
+    import os 
+    import pandas as pd
+    import numpy as np
+    from scipy.io import mmread, mmwrite
+    import scanpy as sc
+    import anndata as an
+    import louvain
+    sys.path.append('/home/biodb/data/abio_database_pipeline_new/') 
+    #注意如果是在阿里云服务器上，该地址改为：'/home/ztr/abio_database_pipeline_new/'
+    from pipeline.datasets_curation import datasetBuilder
+    from pipeline.datasets_curation import inspector
+    from pipeline.datasets_curation import downsample
+    starting_dir = '/home/biodb/data/user_33/No_1/part_1' 
+    #根据自己更改的数据集更换路径
+    my_inspector = inspector.Inspector(starting_dir)
+    my_builder = datasetBuilder.DatasetBuilder(starting_dir)
+    my_downsample = downsample.Downsample(starting_dir)
 
 ## 2. 以下三个部分的数据如果进行了修改，需要注意运行下面的自动化函数：
 
 ### (1) 矩阵
 ### (1.1) raw counts, normalized变动，需要考虑重新生成TPM矩阵；（注意TPM如果重新生成了，参考1.2运行自动生成函数）
 ### (1.2) TPM矩阵如果变化了，所有自动生成函数都需重新运行，包括：
-my_builder.generate_geneAnno()
-my_builder.calculate_dim_red(tSNE = True, UMAP = True)
-my_builder.calculate_cluster(RUN = True) #注意参数RUN=True会将原cluster信息删除并更新，所以如果原文提供cluster信息的时候不要运行该行！
-#以下两个函数最后运行
-my_builder.auto_calculation()
-my_downsample.downsample() #如果需要运行该函数，必须先将原来的downsample_data文件夹删除！
+    my_builder.generate_geneAnno()
+    my_builder.calculate_dim_red(tSNE = True, UMAP = True)
+    my_builder.calculate_cluster(RUN = True) #注意参数RUN=True会将原cluster信息删除并更新，所以如果原文提供cluster信息的时候不要运行该行！
+
+    #以下两个函数最后运行
+    my_builder.auto_calculation()
+    my_downsample.downsample() #如果需要运行该函数，必须先将原来的downsample_data文件夹删除！
 
 ### (2) cellAnnotation（以下情形为矩阵未改动的情形，如矩阵变动参考1.1）
 ### (2.1) clusterName改动，需要重新运行：
@@ -331,8 +338,6 @@ cluster如果是用函数生成的话会多出两列：clusteringMethod和cluste
 - 2.research topic那几个字段，即cancer，disease等已经统一检查过了，一般情况下不需要更改，不确定的请咨询；
 - 3.genomeBuild也是统一核查过的，一般没有错，注意不要改错了。
 - 4.metadata里面多出来的字段不要删掉！少的需要加上！
-- 5.增加字段：metadata['correspondingFigure'] = '' 
-# 这里填写该数据对应的文章tSNE聚类图，格式为形如"1-a"，意思为figure1的图a，没有对应的图填为notAvailable
 
 ### (4) 其他注意事项
 - 4.1 每改完一个问题需要进行汇报；更改数据的代码需新建一个代码脚本进行更改，不要直接在别人的代码上改，相应代码的脚本需放在code文件夹中，命名为revision，同时需要有详细的注释解释更改内容。
@@ -355,17 +360,18 @@ cluster如果是用函数生成的话会多出两列：clusteringMethod和cluste
 实际操作：和原作者一致即可，避免 part 划分人员的主观判断。
 总原则：不同测序方法要分开，不同物种分开。例：part_1: human, part_2: mouse.
 细化：不同细胞大类可以作为一个part。例：part_1: T cell, part_2: B cell.
-1） 最主要的还是根据文章中的聚类分析来进行分part，不管分了几次聚类分析，只要cluster和tSNE/UMAP等的相关信息齐全，就可以算是一个part。
-2） 如果信息不那么齐全 
+- 1) 最主要的还是根据文章中的聚类分析来进行分part，不管分了几次聚类分析，只要cluster和tSNE/UMAP等的相关信息齐全，就可以算是一个part。
+- 2） 如果信息不那么齐全 
 若是文中进行了2次独立的聚类分析，那么应该将数据拆分成2个part。
-- 但是，如果part2的聚类分析是对part1聚类中的某一簇细胞进行的再聚类，只算一个part。
-- 如果多次聚类，都是对同一组细胞的，那么只保留一次。
-例：如果一篇文章涉及 T cell 和 B cell，作者仅做了一次整体聚类，那么我们不需将 T cell 和 B cell 再聚类。如果作者后续单独对 T cell 的集合做了新的聚类，那么我们就新增细化的 T cell part。
-3） 如果实在不知道该不该分part，那就分就可以了。
+    - 但是，如果part2的聚类分析是对part1聚类中的某一簇细胞进行的再聚类，只算一个part。
+    - 如果多次聚类，都是对同一组细胞的，那么只保留一次。
+    例：如果一篇文章涉及 T cell 和 B cell，作者仅做了一次整体聚类，那么我们不需将 T cell 和 B cell 再聚类。如果作者后续单独对 T cell 的集合做了新的聚类，那么我们就新增细化的 T cell part。
+- 3） 如果实在不知道该不该分part，那就分就可以了。
 unstructuredData填写三项：
-划分 part 后，在数据集文件夹(../GSE*****/)下新建一个description.txt文档,写入每个part对应的 description，subDataset，和 correspondingFigure。
 
-保证part_1, part_2, part_3 文件中仅含该 part 所需 GSE 数据信息，如果需要 数据标注人员从同一个 GSE 中挑选该part 所用细胞时，一审人员需要在 description中添加描述。
+- 4) 划分 part 后，在数据集文件夹(../GSE*****/)下新建一个description.txt文档,写入每个part对应的 description，subDataset，和 correspondingFigure。
+
+    保证part_1, part_2, part_3 文件中仅含该 part 所需 GSE 数据信息，如果需要 数据标注人员从同一个 GSE 中挑选该part 所用细胞时，一审人员需要在 description中添加描述。
 
 - subDataset：如果有不只一个part，则根据part_n填为SubDataset-n。只有一个part就空着即可，不可以填。
 - description：填写对part，即subDataset的描述。只有一个part就空着即可，不可以填。格式：description: The original article contains ? subdatasets, based on e.g. species, cell type(s). This subdataset is based on e.g. Mouse, cell A, B and C.  (should match the initial description).
@@ -376,60 +382,61 @@ unstructuredData填写三项：
 负责人：张萌栩 
 ### 二审 修改回收步骤：
 负责人分配任务， 
-1）	二审（可以找优秀的实习生帮忙了），首先把数据集标注的任务在redmine上asign给空闲的实习生，把数据集scp 到修改人的目录中(针对在node02服务器上审核的人)或者move到修改人的目录下面（针对在阿里云服务器上修改的人）
-2）	之后等实习生做完标注并上传report在redmine上，就需要在report和数据集的基础上进行审核，如果有错误，记录在redmine上并在report中使用修订模式指出，然后返回实习生修改。除metadata的错误可由审查人员直接在原文件中自行改动之外，其余错误均需按照以下步骤！
-3）	当修改人在redmine上反馈修改完成之后，审查人去该目录下进行二次检查。除了原有问题之外，需重点看以下几点：
-- 如果是矩阵需要改动，需检查其相应的自动生成函数是否都运行了（可根据文件更新时间进行判断），包括：tsne, cluster, auto_calculation, downsample（这个只有回溯时会有）等；
-- metadata里面的research topic，clusterAvailability以及tSNEAvailability需进行二次核查
-4）	如果没有错误，把report一起保存在数据集中，并回收数据集到：
+- 1）	二审（可以找优秀的实习生帮忙了），首先把数据集标注的任务在redmine上asign给空闲的实习生，把数据集scp 到修改人的目录中(针对在node02服务器上审核的人)或者move到修改人的目录下面（针对在阿里云服务器上修改的人）
+- 2）	之后等实习生做完标注并上传report在redmine上，就需要在report和数据集的基础上进行审核，如果有错误，记录在redmine上并在report中使用修订模式指出，然后返回实习生修改。除metadata的错误可由审查人员直接在原文件中自行改动之外，其余错误均需按照以下步骤！
+- 3）	当修改人在redmine上反馈修改完成之后，审查人去该目录下进行二次检查。除了原有问题之外，需重点看以下几点：
+    - 如果是矩阵需要改动，需检查其相应的自动生成函数是否都运行了（可根据文件更新时间进行判断），包括：tsne, cluster, auto_calculation, downsample（这个只有回溯时会有）等；
+    - metadata里面的research topic，clusterAvailability以及tSNEAvailability需进行二次核查
+- 4）	如果没有错误，把report一起保存在数据集中，并回收数据集到：
 针对在infinity服务器上修改的人：将数据集打包压缩(如果数据集较小可不打包压缩，但还是建议先打包压缩)，并scp回来，拷贝到路径：/home/biodb/data/dataset_collection/datasets/2_inspection_stage/revised/；针对在阿里云服务器上修改的人：将数据集move到路径：/home/biodb/data/revised/。也就是说除了metadata的错误，cellAnnotation的错误和 矩阵的错误，在数据改完之后均需要放在以上这个路径中。
-5）	确认数据集已拷贝至指定路径后，需要删除原来的修改人目录中的数据（不要留有冗余数据）。
-6）	在redmine上更改任务情况的状态为feedback,非紧急任务时需要在本地表格记录审核情况，每周五交给数据集流程管理人员进行汇总。错误记录只需简略提及要点即可，标注人、审核人（在二审表格中）一定要写清楚。
-7）	最后由三审人员在指定3rd_inspection文件夹下做最后审查。小错误自己改改就好的，可以在直接改完后移动到correct文件夹下。做好本地表格记录即可！
-8）	如果有优秀的实习生，并且其本人有意愿，可以让他们接触审核工作，帮忙分担工作压力，但是质量控制要把握好。
+- 5）	确认数据集已拷贝至指定路径后，需要删除原来的修改人目录中的数据（不要留有冗余数据）。
+- 6）	在redmine上更改任务情况的状态为feedback,非紧急任务时需要在本地表格记录审核情况，每周五交给数据集流程管理人员进行汇总。错误记录只需简略提及要点即可，标注人、审核人（在二审表格中）一定要写清楚。
+- 7）	最后由三审人员在指定3rd_inspection文件夹下做最后审查。小错误自己改改就好的，可以在直接改完后移动到correct文件夹下。做好本地表格记录即可！
+- 8）	如果有优秀的实习生，并且其本人有意愿，可以让他们接触审核工作，帮忙分担工作压力，但是质量控制要把握好。
 
 ### 补充教程：
 1.	Unstructured Data 
 在 inspection 中参照 实习生数据标注指南 核验 unstructured data 与 cell annotation。如有错误，记录在report中，并update在redmine上面。
 2.	Cell Annotation 和tSNE 检查
-cellAnnotation
+- cellAnnotation
 重点检查meta部分
 注意检查cluster以及cellOntology部分，set（）出来查看一下
 还要注意检查细胞数量是否与矩阵和文章中一致
 
-使用代码，调用计算脚本画出tSNE的图
-import seaborn as sns
-import matplotlib.pyplot as plt #下一行开始需要在两个不同的block里运行
-clusterName = df_cell['clusterName'].tolist()
-tsne1 = df_cell['tSNE1'].tolist()
-tsne2 = df_cell['tSNE2'].tolist()
-plt.figure(figsize=(10,10))
-sns.scatterplot(x = tsne1, y = tsne2, hue = clusterName)
-检查tSNE图质量，不同颜色的点不可过多重合，过多重合即为 isBadtSNE：False
+- 使用代码，调用计算脚本画出tSNE的图
+    import seaborn as sns
+    import matplotlib.pyplot as plt #下一行开始需要在两个不同的block里运行
+    clusterName = df_cell['clusterName'].tolist()
+    tsne1 = df_cell['tSNE1'].tolist()
+    tsne2 = df_cell['tSNE2'].tolist()
+    plt.figure(figsize=(10,10))
+    sns.scatterplot(x = tsne1, y = tsne2, hue = clusterName)
+- 检查tSNE图质量，不同颜色的点不可过多重合，过多重合即为 isBadtSNE：False
 使用代码画图查看某个基因在细胞中表达的情况
+
 3.	矩阵检查
-1）	TPM 检查
+- 1）	TPM 检查
 读取 expressionMatrix_TPM.tsv 这个文件，检验各行基因的和相加是否为100 000。
-2）	rawCounts矩阵检查
+- 2）	rawCounts矩阵检查
 读取expressionMatrix_rawCounts.tsv 文件，看是否有把normalized矩阵和rawCounts矩阵弄混。还需要去源代码script.ipynb 中检查是否有矩阵拼接上的错误。cellAnnotation中的细胞数量（即，有多少行）应该和矩阵里的细胞数量都是一样的。
-3）	Normalized矩阵检查
+- 3）	Normalized矩阵检查
 读取expressionMatrix_normalized.tsv 文件， 看是否有把normalized矩阵和rawCounts矩阵弄混。
 cellAnnotation中的细胞数量（即有多少行）应该和矩阵里的细胞数量都是一样的。
-4）	如何检查矩阵的正确性？ 
+- 4）	如何检查矩阵的正确性？ 
 分为两个层面：
-第一看作者提供的原始数据，（downloaded data）看看实习生在拼接过程中是否有出错。
-第二，找一个文章里的marker gene在测试网站上画一下图，如果跟文章的图差不多，就问题不大了。
+    - 第一看作者提供的原始数据，（downloaded data）看看实习生在拼接过程中是否有出错。
+    - 第二，找一个文章里的marker gene在测试网站上画一下图，如果跟文章的图差不多，就问题不大了。
 
 
 ## 三审
 负责人：陈淳、天然（暂定）
 ## 只有三审人员可以在redmine上进行任务的关闭，即把任务状态更改为closed。
 ### 三审 修改回收步骤：
-1）	再进行一次二审的操作，不过可以大体浏览。发现错误后在renmine上记录，同时返回实习生修改。(请注意记录二审的漏检率，用作汇报时证明三道审核制度下的优势)
-2）	完全没有错误了之后，需要把README.json中的notPassed改为passed,并保存。
-3）	在redmine网站上close相应的任务。
-4）	在本地表格记录自己的审核情况（包括漏检率的记录），每周五交给数据集流程管理人员进行汇总。标注人、审核人（在三审表格中）一定要写清楚。
-5）	最后，把更改好的数据集转移到node01服务器上。
+- 1）	再进行一次二审的操作，不过可以大体浏览。发现错误后在renmine上记录，同时返回实习生修改。(请注意记录二审的漏检率，用作汇报时证明三道审核制度下的优势)
+- 2）	完全没有错误了之后，需要把README.json中的notPassed改为passed,并保存。
+- 3）	在redmine网站上close相应的任务。
+- 4）	在本地表格记录自己的审核情况（包括漏检率的记录），每周五交给数据集流程管理人员进行汇总。标注人、审核人（在三审表格中）一定要写清楚。
+- 5）	最后，把更改好的数据集转移到node01服务器上。
 ### 审核的汇总表格流程
 周期：每周更新一次数据集回收情况
 流程
@@ -439,6 +446,6 @@ cellAnnotation中的细胞数量（即有多少行）应该和矩阵里的细胞
 4. 除此之外，管理员需每周回收数据集的时候查看各个实习生完成的数据集数量，若是超过两个周的时间中完成不超过两个数据集，需要沟通了解情况。
 下发数据及之后长时间不做怎么办？
 在每周回收数据集时，会发现是否有本周下发的数据集没能close，这时需要审核没做完的数据集是因为什么原因。
-1）	数据集过于复杂（可以适当延长回收日期）
-2）	实习生没有做，并且没有及时通知（需询问是何原因，是否还有意愿继续做数据集？）如果没办法完成数据集，及时换人。
+- 1）	数据集过于复杂（可以适当延长回收日期）
+- 2）	实习生没有做，并且没有及时通知（需询问是何原因，是否还有意愿继续做数据集？）如果没办法完成数据集，及时换人。
 
