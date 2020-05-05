@@ -128,26 +128,32 @@ http://118.190.148.166/biodb/dataset_curation/
 - 填写meta_字段：可以在读取了sample信息后查找是否有值得填写的字段，一般可以查看文章对应的GEO网址里面characteristic一栏中的信息来填写这一部分，注意需要与细胞一一对应。
 - sample表格中的信息如何与CellID找到关系来填写cellAnnotation表格里的内容？
 一般是通过sample表格中title这一列来寻找关系的：
-  1） title中的信息与cellID信息相同，只是顺序不同: 可以借助循环代码历遍表格，利用当title中信息与cellID中信息相同时，才能填入cellID这一行的其他相对应的信息为条件，填入表格信息。
-  2） 如果title中的信息和cellID不同，需要在sample这个表格中另外找能够跟cellID对应 起来的信息。再进行1）中操作。
+
+   1） title中的信息与cellID信息相同，只是顺序不同: 可以借助循环代码历遍表格，利用当title中信息与cellID中信息相同时，才能填入cellID这一行的其他相对应的信息为条件，填入表格信息。
+
+   2） 如果title中的信息和cellID不同，需要在sample这个表格中另外找能够跟cellID对应 起来的信息。再进行1）中操作。
 - 填写clusterName和clusterID（tSNE and UMAP）: 
-  1） 首先要在文章中的supplemental information栏下查找作者是否给了是否有相应的聚类信息（包括clusterName/clusterID，tSNE1/2, UMAP1/2等）。
-  2） 还可以在读取作者提供的矩阵（文章对应的GEO网址下载的）中查找。
-  3） 如果都没有，需要发邮件给作者。（如果没有得到回复，审核人员可以再发一遍试试）
-  4） 最后也没找到clusterName/clusterID的可以先空中，之后运行我们自己的计算脚本，自动生成为数字编号的clusterName/ID、tSNE1/2、UMAP1/2。这部分代码出现在template/script.ipynb中的6.使用脚本自动生成其他项中的6.4，同时cellAnnotation的表格中会多出来两列：clusteringMethod 和 clusterName_scibet。如下图：
 
- ![](figure-4.png)
+   1） 首先要在文章中的supplemental information栏下查找作者是否给了是否有相应的聚类信息（包括clusterName/clusterID，tSNE1/2, UMAP1/2等）。
 
-  5）若tsne和umap作者也没有提供，跟cluster一样，实在不行可以运行自己的脚本自动计算。6.3中的代码生成2D（第一行代码） 和3D的图（第二行代码）
+   2） 还可以在读取作者提供的矩阵（文章对应的GEO网址下载的）中查找。
 
- ![](figure-5.png)
+   3） 如果都没有，需要发邮件给作者。（如果没有得到回复，审核人员可以再发一遍试试）
+
+   4） 最后也没找到clusterName/clusterID的可以先空中，之后运行我们自己的计算脚本，自动生成为数字编号的clusterName/ID、tSNE1/2、UMAP1/2。这部分代码出现在template/script.ipynb中的6.使用脚本自动生成其他项中的6.4，同时cellAnnotation的表格中会多出来两列：clusteringMethod 和 clusterName_scibet。如下图：
+
+   ![](figure-4.png)
+
+   5）若tsne和umap作者也没有提供，跟cluster一样，实在不行可以运行自己的脚本自动计算。6.3中的代码生成2D（第一行代码） 和3D的图（第二行代码）
+
+   ![](figure-5.png)
 
 - 填写cellOntologyName和cellOntologyID：这两项与clusterName是相对应的
-  1） 如果文中提供clusterName等相关内容，cellOntologyName/ID可以在https://www.ebi.ac.uk/ols/index网址搜索细胞信息，并输入与clusterName最相近的cellOntologyName和ID (id现在已经不需要填写，运行6.5代码根据cellOntologyName自动生成)
+   1） 如果文中提供clusterName等相关内容，cellOntologyName/ID可以在https://www.ebi.ac.uk/ols/index网址搜索细胞信息，并输入与clusterName最相近的cellOntologyName和ID (id现在已经不需要填写，运行6.5代码根据cellOntologyName自动生成)
 
- ![](figure-6.png)
+   ![](figure-6.png)
 
-  2） 如果文章没有找到clusterName，那么就只能在文章中寻找进行聚类分析的是什么细胞，有时候只能找到这篇文章是研究**细胞的，如骨髓细胞，那就只查找骨髓细胞相应的cellOntology信息并全部填上即可。目的就是填上就好，能填就填，轻易不要填notAvailable，更不可以空着。
+   2） 如果文章没有找到clusterName，那么就只能在文章中寻找进行聚类分析的是什么细胞，有时候只能找到这篇文章是研究**细胞的，如骨髓细胞，那就只查找骨髓细胞相应的cellOntology信息并全部填上即可。目的就是填上就好，能填就填，轻易不要填notAvailable，更不可以空着。
 
 
 ## 4.	Matrix
@@ -277,23 +283,30 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
    - 答：没有cluster的信息时要先填上notAvailable，再用我们自己的脚本计算cluster，不能留下NaN。
 
 7)	在运行calculate_cluster（RUN = True）的时候报错，是什么原因？
- （1） ![](figure-11.png)
+
+     （1） ![](figure-11.png)
  
- （2） ![](figure-12.png)
+     （2） ![](figure-12.png)
  
    - 答：
-   （1）报错中显示细胞数只有47个，细胞数太少的时候不需要进行细胞聚类。
-   （2）遇到报错可以先运行检查器，查看其他部分是否填写完整无误。在这里 如果rawcounts存成mtx格式在生成tpm就不需要运行geneAnnotation函数了，要不然会覆盖掉。（现在已经优化了代码，不让你运行geneAnnotation了）
-   （3）出现ValueError: cannot reindex from a duplicate axis报错,是因为矩阵中基因名或者细胞名可能有重复。基因名有重复可以使用ensemblID代替基因名，若不行可以在重复的那一列做个标记区别开来。系报名重复时，同一个细胞的基因表达量应该是一样的，因此需要去除重复的细胞。
+      （1）报错中显示细胞数只有47个，细胞数太少的时候不需要进行细胞聚类。
+
+      （2）遇到报错可以先运行检查器，查看其他部分是否填写完整无误。在这里 如果rawcounts存成mtx格式在生成tpm就不需要运行geneAnnotation函数了，要不然会覆盖掉。（现在已经优化了代码，不让你运行geneAnnotation了）
+
+      （3）出现ValueError: cannot reindex from a duplicate axis报错,是因为矩阵中基因名或者细胞名可能有重复。基因名有重复可以使用ensemblID代替基因名，若不行可以在重复的那一列做个标记区别开来。系报名重复时，同一个细胞的基因表达量应该是一样的，因此需要去除重复的细胞。
  
 8)	metadata中的信息有时使用my_builder.get_metadata('')#引号中填写pubmedID获取不到相应的信息，这是为什么？
    - 答：可能是因为文章中本来就没有，可以在文献里确认一下，文献中确实没有的就算了。
+
 9)	metadata中的tSNEAvailability需要发邮件问作者吗？
    - 答：新标注的时候需要发，修改数据集的时候可以不用发。
+
 10)	 citation的次数在哪里找？
    - 答：pubmed中会有，也可以直接google
+
 11） 从rawcounts生成TPM有时候会有基因数不一样的情况
    - 检查后发现rawcounts矩阵中多出的基因为ERCC开头，这种情况时不用管就行了
+
 12） 矩阵存成mtx格式之后运行auto_calutation还是会超时断开，就只能收回来在infinity上跑了。或者先清一下服务器内存看看。清服务器内存可以看 数据节省内存文件夹
 
 
@@ -372,9 +385,13 @@ cluster如果是用函数生成的话会多出两列：clusteringMethod和cluste
 ## 一审内容：
  - Part 分类方法(在把数据集下发给实习生之前就已分好)：
     分part只可以正式的审核人员来管理。
+
     实际操作：和原作者一致即可，避免 part 划分人员的主观判断。
+
     总原则：不同测序方法要分开，不同物种分开。例：part_1: human, part_2: mouse.
+
     细化：不同细胞大类可以作为一个part。例：part_1: T cell, part_2: B cell.
+
     - 1) 最主要的还是根据文章中的聚类分析来进行分part，不管分了几次聚类分析，只要cluster和tSNE/UMAP等的相关信息齐全，就可以算是一个part。
     - 2） 如果信息不那么齐全 
         - 若是文中进行了2次独立的聚类分析，那么应该将数据拆分成2个part。
@@ -385,9 +402,13 @@ cluster如果是用函数生成的话会多出两列：clusteringMethod和cluste
     - 4) 划分 part 后，在数据集文件夹(../GSE*****/)下新建一个description.txt文档,写入每个part对应的 description，subDataset，和 correspondingFigure。
 
     保证part_1, part_2, part_3 文件中仅含该 part 所需 GSE 数据信息，如果需要 数据标注人员从同一个 GSE 中挑选该part 所用细胞时，一审人员需要在 description中添加描述。
+
 - unstructuredData填写三项：
+    
     - subDataset：如果有不只一个part，则根据part_n填为SubDataset-n。只有一个part就空着即可，不可以填。
+
     - description：填写对part，即subDataset的描述。只有一个part就空着即可，不可以填。格式：description: The original article contains ? subdatasets, based on e.g. species, cell type(s). This subdataset is based on e.g. Mouse, cell A, B and C.  (should match the initial description).
+
     - correspondingFigure：这里填写该数据对应的文章tSNE聚类图，格式为形如"1-a"，意思为figure1的图a，如果是附录里面的图，可以填写成“s1-a”的形式，ExtendedData里面发现的图可以填写成：”'extended2-a' 这种形式，没有对应的图填notAvailable。
 
 
@@ -396,15 +417,22 @@ cluster如果是用函数生成的话会多出两列：clusteringMethod和cluste
 ### 二审 修改回收步骤：
 负责人分配任务， 
 - 1）	二审（可以找优秀的实习生帮忙了），首先把数据集标注的任务在redmine上asign给空闲的实习生，把数据集scp 到修改人的目录中(针对在node02服务器上审核的人)或者move到修改人的目录下面（针对在阿里云服务器上修改的人）
+
 - 2）	之后等实习生做完标注并上传report在redmine上，就需要在report和数据集的基础上进行审核，如果有错误，记录在redmine上并在report中使用修订模式指出，然后返回实习生修改。除metadata的错误可由审查人员直接在原文件中自行改动之外，其余错误均需按照以下步骤！
+
 - 3）	当修改人在redmine上反馈修改完成之后，审查人去该目录下进行二次检查。除了原有问题之外，需重点看以下几点：
     - 如果是矩阵需要改动，需检查其相应的自动生成函数是否都运行了（可根据文件更新时间进行判断），包括：tsne, cluster, auto_calculation, downsample（这个只有回溯时会有）等；
     - metadata里面的research topic，clusterAvailability以及tSNEAvailability需进行二次核查
+
 - 4）	如果没有错误，把report一起保存在数据集中，并回收数据集到：
 针对在infinity服务器上修改的人：将数据集打包压缩(如果数据集较小可不打包压缩，但还是建议先打包压缩)，并scp回来，拷贝到路径：/home/biodb/data/dataset_collection/datasets/2_inspection_stage/revised/；针对在阿里云服务器上修改的人：将数据集move到路径：/home/biodb/data/revised/。也就是说除了metadata的错误，cellAnnotation的错误和 矩阵的错误，在数据改完之后均需要放在以上这个路径中。
+
 - 5）	确认数据集已拷贝至指定路径后，需要删除原来的修改人目录中的数据（不要留有冗余数据）。
+
 - 6）	在redmine上更改任务情况的状态为feedback,非紧急任务时需要在本地表格记录审核情况，每周五交给数据集流程管理人员进行汇总。错误记录只需简略提及要点即可，标注人、审核人（在二审表格中）一定要写清楚。
+
 - 7）	最后由三审人员在指定3rd_inspection文件夹下做最后审查。小错误自己改改就好的，可以在直接改完后移动到correct文件夹下。做好本地表格记录即可！
+
 - 8）	如果有优秀的实习生，并且其本人有意愿，可以让他们接触审核工作，帮忙分担工作压力，但是质量控制要把握好。
 
 ### 补充教程：
@@ -424,6 +452,7 @@ cluster如果是用函数生成的话会多出两列：clusteringMethod和cluste
         tsne2 = df_cell['tSNE2'].tolist()
         plt.figure(figsize=(10,10))
         sns.scatterplot(x = tsne1, y = tsne2, hue = clusterName)
+
     - 检查tSNE图质量，不同颜色的点不可过多重合，过多重合即为 isBadtSNE：True
         使用代码画图查看某个基因在细胞中表达的情况
 
@@ -445,11 +474,17 @@ cellAnnotation中的细胞数量（即有多少行）应该和矩阵里的细胞
 负责人：陈淳、天然（暂定）
 ## 只有三审人员可以在redmine上进行任务的关闭，即把任务状态更改为closed。
 ### 三审 修改回收步骤：
+
 - 1）	再进行一次二审的操作，不过可以大体浏览。发现错误后在renmine上记录，同时返回实习生修改。(请注意记录二审的漏检率，用作汇报时证明三道审核制度下的优势)
+
 - 2）	完全没有错误了之后，需要把README.json中的notPassed改为passed,并保存。
+
 - 3）	在redmine网站上close相应的任务。
+
 - 4）	在本地表格记录自己的审核情况（包括漏检率的记录），每周五交给数据集流程管理人员进行汇总。标注人、审核人（在三审表格中）一定要写清楚。
+
 - 5）	最后，把更改好的数据集转移到node01服务器上。
+
 ### 审核的汇总表格流程
 周期：每周更新一次数据集回收情况
 流程
