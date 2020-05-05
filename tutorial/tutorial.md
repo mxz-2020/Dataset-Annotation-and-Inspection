@@ -107,9 +107,9 @@ http://118.190.148.166/biodb/dataset_curation/
 - （新加入）isCultured：填True or False，意思是scRNA-seq所用的细胞是作者自己传代培养的细胞系（True）的还是原代细胞（False）。
 - （新加入）isTPMNotAvailable：填True or False。这个字段的意思时问这个数据集中的TPM矩阵是否是真正的TPM矩阵？因为：Some articles provide norm matrix only and cannot generate TPM (we can only treat the norm as if it is TPM)，找不到真正的TPM矩阵的时候填上True。但在矩阵的normalizationMethod这一列里要标注清楚'Copied from norm'，表示这个不是TPM矩阵！
 - （新加入）diseaseOntology：在https://disease-ontology.org/中寻找disease_name。
- ![](figure-2.png)
+![](figure-2.png)
 - （当cancer为True时需要填写）cancerDescription：按照script脚本里面的要求填写，文章不是cancer相关可以不填
- ![](figure-3.png)
+![](figure-3.png)
 
 ### 对于各字段的说明：
 - disease：是指文章研究内容是否与疾病有关，例如研究某种疾病、从疾病患者采样等，但对于一般性的研究某一通路、细胞等作用，最后认为可能与某种疾病有关时需要多加判断，准则是此篇文章出发的目的和主题内容是否是与疾病相关，此外，cancer必为disease；
@@ -142,16 +142,16 @@ http://118.190.148.166/biodb/dataset_curation/
 
    4） 最后也没找到clusterName/clusterID的可以先空中，之后运行我们自己的计算脚本，自动生成为数字编号的clusterName/ID、tSNE1/2、UMAP1/2。这部分代码出现在template/script.ipynb中的6.使用脚本自动生成其他项中的6.4，同时cellAnnotation的表格中会多出来两列：clusteringMethod 和 clusterName_scibet。如下图：
 
-   ![](figure-4.png)
+![](figure-4.png)
 
    5）若tsne和umap作者也没有提供，跟cluster一样，实在不行可以运行自己的脚本自动计算。6.3中的代码生成2D（第一行代码） 和3D的图（第二行代码）
 
-   ![](figure-5.png)
+![](figure-5.png)
 
 - 填写cellOntologyName和cellOntologyID：这两项与clusterName是相对应的
    1） 如果文中提供clusterName等相关内容，cellOntologyName/ID可以在https://www.ebi.ac.uk/ols/index网址搜索细胞信息，并输入与clusterName最相近的cellOntologyName和ID (id现在已经不需要填写，运行6.5代码根据cellOntologyName自动生成)
 
-   ![](figure-6.png)
+![](figure-6.png)
 
    2） 如果文章没有找到clusterName，那么就只能在文章中寻找进行聚类分析的是什么细胞，有时候只能找到这篇文章是研究**细胞的，如骨髓细胞，那就只查找骨髓细胞相应的cellOntology信息并全部填上即可。目的就是填上就好，能填就填，轻易不要填notAvailable，更不可以空着。
 
@@ -230,7 +230,7 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 4. clustering计算，在6.4中，仅在找不到作者又未回复时使用，记得运行第二行代码来判断isbadtSNE，来判断tSNE图上的细胞簇点是否能分得开。
 5. cellOntologyID，在6.5中运行后根据cellOntologyName自动填写
 6. 还添加了一些需要运行的代码在6.6-6.8中
-   ![](figure-7.png)
+![](figure-7.png)
 7. 填写README:
    - 第一个block里面运行的代码用来赋值和读取readme.json
    - 第二个block里面填写信息
@@ -248,12 +248,12 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 常见报错：
 1.	 unstructuredData中缺少内容：
 
- ![](figure-8.png)
+![](figure-8.png)
 
  只需要补充上即可。
 
 2.	markergenes
- ![](figure-9.png)
+![](figure-9.png)
 
  markergenes中缺少ensemblID,这个ID是有内置函数换算的，是跟gene一一对应的。
  这里报错是因为cluster里的ensemblID都为notAvailable，这可能是因为函数没有运行正确，也有可能是基因库没有对应的。可以重新运行试试，如果还是没有，可以在群里询问。
@@ -278,20 +278,20 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
    - 答：这种情况一般是因为运行的文件占用内存太大，被程序自动kill了，可以尝试在人少的时候再试试，是在不行就联系发任务的人。 
 
 6)	在运行auto_calculation的时候，显示clusterName Error！怎么办？
-  ![](figure-10.png)
+![](figure-10.png)
  
    - 答：没有cluster的信息时要先填上notAvailable，再用我们自己的脚本计算cluster，不能留下NaN。
 
 7)	在运行calculate_cluster（RUN = True）的时候报错，是什么原因？
 
-     （1） ![](figure-11.png)
+![](figure-11.png)
  
-     （2） ![](figure-12.png)
+![](figure-12.png)
  
    - 答：
-      （1）报错中显示细胞数只有47个，细胞数太少的时候不需要进行细胞聚类。
+      （1）第一张图报错中显示细胞数只有47个，细胞数太少的时候不需要进行细胞聚类。
 
-      （2）遇到报错可以先运行检查器，查看其他部分是否填写完整无误。在这里 如果rawcounts存成mtx格式在生成tpm就不需要运行geneAnnotation函数了，要不然会覆盖掉。（现在已经优化了代码，不让你运行geneAnnotation了）
+      （2）第二张图遇到报错可以先运行检查器，查看其他部分是否填写完整无误。在这里 如果rawcounts存成mtx格式在生成tpm就不需要运行geneAnnotation函数了，要不然会覆盖掉。（现在已经优化了代码，不让你运行geneAnnotation了）
 
       （3）出现ValueError: cannot reindex from a duplicate axis报错,是因为矩阵中基因名或者细胞名可能有重复。基因名有重复可以使用ensemblID代替基因名，若不行可以在重复的那一列做个标记区别开来。系报名重复时，同一个细胞的基因表达量应该是一样的，因此需要去除重复的细胞。
  
