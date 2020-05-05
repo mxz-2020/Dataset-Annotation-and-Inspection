@@ -128,21 +128,26 @@ http://118.190.148.166/biodb/dataset_curation/
 - 填写meta_字段：可以在读取了sample信息后查找是否有值得填写的字段，一般可以查看文章对应的GEO网址里面characteristic一栏中的信息来填写这一部分，注意需要与细胞一一对应。
 - sample表格中的信息如何与CellID找到关系来填写cellAnnotation表格里的内容？
 一般是通过sample表格中title这一列来寻找关系的：
-1） title中的信息与cellID信息相同，只是顺序不同: 可以借助循环代码历遍表格，利用当title中信息与cellID中信息相同时，才能填入cellID这一行的其他相对应的信息为条件，填入表格信息。
-2） 如果title中的信息和cellID不同，需要在sample这个表格中另外找能够跟cellID对应 起来的信息。再进行1）中操作。
+  1） title中的信息与cellID信息相同，只是顺序不同: 可以借助循环代码历遍表格，利用当title中信息与cellID中信息相同时，才能填入cellID这一行的其他相对应的信息为条件，填入表格信息。
+  2） 如果title中的信息和cellID不同，需要在sample这个表格中另外找能够跟cellID对应 起来的信息。再进行1）中操作。
 - 填写clusterName和clusterID（tSNE and UMAP）: 
-1） 首先要在文章中的supplemental information栏下查找作者是否给了是否有相应的聚类信息（包括clusterName/clusterID，tSNE1/2, UMAP1/2等）。
-2） 还可以在读取作者提供的矩阵（文章对应的GEO网址下载的）中查找。
-3） 如果都没有，需要发邮件给作者。（如果没有得到回复，审核人员可以再发一遍试试）
-4） 最后也没找到clusterName/clusterID的可以先空中，之后运行我们自己的计算脚本，自动生成为数字编号的clusterName/ID、tSNE1/2、UMAP1/2。这部分代码出现在template/script.ipynb中的6.使用脚本自动生成其他项中的6.4，同时cellAnnotation的表格中会多出来两列：clusteringMethod 和 clusterName_scibet。如下图：
+  1） 首先要在文章中的supplemental information栏下查找作者是否给了是否有相应的聚类信息（包括clusterName/clusterID，tSNE1/2, UMAP1/2等）。
+  2） 还可以在读取作者提供的矩阵（文章对应的GEO网址下载的）中查找。
+  3） 如果都没有，需要发邮件给作者。（如果没有得到回复，审核人员可以再发一遍试试）
+  4） 最后也没找到clusterName/clusterID的可以先空中，之后运行我们自己的计算脚本，自动生成为数字编号的clusterName/ID、tSNE1/2、UMAP1/2。这部分代码出现在template/script.ipynb中的6.使用脚本自动生成其他项中的6.4，同时cellAnnotation的表格中会多出来两列：clusteringMethod 和 clusterName_scibet。如下图：
+
  ![](figure-4.png)
-5）若tsne和umap作者也没有提供，跟cluster一样，实在不行可以运行自己的脚本自动计算。6.3中的代码生成2D（第一行代码） 和3D的图（第二行代码）
+
+  5）若tsne和umap作者也没有提供，跟cluster一样，实在不行可以运行自己的脚本自动计算。6.3中的代码生成2D（第一行代码） 和3D的图（第二行代码）
+
  ![](figure-5.png)
+
 - 填写cellOntologyName和cellOntologyID：这两项与clusterName是相对应的
-1） 如果文中提供clusterName等相关内容，cellOntologyName/ID可以在https://www.ebi.ac.uk/ols/index网址搜索细胞信息，并输入与clusterName最相近的cellOntologyName和ID (id现在已经不需要填写，运行6.5代码根据cellOntologyName自动生成)
+  1） 如果文中提供clusterName等相关内容，cellOntologyName/ID可以在https://www.ebi.ac.uk/ols/index网址搜索细胞信息，并输入与clusterName最相近的cellOntologyName和ID (id现在已经不需要填写，运行6.5代码根据cellOntologyName自动生成)
+
  ![](figure-6.png)
 
-2） 如果文章没有找到clusterName，那么就只能在文章中寻找进行聚类分析的是什么细胞，有时候只能找到这篇文章是研究**细胞的，如骨髓细胞，那就只查找骨髓细胞相应的cellOntology信息并全部填上即可。目的就是填上就好，能填就填，轻易不要填notAvailable，更不可以空着。
+  2） 如果文章没有找到clusterName，那么就只能在文章中寻找进行聚类分析的是什么细胞，有时候只能找到这篇文章是研究**细胞的，如骨髓细胞，那就只查找骨髓细胞相应的cellOntology信息并全部填上即可。目的就是填上就好，能填就填，轻易不要填notAvailable，更不可以空着。
 
 
 ## 4.	Matrix
@@ -175,11 +180,11 @@ Matrix_normalized 中数据往往是对 Matrix_rawCounts 数据做出某些处�
 
 ### 如何填写normalization method?
 下载的normalized矩阵和生成的TPM矩阵都需要填写一列normalizationMethod。
-1)	Normalized矩阵：一般是下载得来，需要在文献中找出normalized Matrix是怎样被标准化的，有的是FPKM,有的是RPKM,还有log2（TPM+1）等等形式，载入normalizedMatrix的时候需要在第一列标明normalizedMethod。格式： 如，FPKM。（直接填写原文作者把rawcounts标准化的方法，不要添加其他字符。）
-2)	TPM矩阵：
-- 如果由rawcounts矩阵转化而来，填写：TPM from raw counts
-- 如果由normalized矩阵转化而来，填写： TPM from FPKM （根据normalized矩阵的方法而改变，如：TPM from log2（TPM+1） ）
-3)	如果遇到无法转换成TPM的，TPM的normalizationMethod一定要强调这个不是TPM！并且一定要很详细的注明这个矩阵的标准化方法是什么, 如：矩阵不是TPM! 是TMM矩阵。
+  1)	Normalized矩阵：一般是下载得来，需要在文献中找出normalized Matrix是怎样被标准化的，有的是FPKM,有的是RPKM,还有log2（TPM+1）等等形式，载入normalizedMatrix的时候需要在第一列标明normalizedMethod。格式： 如，FPKM。（直接填写原文作者把rawcounts标准化的方法，不要添加其他字符。）
+  2)	TPM矩阵：
+   - 如果由rawcounts矩阵转化而来，填写：TPM from raw counts
+   - 如果由normalized矩阵转化而来，填写： TPM from FPKM （根据normalized矩阵的方法而改变，如：TPM from log2（TPM+1） ）
+  3)	如果遇到无法转换成TPM的，TPM的normalizationMethod一定要强调这个不是TPM！并且一定要很详细的注明这个矩阵的标准化方法是什么, 如：矩阵不是TPM! 是TMM矩阵。
 
 ### 检查TPM矩阵正确与否方法：
 TPM中横行代表基因，纵列代表细胞。对于任意单个细胞，当其对应横行中的基因值相加和为1000 000 (10^6)，则TPM正确。如果文章提到使用UMI, 那么CPM（也叫RPM） = TPM, 行和都是一百万，M代表million。
@@ -218,10 +223,11 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 3. 当真的没有tsne和umap坐标没办法从作者那里得到回复时，可以运行我们自己的计算脚本，计算tSNE和UMAP的二维和三维， 运算脚本在script.ipynb中的6.3可见。
 4. clustering计算，在6.4中，仅在找不到作者又未回复时使用，记得运行第二行代码来判断isbadtSNE，来判断tSNE图上的细胞簇点是否能分得开。
 5. cellOntologyID，在6.5中运行后根据cellOntologyName自动填写
-6. ![](figure-7.png)
+6. 还添加了一些需要运行的代码在6.6-6.8中
+   ![](figure-7.png)
 7. 填写README:
-- 第一个block里面运行的代码用来赋值和读取readme.json
-- 第二个block里面填写信息
+   - 第一个block里面运行的代码用来赋值和读取readme.json
+   - 第二个block里面填写信息
     Readme['author'] = ''  #填写自己的名字拼音，如 Xiaoming
     Readme['date'] = ''     #填写完成日期
     Readme['modificationDate'] = '' #填写修改日期
@@ -235,50 +241,59 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 在运行检查器后经常会出现报错，这时就需要根据检查器报错来排查错误信息
 常见报错：
 1.	 unstructuredData中缺少内容：
+
  ![](figure-8.png)
-只需要补充上即可。
+
+ 只需要补充上即可。
 
 2.	markergenes
  ![](figure-9.png)
-markergenes中缺少ensemblID,这个ID是有内置函数换算的，是跟gene一一对应的。
-这里报错是因为cluster里的ensemblID都为notAvailable，这可能是因为函数没有运行正确，也有可能是基因库没有对应的。可以重新运行试试，如果还是没有，可以在群里询问。
+
+ markergenes中缺少ensemblID,这个ID是有内置函数换算的，是跟gene一一对应的。
+ 这里报错是因为cluster里的ensemblID都为notAvailable，这可能是因为函数没有运行正确，也有可能是基因库没有对应的。可以重新运行试试，如果还是没有，可以在群里询问。
 
 3.	如果没填写libraryPreparationMehtod或者taxonomy就想生成toTPM或者geneAnnotation，也会报错提示
 
 ## 7.	遇到的问题与解答
 1）	rawcounts文件太大，生成TPM总是崩溃怎么办？
-- 答：可以试试存成sparse matrix，这样会小一点，然后再转成TPM。细胞超过5万以上的就不要存成tsv格式了。现在如果只提供rawcounts，都需要生成mtx格式的矩阵。
+   - 答：可以试试存成sparse matrix，这样会小一点，然后再转成TPM。细胞超过5万以上的就不要存成tsv格式了。现在如果只提供rawcounts，都需要生成mtx格式的矩阵。
+
 2）	 libraryPreparationMethod里面的msSCRB-seq是什么？
-- 答：是molecular crowding SCRB-seq。https://omictools.com/mcscrb-seq-tool
+   - 答：是molecular crowding SCRB-seq。https://omictools.com/mcscrb-seq-tool
+
 3）	 jypyter_no_port错误解决方法？
-- 答：百度网盘里有文档解释
-https://pan.baidu.com/s/1NAJ6_BVTdB1IarZXh6gHaw 提取码: hbmm
+   - 答：百度网盘里有文档解释
+   https://pan.baidu.com/s/1NAJ6_BVTdB1IarZXh6gHaw 提取码: hbmm
+
 4)	TPM矩阵如何从sparse matrix转换过来？
-- 答：rawcounts存储为sparse matrix时运行my_builder.toTPM()这个函数生成TPM #运行这个函数前，需要保证rawcounts.tsv  这个文件是空的才行
+   - 答：rawcounts存储为sparse matrix时运行my_builder.toTPM()这个函数生成TPM #运行这个函数前，需要保证rawcounts.tsv  这个文件是空的才行
+
 5)	在读取文或运行件的时候，跳出received signal 15，stopping然后shutdown是什么原因呢？有什么处理办法吗？
-- 答：这种情况一般是因为运行的文件占用内存太大，被程序自动kill了，可以尝试在人少的时候再试试，是在不行就联系发任务的人。 
+   - 答：这种情况一般是因为运行的文件占用内存太大，被程序自动kill了，可以尝试在人少的时候再试试，是在不行就联系发任务的人。 
+
 6)	在运行auto_calculation的时候，显示clusterName Error！怎么办？
- ![](figure-10.png)
+  ![](figure-10.png)
  
-- 答：没有cluster的信息时要先填上notAvailable，再用我们自己的脚本计算cluster，不能留下NaN。
+   - 答：没有cluster的信息时要先填上notAvailable，再用我们自己的脚本计算cluster，不能留下NaN。
+
 7)	在运行calculate_cluster（RUN = True）的时候报错，是什么原因？
  （1） ![](figure-11.png)
  
  （2） ![](figure-12.png)
  
-- 答：
-（1）报错中显示细胞数只有47个，细胞数太少的时候不需要进行细胞聚类。
-（2）遇到报错可以先运行检查器，查看其他部分是否填写完整无误。在这里 如果rawcounts存成mtx格式在生成tpm就不需要运行geneAnnotation函数了，要不然会覆盖掉。（现在已经优化了代码，不让你运行geneAnnotation了）
-（3）出现ValueError: cannot reindex from a duplicate axis报错,是因为矩阵中基因名或者细胞名可能有重复。基因名有重复可以使用ensemblID代替基因名，若不行可以在重复的那一列做个标记区别开来。系报名重复时，同一个细胞的基因表达量应该是一样的，因此需要去除重复的细胞。
+   - 答：
+   （1）报错中显示细胞数只有47个，细胞数太少的时候不需要进行细胞聚类。
+   （2）遇到报错可以先运行检查器，查看其他部分是否填写完整无误。在这里 如果rawcounts存成mtx格式在生成tpm就不需要运行geneAnnotation函数了，要不然会覆盖掉。（现在已经优化了代码，不让你运行geneAnnotation了）
+   （3）出现ValueError: cannot reindex from a duplicate axis报错,是因为矩阵中基因名或者细胞名可能有重复。基因名有重复可以使用ensemblID代替基因名，若不行可以在重复的那一列做个标记区别开来。系报名重复时，同一个细胞的基因表达量应该是一样的，因此需要去除重复的细胞。
  
 8)	metadata中的信息有时使用my_builder.get_metadata('')#引号中填写pubmedID获取不到相应的信息，这是为什么？
-- 答：可能是因为文章中本来就没有，可以在文献里确认一下，文献中确实没有的就算了。
+   - 答：可能是因为文章中本来就没有，可以在文献里确认一下，文献中确实没有的就算了。
 9)	metadata中的tSNEAvailability需要发邮件问作者吗？
-- 答：新标注的时候需要发，修改数据集的时候可以不用发。
+   - 答：新标注的时候需要发，修改数据集的时候可以不用发。
 10)	 citation的次数在哪里找？
-- 答：pubmed中会有，也可以直接google
+   - 答：pubmed中会有，也可以直接google
 11） 从rawcounts生成TPM有时候会有基因数不一样的情况
-- 检查后发现rawcounts矩阵中多出的基因为ERCC开头，这种情况时不用管就行了
+   - 检查后发现rawcounts矩阵中多出的基因为ERCC开头，这种情况时不用管就行了
 12） 矩阵存成mtx格式之后运行auto_calutation还是会超时断开，就只能收回来在infinity上跑了。或者先清一下服务器内存看看。清服务器内存可以看 数据节省内存文件夹
 
 
@@ -355,27 +370,25 @@ cluster如果是用函数生成的话会多出两列：clusteringMethod和cluste
 2.	由实习生标注的时候把相应内容黏贴到数据集里，防止直接写到文简里被随意更改掉。
 3.	记录到本地检查表格中，并把表格交给二审负责人，并把分好part的数据集，放入二审负责人用户下文件夹里
 ## 一审内容：
-- Part 分类方法(在把数据集下发给实习生之前就已分好)：
-分part只可以正式的审核人员来管理。
-实际操作：和原作者一致即可，避免 part 划分人员的主观判断。
-总原则：不同测序方法要分开，不同物种分开。例：part_1: human, part_2: mouse.
-细化：不同细胞大类可以作为一个part。例：part_1: T cell, part_2: B cell.
-- 1) 最主要的还是根据文章中的聚类分析来进行分part，不管分了几次聚类分析，只要cluster和tSNE/UMAP等的相关信息齐全，就可以算是一个part。
-- 2） 如果信息不那么齐全 
-若是文中进行了2次独立的聚类分析，那么应该将数据拆分成2个part。
-    - 但是，如果part2的聚类分析是对part1聚类中的某一簇细胞进行的再聚类，只算一个part。
-    - 如果多次聚类，都是对同一组细胞的，那么只保留一次。
-    例：如果一篇文章涉及 T cell 和 B cell，作者仅做了一次整体聚类，那么我们不需将 T cell 和 B cell 再聚类。如果作者后续单独对 T cell 的集合做了新的聚类，那么我们就新增细化的 T cell part。
-- 3） 如果实在不知道该不该分part，那就分就可以了。
-unstructuredData填写三项：
-
-- 4) 划分 part 后，在数据集文件夹(../GSE*****/)下新建一个description.txt文档,写入每个part对应的 description，subDataset，和 correspondingFigure。
+ - Part 分类方法(在把数据集下发给实习生之前就已分好)：
+    分part只可以正式的审核人员来管理。
+    实际操作：和原作者一致即可，避免 part 划分人员的主观判断。
+    总原则：不同测序方法要分开，不同物种分开。例：part_1: human, part_2: mouse.
+    细化：不同细胞大类可以作为一个part。例：part_1: T cell, part_2: B cell.
+    - 1) 最主要的还是根据文章中的聚类分析来进行分part，不管分了几次聚类分析，只要cluster和tSNE/UMAP等的相关信息齐全，就可以算是一个part。
+    - 2） 如果信息不那么齐全 
+        - 若是文中进行了2次独立的聚类分析，那么应该将数据拆分成2个part。
+        - 但是，如果part2的聚类分析是对part1聚类中的某一簇细胞进行的再聚类，只算一个part。
+        - 如果多次聚类，都是对同一组细胞的，那么只保留一次。
+        例：如果一篇文章涉及 T cell 和 B cell，作者仅做了一次整体聚类，那么我们不需将 T cell 和 B cell 再聚类。如果作者后续单独对 T cell 的集合做了新的聚类，那么我们就新增细化的 T cell part。
+    - 3） 如果实在不知道该不该分part，那就分就可以了。
+    - 4) 划分 part 后，在数据集文件夹(../GSE*****/)下新建一个description.txt文档,写入每个part对应的 description，subDataset，和 correspondingFigure。
 
     保证part_1, part_2, part_3 文件中仅含该 part 所需 GSE 数据信息，如果需要 数据标注人员从同一个 GSE 中挑选该part 所用细胞时，一审人员需要在 description中添加描述。
-
-- subDataset：如果有不只一个part，则根据part_n填为SubDataset-n。只有一个part就空着即可，不可以填。
-- description：填写对part，即subDataset的描述。只有一个part就空着即可，不可以填。格式：description: The original article contains ? subdatasets, based on e.g. species, cell type(s). This subdataset is based on e.g. Mouse, cell A, B and C.  (should match the initial description).
-- correspondingFigure：这里填写该数据对应的文章tSNE聚类图，格式为形如"1-a"，意思为figure1的图a，如果是附录里面的图，可以填写成“s1-a”的形式，ExtendedData里面发现的图可以填写成：”'extended2-a' 这种形式，没有对应的图填notAvailable。
+- unstructuredData填写三项：
+    - subDataset：如果有不只一个part，则根据part_n填为SubDataset-n。只有一个part就空着即可，不可以填。
+    - description：填写对part，即subDataset的描述。只有一个part就空着即可，不可以填。格式：description: The original article contains ? subdatasets, based on e.g. species, cell type(s). This subdataset is based on e.g. Mouse, cell A, B and C.  (should match the initial description).
+    - correspondingFigure：这里填写该数据对应的文章tSNE聚类图，格式为形如"1-a"，意思为figure1的图a，如果是附录里面的图，可以填写成“s1-a”的形式，ExtendedData里面发现的图可以填写成：”'extended2-a' 这种形式，没有对应的图填notAvailable。
 
 
 ## 二审：
@@ -398,21 +411,21 @@ unstructuredData填写三项：
 1.	Unstructured Data 
 在 inspection 中参照 实习生数据标注指南 核验 unstructured data 与 cell annotation。如有错误，记录在report中，并update在redmine上面。
 2.	Cell Annotation 和tSNE 检查
-- cellAnnotation
-重点检查meta部分
-注意检查cluster以及cellOntology部分，set（）出来查看一下
-还要注意检查细胞数量是否与矩阵和文章中一致
+    - cellAnnotation
+    重点检查meta部分
+    注意检查cluster以及cellOntology部分，set（）出来查看一下
+    还要注意检查细胞数量是否与矩阵和文章中一致
 
-- 使用代码，调用计算脚本画出tSNE的图
-    import seaborn as sns
-    import matplotlib.pyplot as plt #下一行开始需要在两个不同的block里运行
-    clusterName = df_cell['clusterName'].tolist()
-    tsne1 = df_cell['tSNE1'].tolist()
-    tsne2 = df_cell['tSNE2'].tolist()
-    plt.figure(figsize=(10,10))
-    sns.scatterplot(x = tsne1, y = tsne2, hue = clusterName)
-- 检查tSNE图质量，不同颜色的点不可过多重合，过多重合即为 isBadtSNE：False
-使用代码画图查看某个基因在细胞中表达的情况
+    - 使用代码，调用计算脚本画出tSNE的图
+        import seaborn as sns
+        import matplotlib.pyplot as plt #下一行开始需要在两个不同的block里运行
+        clusterName = df_cell['clusterName'].tolist()
+        tsne1 = df_cell['tSNE1'].tolist()
+        tsne2 = df_cell['tSNE2'].tolist()
+        plt.figure(figsize=(10,10))
+        sns.scatterplot(x = tsne1, y = tsne2, hue = clusterName)
+    - 检查tSNE图质量，不同颜色的点不可过多重合，过多重合即为 isBadtSNE：True
+        使用代码画图查看某个基因在细胞中表达的情况
 
 3.	矩阵检查
 - 1）	TPM 检查
