@@ -1,0 +1,300 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据处理代码-新手参考</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1><a id="_0"></a>一、矩阵处理</h1>
+<h4><a id="_2"></a>情况一：常规矩阵</h4>
+<ul>
+<li><strong>例子1：</strong> 常规处理，最常见的矩阵形式是行为基因，列为细胞，其中一般第一列为geneName。当然也有前多列为gene信息的情况, 如下：<br>
+<img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8yMzI0NzQ1Mi0xYTljYjVjNmRmMjEwZTcxLnBuZw?x-oss-process=image/format,png" alt="1.png"></li>
+</ul>
+<blockquote>
+<p><strong>处理思路：</strong></p>
+<ol>
+<li>去除矩阵中<strong>非数据列</strong>（通常是geneName）</li>
+<li>矩阵转置</li>
+<li>依次添加cellID和normalizationMethod</li>
+</ol>
+<ul>
+<li><em>当然也可以先转置后去除<strong>非数据行</strong></em>，效果是一样的。</li>
+</ul>
+</blockquote>
+<pre><code class="prism language-python"><span class="token comment">#读取矩阵</span>
+df_downloaded <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'../downloaded_data/GSE_supplementary_data/GSE130812_FPKM_C1_table.txt.gz'</span><span class="token punctuation">,</span>sep<span class="token operator">=</span><span class="token string">'\t'</span><span class="token punctuation">)</span>
+df_downloaded<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment">##单独提取基因映射文件（前两列为基因信息列，列名为'gene_id'和'gene_name'），用于后面矩阵转置后的列重命名；</span>
+<span class="token comment">##小建议：一般建议使用ensemblID（形如ENSMUSG00000000001）来标识基因，这样不会出现基因名字重复的问题。</span>
+geneMap <span class="token operator">=</span> df_downloaded<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span> 
+df_downloaded <span class="token operator">=</span> df_downloaded<span class="token punctuation">.</span>drop<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'gene_id'</span><span class="token punctuation">,</span><span class="token string">'gene_name'</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment">##去除矩阵中的非数据列；便于转置</span>
+<span class="token comment">###有时候读取的文件中gene不在第一列，而是作为行名出现，此时可以忽略此步操作。 当然，你也可以使用gene=df_downloaded.index.tolist()提取基因</span>
+
+<span class="token comment">##提取cellID</span>
+cellID <span class="token operator">=</span> df_downloaded<span class="token punctuation">.</span>columns<span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+df_norm <span class="token operator">=</span> df_downloaded<span class="token punctuation">.</span>T <span class="token comment">##最常见的矩阵形式是行为基因，列为细胞，所以必须转置</span>
+df_norm<span class="token punctuation">.</span>rename<span class="token punctuation">(</span>columns<span class="token operator">=</span>geneMap<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token builtin">str</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">'(.[0-9]+$)'</span><span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">,</span> inplace <span class="token operator">=</span> <span class="token boolean">True</span><span class="token punctuation">)</span><span class="token comment">##用ensemblID重命名列（即第一步提取的geneMap文件）</span>
+<span class="token comment">###ensemblID有时候会在后面带上版本号（如ENSMUSG00000000001.4中的.4）,这些版本号必须去除。这里使用正则匹配的方式直接将末尾的版本号替换成了空</span>
+<span class="token comment">##很多pandas中类似的字符提取的操作建议使用正则表达式来完成，速度较快；</span>
+df_norm<span class="token punctuation">.</span>insert<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string">'cellID'</span><span class="token punctuation">,</span>cellID<span class="token punctuation">)</span><span class="token comment">#插入cellID</span>
+df_norm<span class="token punctuation">.</span>insert<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string">'normalizationMethod'</span><span class="token punctuation">,</span><span class="token string">'FPKM'</span><span class="token punctuation">)</span> <span class="token comment">##插入normalizationMethod</span>
+df_norm<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<hr>
+<ul>
+<li><strong>补充例子：最常用的转换获取TPM的操作</strong></li>
+</ul>
+<ol>
+<li><strong>FPKM 转 TPM</strong></li>
+</ol>
+<pre><code class="prism language-python">df_tpm <span class="token operator">=</span> df_norm <span class="token comment">##直接将df_norm赋给df_tpm. (注意：运行完这步之后千万别再保存df_norm到文件中，因为后续对df_tpm的操作同时也会修改df_norm, 保存的话会将TPM矩阵覆盖至原本已经保存的norm文件中)</span>
+df_tpm<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_tpm<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token operator">/</span>np<span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span>df_tpm<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span>axis<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>values<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">1e6</span>
+df_tpm<span class="token punctuation">[</span><span class="token string">'normalizationMethod'</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token string">'TPM from FPKM data'</span>
+df_tpm<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<ol start="2">
+<li><strong>log2(TPM+1)  转 TPM</strong></li>
+</ol>
+<pre><code class="prism language-python">df_tpm <span class="token operator">=</span> df_norm <span class="token comment">##直接将df_norm赋给df_tpm. (注意：运行完这步之后千万别再保存df_norm到文件中，因为后续对df_tpm的操作同时也会修改df_norm, 保存的话会将TPM矩阵覆盖至原本已经保存的norm文件中)</span>
+df_tpm<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_tpm<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token builtin">apply</span><span class="token punctuation">(</span>np<span class="token punctuation">.</span>exp2<span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span> <span class="token comment">##如果是ln(TPM+1) --&gt; TPM,则直接将.apply(np.exp2)-1改为.apply(np.expm1)</span>
+df_tpm<span class="token punctuation">[</span><span class="token string">'normalizationMethod'</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token string">'TPM from log2(TPM+1) data'</span>
+df_tpm<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<ol start="3">
+<li><strong>log2(FPKM+1)  转 TPM</strong></li>
+</ol>
+<pre><code class="prism language-python">df_tpm <span class="token operator">=</span> df_norm<span class="token comment">##直接将df_norm赋给df_tpm. (注意：运行完这步之后千万别再保存df_norm到文件中，因为后续对df_tpm的操作同时也会修改df_norm, 保存的话会将TPM矩阵覆盖至原本已经保存的norm文件中)</span>
+df_tpm<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_tpm<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token builtin">apply</span><span class="token punctuation">(</span>np<span class="token punctuation">.</span>exp2<span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span>
+df_tpm<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_tpm<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token operator">/</span>np<span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span>df_tpm<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span>axis<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>values<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">1e6</span>
+df_tpm<span class="token punctuation">[</span><span class="token string">'normalizationMethod'</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token string">'TPM from log2(FPKM+1) data'</span>
+</code></pre>
+<hr>
+<h4><a id="_56"></a>情况二：稀疏矩阵</h4>
+<blockquote>
+<p>一般细胞数在5000以上就需要存成稀疏矩阵，这样方便后续的操作，因为后面绝大多数的自动函数都需要读取TPM矩阵，保存常规矩阵会运行得特别慢。</p>
+</blockquote>
+<h5><a id="21__58"></a><strong>情况2.1: 单个稀疏矩阵</strong></h5>
+<p><em>建议直接读取稀疏矩阵后就保存。也可以直接对稀疏矩阵进行操作（矩阵切片提取部分细胞、FPKM转TPM等）后再保存</em></p>
+<ul>
+<li><strong>例子1:</strong> 数据不需要做任何操作，直接读取然后保存</li>
+</ul>
+<pre><code class="prism language-python"><span class="token keyword">from</span> scipy <span class="token keyword">import</span> sparse
+<span class="token keyword">from</span> scipy<span class="token punctuation">.</span>sparse <span class="token keyword">import</span> coo_matrix
+<span class="token keyword">from</span> scipy<span class="token punctuation">.</span>io <span class="token keyword">import</span> mmread<span class="token punctuation">,</span> mmwrite<span class="token punctuation">,</span> mminfo
+<span class="token keyword">from</span> scipy<span class="token punctuation">.</span>sparse <span class="token keyword">import</span> coo_matrix<span class="token punctuation">,</span> hstack<span class="token punctuation">,</span>vstack
+<span class="token comment">##读取稀疏矩阵三个关键文件</span>
+cellID_raw<span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'../downloaded_data/E-MTAB-8483.aggregated_filtered_counts.mtx_cols'</span><span class="token punctuation">,</span>header<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span>names<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'cellID'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+genes_raw  <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'../downloaded_data/E-MTAB-8483.aggregated_filtered_counts.mtx_rows'</span><span class="token punctuation">,</span>sep<span class="token operator">=</span><span class="token string">'\t'</span><span class="token punctuation">,</span>header<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span>names<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'ENSMUG1'</span><span class="token punctuation">,</span><span class="token string">'ENSMUG2'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment">##这里需要先读取基因文件查看文件格式，然后视情况自行对names进行修改</span>
+coo_mtx_raw <span class="token operator">=</span>mmread<span class="token punctuation">(</span><span class="token string">'../downloaded_data/E-MTAB-8483.aggregated_filtered_counts.mtx'</span><span class="token punctuation">)</span>
+
+<span class="token comment">##单独提取cellID和gene</span>
+genes <span class="token operator">=</span> genes_raw<span class="token punctuation">[</span><span class="token string">'ENSMUG1'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+cellID <span class="token operator">=</span> cellID_raw<span class="token punctuation">[</span><span class="token string">'cellID'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment">#保存结果。 读取的矩阵一般都是行为基因，列为样本。咱们保存的正好相反。所以需要转置</span>
+my_builder<span class="token punctuation">.</span>save_template_mtx<span class="token punctuation">(</span>mtx<span class="token operator">=</span>coo_mtx_raw<span class="token punctuation">.</span>T<span class="token punctuation">,</span> mtx_name<span class="token operator">=</span><span class="token string">'expressionMatrix_rawCounts.mtx'</span><span class="token punctuation">,</span> genes<span class="token operator">=</span>genes<span class="token punctuation">,</span> cellID<span class="token operator">=</span>cellID<span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li><strong>例子2:</strong> 需要提取部分细胞（直接对稀疏矩阵进行细胞筛选）</li>
+</ul>
+<pre><code class="prism language-python"><span class="token keyword">from</span> scipy <span class="token keyword">import</span> sparse
+<span class="token keyword">from</span> scipy<span class="token punctuation">.</span>sparse <span class="token keyword">import</span> coo_matrix
+<span class="token keyword">from</span> scipy<span class="token punctuation">.</span>io <span class="token keyword">import</span> mmread<span class="token punctuation">,</span> mmwrite<span class="token punctuation">,</span> mminfo
+<span class="token keyword">from</span> scipy<span class="token punctuation">.</span>sparse <span class="token keyword">import</span> coo_matrix<span class="token punctuation">,</span> hstack<span class="token punctuation">,</span>vstack
+<span class="token comment">##读取稀疏矩阵三个关键文件</span>
+cellID_raw<span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'../downloaded_data/E-MTAB-8483.aggregated_filtered_counts.mtx_cols'</span><span class="token punctuation">,</span>header<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span>names<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'cellID'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+genes_raw  <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'../downloaded_data/E-MTAB-8483.aggregated_filtered_counts.mtx_rows'</span><span class="token punctuation">,</span>sep<span class="token operator">=</span><span class="token string">'\t'</span><span class="token punctuation">,</span>header<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span>names<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'ENSMUG1'</span><span class="token punctuation">,</span><span class="token string">'ENSMUG2'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment">##这里需要先读取基因文件查看文件格式，然后视情况自行对names进行修改</span>
+coo_mtx_raw <span class="token operator">=</span>mmread<span class="token punctuation">(</span><span class="token string">'../downloaded_data/E-MTAB-8483.aggregated_filtered_counts.mtx'</span><span class="token punctuation">)</span>
+genes <span class="token operator">=</span> genes_raw<span class="token punctuation">[</span><span class="token string">'ENSMUG1'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment">####直接对稀疏矩阵进行细胞筛选（例如我们只提取第55列到61列进行保存）</span>
+cellID <span class="token operator">=</span> cellID_raw<span class="token punctuation">[</span><span class="token string">'cellID'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+filter_list <span class="token operator">=</span> cellID<span class="token punctuation">[</span><span class="token number">56</span><span class="token punctuation">:</span><span class="token number">60</span><span class="token punctuation">]</span>
+<span class="token comment">###提权被筛选细胞的索引</span>
+cellID_index <span class="token operator">=</span> <span class="token punctuation">[</span>cellID<span class="token punctuation">.</span>index<span class="token punctuation">(</span>i<span class="token punctuation">)</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> cellID <span class="token keyword">if</span> i <span class="token keyword">in</span> filter_list<span class="token punctuation">]</span>
+<span class="token comment">##获得筛选后的cellID</span>
+cellID_filter <span class="token operator">=</span> <span class="token punctuation">[</span>cellID<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> cellID_index<span class="token punctuation">]</span>	
+<span class="token comment">##基于cellID的索引对提取稀疏矩阵中的子列</span>
+coo_mtx_raw_filter <span class="token operator">=</span> coo_mtx_raw<span class="token punctuation">.</span>tocsr<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span>cellID_index<span class="token punctuation">]</span>	
+<span class="token comment">##提取的稀疏矩阵，type 为scipy.sparse.csr.csr_matrix，需要需要转化一些方便储存</span>
+coo_mtx_raw_filter <span class="token operator">=</span> sparse<span class="token punctuation">.</span>coo_matrix<span class="token punctuation">(</span>coo_mtx_raw_filter<span class="token punctuation">)</span>
+
+<span class="token comment">##保存结果。 读取的矩阵一般都是行为基因，列为样本。咱们保存的正好相反。所以需要转置</span>
+my_builder<span class="token punctuation">.</span>save_template_mtx<span class="token punctuation">(</span>mtx<span class="token operator">=</span>coo_mtx_raw_filter<span class="token punctuation">.</span>T<span class="token punctuation">,</span> mtx_name<span class="token operator">=</span><span class="token string">'expressionMatrix_rawCounts.mtx'</span><span class="token punctuation">,</span> genes<span class="token operator">=</span>genes<span class="token punctuation">,</span> cellID<span class="token operator">=</span>cellID_filter<span class="token punctuation">)</span>
+</code></pre>
+<hr>
+<h5><a id="22__107"></a><strong>情况2.2: 多个稀疏矩阵直接进行拼接再保存</strong></h5>
+<blockquote>
+<p><strong>稀疏矩阵越多越有必要使用此种方式处理。常规的转换成常规矩阵再拼接，内存压力太大，速度太慢容易崩溃。（5星推荐）</strong></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>例子如下：整个过程分三段</li>
+</ul>
+<ol>
+<li>循环匹配文件名并对文件名排序</li>
+<li>基于提取的文件名循环读取稀疏矩阵获取稀疏矩阵list</li>
+<li>合并所有稀疏矩阵</li>
+</ol>
+</blockquote>
+<pre><code class="prism language-python"><span class="token comment">###循环匹配文件，稀疏矩阵读取</span>
+<span class="token keyword">import</span> fnmatch
+
+filetxt_genes <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+filetxt_barcodes <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+filetxt_matrix <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+root_dir <span class="token operator">=</span> <span class="token string">'../downloaded_data/GSE_supplementary_data/GSE111360_RAW/'</span><span class="token comment">#此处的路径要做对应的修改</span>
+<span class="token keyword">for</span> root<span class="token punctuation">,</span>dirs<span class="token punctuation">,</span>files <span class="token keyword">in</span> os<span class="token punctuation">.</span>walk<span class="token punctuation">(</span>root_dir<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> <span class="token builtin">file</span> <span class="token keyword">in</span> files<span class="token punctuation">:</span>
+        <span class="token keyword">if</span> fnmatch<span class="token punctuation">.</span>fnmatch<span class="token punctuation">(</span><span class="token builtin">file</span><span class="token punctuation">,</span> <span class="token string">'*genes.tsv.gz'</span><span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token comment">###匹配对应的gene文件，看情况修改</span>
+            filetxt_genes<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token builtin">file</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> fnmatch<span class="token punctuation">.</span>fnmatch<span class="token punctuation">(</span><span class="token builtin">file</span><span class="token punctuation">,</span> <span class="token string">'*barcodes.tsv.gz'</span><span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token comment">###匹配对应的barcodes文件，看情况修改</span>
+            filetxt_barcodes<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token builtin">file</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> fnmatch<span class="token punctuation">.</span>fnmatch<span class="token punctuation">(</span><span class="token builtin">file</span><span class="token punctuation">,</span> <span class="token string">'*matrix.mtx.gz'</span><span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token comment">###匹配对应的matrix文件，看情况修改</span>
+            filetxt_matrix<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token builtin">file</span><span class="token punctuation">)</span>
+
+<span class="token comment">###排序文件，保持文件一致（这段代码非常重要，不进行排序可能直接导致barcode和矩阵数据不对应，到时候错都不知道错在哪）</span>
+filetxt_genes<span class="token punctuation">.</span>sort<span class="token punctuation">(</span><span class="token punctuation">)</span>
+filetxt_genes
+
+filetxt_barcodes<span class="token punctuation">.</span>sort<span class="token punctuation">(</span><span class="token punctuation">)</span>
+filetxt_barcodes
+
+filetxt_matrix<span class="token punctuation">.</span>sort<span class="token punctuation">(</span><span class="token punctuation">)</span>
+filetxt_matrix
+
+<span class="token comment">###循环读取稀疏矩阵，获取稀疏矩阵list  dataframe_list </span>
+<span class="token keyword">from</span> scipy <span class="token keyword">import</span> sparse
+<span class="token keyword">from</span> scipy<span class="token punctuation">.</span>sparse <span class="token keyword">import</span> coo_matrix
+<span class="token keyword">from</span> scipy<span class="token punctuation">.</span>io <span class="token keyword">import</span> mmread<span class="token punctuation">,</span> mmwrite<span class="token punctuation">,</span> mminfo
+<span class="token keyword">from</span> scipy<span class="token punctuation">.</span>sparse <span class="token keyword">import</span> coo_matrix<span class="token punctuation">,</span> hstack<span class="token punctuation">,</span>vstack
+<span class="token keyword">import</span> re
+dataframe_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+cellID <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token builtin">len</span><span class="token punctuation">(</span>filetxt_barcodes<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+    path_cellfile<span class="token operator">=</span> root_dir <span class="token operator">+</span> filetxt_barcodes<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+    path_genefile<span class="token operator">=</span> root_dir <span class="token operator">+</span> filetxt_genes<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+    path_matrix<span class="token operator">=</span> root_dir <span class="token operator">+</span> filetxt_matrix<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+    df1 <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span>path_cellfile <span class="token punctuation">,</span>header<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span>names<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'cellID'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Read cellFile!!"</span><span class="token punctuation">)</span>
+    barcodes <span class="token operator">=</span> df1<span class="token punctuation">[</span><span class="token string">'cellID'</span><span class="token punctuation">]</span>
+    barcodes <span class="token operator">=</span> <span class="token punctuation">(</span>re<span class="token punctuation">.</span>sub<span class="token punctuation">(</span><span class="token string">'_.+$'</span><span class="token punctuation">,</span><span class="token string">'_'</span><span class="token punctuation">,</span>filetxt_barcodes<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">+</span> barcodes<span class="token punctuation">)</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token comment">###这里是为了区分样本的cellID,便于后期cellAnnotion的处理，需要看情况修改</span>
+    cellID<span class="token punctuation">.</span>extend<span class="token punctuation">(</span>barcodes<span class="token punctuation">)</span>
+    df2 <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span>path_genefile <span class="token punctuation">,</span>sep<span class="token operator">=</span><span class="token string">"\t"</span><span class="token punctuation">,</span>header<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span>names<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'ensemblID'</span><span class="token punctuation">,</span><span class="token string">'geneSymbol'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token comment">###先查看一下gene文件的格式，如果第一列是ensemblID，第二列是geneSymbol就不用修改</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Read geneFile!!"</span><span class="token punctuation">)</span>
+    gene <span class="token operator">=</span> df2<span class="token punctuation">[</span><span class="token string">'ensemblID'</span><span class="token punctuation">]</span> <span class="token comment">##根据df2的格式修改</span>
+    gene <span class="token operator">=</span> gene<span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    coo_mtx <span class="token operator">=</span> mmread<span class="token punctuation">(</span>path_matrix<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Read matrix!!"</span><span class="token punctuation">)</span>
+    dataframe_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>coo_mtx<span class="token punctuation">.</span>T<span class="token punctuation">)</span><span class="token comment">##千万别忘记转置，目前我们碰到的稀疏矩阵都需要转置</span>
+
+<span class="token comment">##直接将dataframe_list中的稀疏矩阵合并</span>
+mtx_data <span class="token operator">=</span> vstack<span class="token punctuation">(</span>dataframe_list<span class="token punctuation">)</span>
+
+<span class="token comment">#然后用脚本上的代码保存mtx_data、gene、cellID就好了</span>
+my_builder<span class="token punctuation">.</span>save_template_mtx<span class="token punctuation">(</span>mtx<span class="token operator">=</span>mtx_data<span class="token punctuation">,</span> mtx_name<span class="token operator">=</span><span class="token string">'expressionMatrix_rawCounts.mtx'</span><span class="token punctuation">,</span> genes<span class="token operator">=</span>gene<span class="token punctuation">,</span> cellID<span class="token operator">=</span>cellID<span class="token punctuation">)</span>
+</code></pre>
+<hr>
+<h1><a id="cellAnnotion_176"></a>二、cellAnnotion处理</h1>
+<blockquote>
+<p>此部分处理的关键是找到cellID和sample中某一列的对应关系（一般是title）</p>
+</blockquote>
+<ul>
+<li><strong>例子1:</strong> 最简单的方式就是cellID刚好能够和title对应，那么基于两者完成两个dataframe的匹配即可；</li>
+</ul>
+<blockquote>
+<p>匹配不建议使用loc加循环的方式去做，速度特别慢，这里推荐使用pd.merge实现df_cell和sample的匹配</p>
+</blockquote>
+<pre><code class="prism language-python"><span class="token comment">##初始化df_cell矩阵，这里就是模板中的代码</span>
+df_cell <span class="token operator">=</span> my_builder<span class="token punctuation">.</span>read_template_tsv<span class="token punctuation">(</span>cellAnnotation<span class="token punctuation">)</span>
+df_tpm <span class="token operator">=</span> my_builder<span class="token punctuation">.</span>read_template_tsv<span class="token punctuation">(</span>expressionMatrix_TPM<span class="token punctuation">)</span>
+df_tpm<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span>
+df_cell<span class="token punctuation">[</span><span class="token string">'cellID'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_tpm<span class="token punctuation">[</span><span class="token string">'cellID'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+df_cell<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8yMzI0NzQ1Mi1mMDA5MGM3NGU4YjhmMGExLnBuZw?x-oss-process=image/format,png" alt="2.1.png"></p>
+<pre><code class="prism language-python"><span class="token comment">###读取sample</span>
+sample <span class="token operator">=</span> my_builder<span class="token punctuation">.</span>sample_info<span class="token punctuation">(</span>GSE <span class="token operator">=</span> <span class="token string">'GSE130812'</span><span class="token punctuation">)</span>
+sample<span class="token punctuation">.</span>iloc<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token comment">##使用这种方式去查看sample中的条目，便于匹配，也便于后面条目的填写</span>
+</code></pre>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8yMzI0NzQ1Mi1mYmMyZjU1NmMzZGJiNmExLnBuZw?x-oss-process=image/format,png" alt="2.2.png"></p>
+<p><strong>关键步骤，使用使用pd.merge实现df_cell和sample的匹配</strong></p>
+<pre><code class="prism language-python"><span class="token comment">##重点：使用pd.merge实现df_cell和sample的匹配（这里使用最简单的情况：cellID和sample中的title能够匹配）</span>
+df_cell_tmp <span class="token operator">=</span> pd<span class="token punctuation">.</span>merge<span class="token punctuation">(</span>df_cell<span class="token punctuation">,</span>sample<span class="token punctuation">,</span> how <span class="token operator">=</span> <span class="token string">'left'</span><span class="token punctuation">,</span>left_on<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'cellID'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> right_on<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'title'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  
+df_cell_tmp<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token comment">###df_cell和sample合并，创建df_cell_tmp。</span>
+<span class="token comment">#df_cell_tmp中包含了df_cell和sample中所有的列，其cellID顺序和df_cell中的一致。</span>
+
+<span class="token comment">#这时我们只要将df_cell_tmp中的条目直接填入df_cell中即可，如下：</span>
+df_cell<span class="token punctuation">[</span><span class="token string">'meta_sourceName'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_cell_tmp<span class="token punctuation">[</span><span class="token string">'source_name_ch1'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+df_cell<span class="token punctuation">[</span><span class="token string">'meta_tissue'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_cell_tmp<span class="token punctuation">[</span><span class="token string">'characteristics_ch1.2.tissue'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+df_cell<span class="token punctuation">[</span><span class="token string">'meta_genotype'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_cell_tmp<span class="token punctuation">[</span><span class="token string">'characteristics_ch1.1.genotype'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+df_cell<span class="token punctuation">[</span><span class="token string">'clusterID'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'notAvailable'</span>
+df_cell<span class="token punctuation">[</span><span class="token string">'clusterName'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'notAvailable'</span>
+df_cell<span class="token punctuation">[</span><span class="token string">'sampleID'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_cell_tmp<span class="token punctuation">[</span><span class="token string">'geo_accession'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+df_cell<span class="token punctuation">[</span><span class="token string">'cellOntologyName'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'pro-T cell'</span>
+df_cell<span class="token punctuation">[</span><span class="token string">'cellOntologyID'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'CL:0000827'</span>
+df_cell<span class="token punctuation">[</span><span class="token string">'FACSMarker'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_cell_tmp<span class="token punctuation">[</span><span class="token string">'characteristics_ch1.3.facs purification gate'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+df_cell<span class="token punctuation">[</span><span class="token string">'tSNE1'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">''</span><span class="token comment"># 从文章提供的表格或者其他数据来源中查找tSNE信息填入，若无再使用6中的函数生成</span>
+df_cell<span class="token punctuation">[</span><span class="token string">'tSNE2'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">''</span>
+</code></pre>
+<p><strong>补充说明：</strong></p>
+<ol>
+<li>pd.merge中的how参数推荐使用left（df_cell在左边）。原因是pd.merge会根据how的参数对合并的结果进行自动排序。如果how='left’则合并结果会与df_cell的原始顺序一致，不会打乱顺序，也不会丢失结果。即使在df_cell中有个别cellID与sample无法匹配，这参数也能保证cellID位置不变（只不过合并结果的其它列都为NAN）</li>
+<li>当cellID和sample中的列无法直接匹配时就得自己想办法处理了，这里千万要仔细。多数情况是能找到匹配线索的，此时可以在sample中添加一列，将线索转化为一列信息然后用于合并就行</li>
+<li>同理，如果有cluster文件，也可以使用此方法将df_cell和cluster文件进行匹配</li>
+</ol>
+<hr>
+<h1><a id="marker_232"></a>三、快速填写marker基因</h1>
+<h4><a id="1_markerGene_233"></a>情况1： markerGene文件以一个表格的形式存放，如下图：</h4>
+<pre><code class="prism language-python">cellMarker <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'../downloaded_data/GSE_supplementary_data/markerGene_C1.txt'</span><span class="token punctuation">,</span>sep<span class="token operator">=</span><span class="token string">'\t'</span><span class="token punctuation">)</span>
+cellMarker<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8yMzI0NzQ1Mi05NjRhNmQ2Zjk0ZWZjMGM4LnBuZw?x-oss-process=image/format,png" alt="3.1.png"></p>
+<pre><code class="prism language-python">markerGenes <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+cellMarker <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'../downloaded_data/GSE_supplementary_data/GSE111360_RAW/cellMarker.txt'</span><span class="token punctuation">,</span>sep<span class="token operator">=</span><span class="token string">'\t'</span><span class="token punctuation">)</span>
+cellMarker<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">for</span> name<span class="token punctuation">,</span>group <span class="token keyword">in</span> cellMarker<span class="token punctuation">.</span>groupby<span class="token punctuation">(</span><span class="token string">'cluster'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>group<span class="token punctuation">[</span><span class="token string">'gene'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    markerGenes<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token comment">#cluster1为clusterName，每个clusterName都要有以下五个keywords</span>
+<span class="token comment"># 下面等号右边填为List格式，且长度一致，没有的填notAvailable，也需为list格式</span>
+    markerGenes<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'geneSymbol'</span><span class="token punctuation">]</span> <span class="token operator">=</span> group<span class="token punctuation">[</span><span class="token string">'gene'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    markerGenes<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'ensemblID'</span><span class="token punctuation">]</span> <span class="token operator">=</span> my_builder<span class="token punctuation">.</span>calculate_ensemblID<span class="token punctuation">(</span>group<span class="token punctuation">[</span><span class="token string">'gene'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    markerGenes<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'pValue'</span><span class="token punctuation">]</span> <span class="token operator">=</span> group<span class="token punctuation">[</span><span class="token string">'p_val'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    markerGenes<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'statistics'</span><span class="token punctuation">]</span> <span class="token operator">=</span> group<span class="token punctuation">[</span><span class="token string">'avg_logFC'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token comment"># 统计量</span>
+    markerGenes<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'statisticsType'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'wilcoxon'</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>group<span class="token punctuation">[</span><span class="token string">'gene'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+</code></pre>
+<h4><a id="2_markerGeneExcelsheetclusterName_257"></a>情况2： markerGene文件以多重Excel表格的形式存放,不同的sheet用对应的clusterName表示，如下图：</h4>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8yMzI0NzQ1Mi0xNzY4NGNmZDNjODExNzg5LnBuZw?x-oss-process=image/format,png" alt="3.2.png"></p>
+<pre><code class="prism language-python"><span class="token comment">##分开的文件保存marker基因	</span>
+clusters <span class="token operator">=</span> <span class="token builtin">set</span><span class="token punctuation">(</span>df_cell<span class="token punctuation">[</span><span class="token string">'clusterID'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+markerGenes <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> clusters<span class="token punctuation">:</span>
+    df_marker <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_excel<span class="token punctuation">(</span><span class="token string">'../downloaded_data/GSE_supplementary_data/GSE118257_markerGenes.xlsx'</span><span class="token punctuation">,</span> sheet_name <span class="token operator">=</span> i<span class="token punctuation">)</span>
+    markerGenes<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    markerGenes<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'geneSymbol'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_marker<span class="token punctuation">[</span><span class="token string">'gene'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    markerGenes<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'pValue'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_marker<span class="token punctuation">[</span><span class="token string">'p_val'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    markerGenes<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'statistics'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df_marker<span class="token punctuation">[</span><span class="token string">'avg_logFC'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    markerGenes<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'ensemblID'</span><span class="token punctuation">]</span> <span class="token operator">=</span> my_builder<span class="token punctuation">.</span>calculate_ensemblID<span class="token punctuation">(</span>markerGenes<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'geneSymbol'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    markerGenes<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'statisticsType'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'FScore'</span><span class="token punctuation">]</span><span class="token operator">*</span><span class="token builtin">len</span><span class="token punctuation">(</span>markerGenes<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'geneSymbol'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+</code></pre>
+<p><strong>补充说明：</strong></p>
+<ol>
+<li>绝大多数时候都是情况1，当碰见其他情况是，可以考虑手动将它们处理成上述两种情况再进行处理，速度会快很多；</li>
+<li>两种情况都要保证cluster列和cellAnnotation中的clusterName相匹配（除非cellAnnotation中的cluster是用函数自动生成的）</li>
+</ol>
+</div>
+</body>
+
+</html>
