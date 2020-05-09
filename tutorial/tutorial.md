@@ -162,7 +162,7 @@ http://118.190.148.166/biodb/dataset_curation/
 
 
 ## 4.	Matrix
-### 注：当只提供了rawcounts文件的时候需要把矩阵存成mtx格式，一旦存了mtx格式，所有矩阵都需要存成mtx格式。 
+### 注：当文献里面细胞数目超过1 万时，需要把矩阵存成mtx格式，一旦存了mtx格式，所有矩阵都需要存成mtx格式。 
 
 #### 从 Matrix_rawCounts 或 Matrix_normalized 生成 TPM
 注意：Matrix_normalized 优先于 Matrix_rawCounts 使用生成TPM。
