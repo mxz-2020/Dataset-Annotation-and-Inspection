@@ -105,6 +105,9 @@ http://118.190.148.166/biodb/dataset_curation/
 - immunology：填True or False
 - cellAtlas： 填True or False （遗传图谱）
 - tSNEAvailability：填True or False, 意思是能否找到tSNE的坐标信息
+- isBadtSNE: 填True or False,由6中的tSNEplot画出图形判断
+- UMAPAvailability: 填True or False,意思是能否找到UMAP的坐标信息，同样需要发邮件
+- isBadUMAP: 填True or False,由6中的UMAPplot画出图形判断
 - （新加入）isCultured：填True or False，意思是scRNA-seq所用的细胞是作者自己传代培养的细胞系（True）的还是原代细胞（False）。
 - （新加入）isTPMNotAvailable：填True or False。这个字段的意思时问这个数据集中的TPM矩阵是否是真正的TPM矩阵？因为：Some articles provide norm matrix only and cannot generate TPM (we can only treat the norm as if it is TPM)，找不到真正的TPM矩阵的时候填上True。但在矩阵的normalizationMethod这一列里要标注清楚'Copied from norm'，表示这个不是TPM矩阵！
 - （新加入）diseaseOntology：在https://disease-ontology.org/中寻找disease_name。
@@ -162,7 +165,7 @@ http://118.190.148.166/biodb/dataset_curation/
 
 
 ## 4.	Matrix
-### 注：当只提供了rawcounts文件的时候需要把矩阵存成mtx格式，一旦存了mtx格式，所有矩阵都需要存成mtx格式。 
+### 注：当文献里面细胞数目超过1 万时，需要把矩阵存成mtx格式，一旦存了mtx格式，所有矩阵都需要存成mtx格式。 
 
 #### 从 Matrix_rawCounts 或 Matrix_normalized 生成 TPM
 注意：Matrix_normalized 优先于 Matrix_rawCounts 使用生成TPM。
