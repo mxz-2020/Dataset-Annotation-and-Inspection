@@ -387,20 +387,34 @@ cluster如果是用函数生成的话会多出两列：clusteringMethod和cluste
 ## 一审
 负责人：门语实
 派发步骤：
-1.	一审人员（只可以在正式员工里面选择哦！）在确定每周要发包的数据集有哪些之后，需要给每个数据集分part，并保证每个数据集下面只有相应的part需要用的GEO数据信息，并写出一部分unstructuredData的内容在数据集文件夹下的descriptio.txt中。
+### 初筛
+前一周周五下发下一周需要的筛选的数据集总表，周日晚九点完成填写。预计平均每人每次有15-25个需要分类的文章。一审同学可通过浏览文章 title 和 abstract 确定文章是否符合相关主题，是否可以使用。列表回收后门语实会检查文章分类和可用性，并根据数据集是否已经被标注筛选新的下发文章。一审同学将对个人初筛的文章进行一审。在最终确定文章是否是用前，初筛不需要检查 cluster、tSNE、UMAP 等信息。
+当前数据收集目录：scRNA-seq, snRNA-seq, CITE-seq, CAR-T, TCR-seq, BCR-seq.
+
+对于可以使用的文章，请填写表格中需要填写的空白项目，包括：PMID, accessionNumber, topic, queue, featurePublication, isDiscarded, discardedReason, others.
+
+accessionNumber: 填写文章做tSNE、UMAP 或者基因热图使用的所有数据编号（一般就是所有作者自己产生的新数据，如果是用了别人的数据做了以上三种图，请一并填写，并在 others 列里备注哪个数据属于别人，e.g. GSE12345 from PMID:13579 for fig.1-a）。accessionNumber 用英文逗号隔开，中间没有空格。如果涉及网址，请粘贴网址。如果文章属于可使用文章，但没有数据号且未提供下载链接，则填写notAvailable；如果文章不属于可使用文章则 accessionNumber 填写“-”。填写示例：GSE12345,GSE67890,GSE13579 全为英文符号且中间没有空格。
+
+topic: 仅填写文章主题关键词即可，例如：cancer, liver, heart, aorta, eye, brain, neuroscience, immunology, cell atlas, etc. queue 1: cancer, immunology, organs (e.g. heart, lung, liver…), neuroscience, cell atlas, regeneration 等等，检测、治疗学相关，或者其他所有看起来有商业价值的东西都是 queue 1. queue 2: differentiation (mammal), differentiation (non-mammal, 但是仅限于nature, cell, science上关于脊椎动物的研究), somatic, 等等其他不是很重要的东西。queue 3: 作者自己产生了新数据的方法学研究。queue 4-5: 其他各种不重要的东西，比如关于线虫的研究可以是 queue 5。queue 6: methodology，方法学，且作者只用了别人的数据。另：每篇文章可以有多个topic，比如 (cancer, cancer immunology), (eye, neurosciences), 等等组合。
+
+queue: 参见 topic queue
+
+featurePublication: therapy, therapy resistance, testing or prediction 等等很有医学或药物研究、检测用处的相关文章，填写 TRUE or FALSE。
+
+isDiscarded: TRUE/FALSE
+
+discardedReason: 被discaded的文章填写此项。参考以下字段填写：not scRNA-seq, ATAC-seq only,… 一切数据不能使用的原因，可以是主题过差，比如研究了蟒蛇、酵母…。被保留的文章填写“-”。
+
+others: 如果某数据在未来公开则需填写此项，e.g. GSE12345 available on 2020.06.01。对于方法学的文章，如果作者只用了别人的数据，则把被使用的数据号填写在这里。方法学文章如果找不到accessionNumber则 others 空着。对于其他类型的文章，如果作者借鉴了别人用到数据，但是借鉴的数据并没有用于 tSNE、UMAP 或者基因热图，则不用填写。
+
+1.	一审人员在确定每周要发包的数据集有哪些之后，需要给每个数据集分part，并保证每个数据集下面只有相应的part需要用的GEO数据信息，并写出一部分unstructuredData的内容在数据集文件夹下的descriptio.txt中。
 2.	由实习生标注的时候把相应内容黏贴到数据集里，防止直接写到文简里被随意更改掉。
 3.	记录到本地检查表格中，并把表格交给二审负责人，并把分好part的数据集，放入二审负责人用户下文件夹里
-## 一审内容：
+### 一审内容：
  - Part 分类方法(在把数据集下发给实习生之前就已分好)：
-    分part只可以正式的审核人员来管理。
+    分part实际操作：和原作者一致即可，避免 part 划分人员的主观判断。
 
-    实际操作：和原作者一致即可，避免 part 划分人员的主观判断。
-
-    总原则：不同测序方法要分开，不同物种分开。例：part_1: human, part_2: mouse.
-
-    细化：不同细胞大类可以作为一个part。例：part_1: T cell, part_2: B cell.
-
-    - 1) 最主要的还是根据文章中的聚类分析来进行分part，不管分了几次聚类分析，只要cluster和tSNE/UMAP等的相关信息齐全，就可以算是一个part。
+    - 1) 最主要根据文章中的聚类分析来进行分part，不管分了几次聚类分析，只要cluster和tSNE/UMAP等的相关信息齐全，就可以算是一个part。
     - 2） 如果信息不那么齐全 
         - 若是文中进行了2次独立的聚类分析，那么应该将数据拆分成2个part。
         - 但是，如果part2的聚类分析是对part1聚类中的某一簇细胞进行的再聚类，只算一个part。
@@ -419,6 +433,39 @@ cluster如果是用函数生成的话会多出两列：clusteringMethod和cluste
 
     - correspondingFigure：这里填写该数据对应的文章tSNE聚类图，格式为形如"1-a"，意思为figure1的图a，如果是附录里面的图，可以填写成“s1-a”的形式，ExtendedData里面发现的图可以填写成：”'extended2-a' 这种形式，没有对应的图填notAvailable。
 
+Literature alignment, 包括根据作者聚类进行的 part 划分，data/code availability or supplementary files 中附加数据的检查和每个 part 使用数据的整理 (相应 part 文件夹中应仅包含该 part 使用的数据)。
+
+注意除了 data availability 和 supplementary files 以外，需要特别查看 code availability 里面有没有 GitHub 或者其他可能有数据的网站链接，里面有时会有诸如 cluster 信息、tSNE、UMAP 坐标等等的东西，请进行下载，并加入 downloaded data 文件夹。
+
+对于可能有划分 part 问题的文章请联系门语实确认。一审结束后交由张萌栩下发标注，会有无规律一审质检。
+
+聚类的意义：所有实验的最终目的是区分不同的细胞并找到它们之间的差异基因 (candidate drug targets marker genes)。tSNE 和 UMAP 的作用就是通过调节参数把不同类型的细胞分开，同类型细胞归为一组。每一类细胞有他们的特异基因，作者的 tSNE 和 UMAP 的好坏标志着细胞分类是否正确合理，同时展现了根据该聚类结果得到的 marker genes 的正确性。
+
+Part 划分方法：遵循原作，对于每次作者的重新聚类都应建立相应 part。注意区分作者给的图同一个 tSNE 遮盖部分细胞后分别显示控制组和实验组，还是真正的分别聚类。一般如果作者没有特别声明，且两个图中同类型细胞的位置相差无几，那么它们大概率是遮盖部分细胞显示，不需要分。
+(调参工作复杂漫长，一般在两个不同图的调参中很难保持各类型细胞的绝对位置。)
+
+一审进行时需填写 description 文件，内容及格式如下：
+
+title:
+PMID:
+
+part_n 仅一个part省去 subDataset 和 description
+subDataset-n
+description:The original article contains N subDatasets, which are different by species/library preparation method/tissues/cells/protocols (放用于区分part的关键词). This subDataset is based on human/mouse data/xxx tissue/xxx cells/xxx method (填写part间的区别信息).
+correspondingFigure:1-a
+
+tissue:
+
+clusterAvailability:
+tSNEAvailability:
+UMAPAvailability:
+
+以上三项如果是 TRUE 则需要在 downloaded data 里面有相应文件，可以自行下载后上传，或者使用 linux 命令 nohup wget xxxx(网址链接) > log.txt & 后台下载到 downloaded data 文件夹，生成的 log.txt 日志请检查是否显示 100% 下载完成，确认下载无误请删去 log.txt。如有下载问题请联系我们。非后台下载：cd 到 downloaded data 文件夹直接使用 wget xxxx(链接) 会自动显示下载百分比。
+
+genomeBuild:
+taxonomyID:
+libraryPreparationMethod:
+sequencingPlatform:
 
 ## 二审：
 负责人：张萌栩 
