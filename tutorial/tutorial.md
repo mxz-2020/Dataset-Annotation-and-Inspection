@@ -110,7 +110,7 @@ http://118.190.148.166/biodb/dataset_curation/
 - isBadUMAP: 填True or False,由6中的UMAPplot画出图形判断
 - （新加入）isCultured：填True or False，意思是scRNA-seq所用的细胞是作者自己传代培养的细胞系（True）的还是原代细胞（False）。
 - （新加入）isTPMNotAvailable：填True or False。这个字段的意思时问这个数据集中的TPM矩阵是否是真正的TPM矩阵？因为：Some articles provide norm matrix only and cannot generate TPM (we can only treat the norm as if it is TPM)，找不到真正的TPM矩阵的时候填上True。但在矩阵的normalizationMethod这一列里要标注清楚'Copied from norm'，表示这个不是TPM矩阵！
-- （新加入）diseaseOntology：在https://disease-ontology.org/中寻找disease_name。
+- （新加入）diseaseOntology：在https://www.ebi.ac.uk/ols/ontologies/doid中寻找disease_name。
     ![](figure-2.png)
 - （当cancer为True时需要填写）cancerDescription：按照script脚本里面的要求填写，文章不是cancer相关可以不填
    ![](figure-3.png)
