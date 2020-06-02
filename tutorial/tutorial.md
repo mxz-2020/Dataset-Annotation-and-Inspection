@@ -358,11 +358,11 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 
 ### (2) cellAnnotation（以下情形为矩阵未改动的情形，如矩阵变动参考1.1）
 ### (2.1) clusterName改动，需要重新运行：
-my_builder.auto_calculation()
-my_downsample.downsample(tpm_downsampled = True)
+  -my_builder.auto_calculation()
+  -my_downsample.downsample(tpm_downsampled = True)
 ### (2.2) clusterName没变，其他部分变动
-不需要运行其他代码
-my_downsample.downsample(tpm_downsampled = True)
+  -不需要运行其他代码
+  -(当细胞超过4000个时运行)my_downsample.downsample(tpm_downsampled = True)
 ### (2.3) 其他
 cluster如果是用函数生成的话会多出两列：clusteringMethod和clusterName_scibet。
 所以如果是后面找到原文提供的cluster信息填入之后，需要将原来这两列删除。
@@ -469,6 +469,8 @@ sequencingPlatform:
 
 ## 二审：
 负责人：张萌栩 
+#### 二审基本原则：检查数据集中每一项填写的内容是否有问题，并通过画基因表达图复现出与原文献相同的gene在细胞上的表达图，并把所有图合并成一个名为genesPlot.pdf的形式存储在processed_data/文件夹下
+
 ### 二审 修改回收步骤：
 负责人分配任务， 
 - 1）	二审（可以找优秀的实习生帮忙了），首先把数据集标注的任务在redmine上asign给空闲的实习生，把数据集scp 到修改人的目录中(针对在node02服务器上审核的人)或者move到修改人的目录下面（针对在阿里云服务器上修改的人）
@@ -492,14 +494,15 @@ sequencingPlatform:
 
 ### 补充教程：
 1.	Unstructured Data 
-在 inspection 中参照 实习生数据标注指南 核验 unstructured data 与 cell annotation。如有错误，记录在report中，并update在redmine上面。
+在 inspection.ipynb 中参照 实习生数据标注指南 核验 unstructured data 中每一项是否有错误，需要看文献，并点开填写的各个网址查看，还需要确认markergene是否文章中给了却没有填写等待这些情况。如有错误，随时记录在redmine相应的任务下。
+
 2.	Cell Annotation 和tSNE 检查
     - cellAnnotation
-    重点检查meta部分
-    注意检查cluster以及cellOntology部分，set（）出来查看一下
-    还要注意检查细胞数量是否与矩阵和文章中一致
+      -重点检查meta部分,包括是否是有效信息，有无缺漏，表头填写是否正确，是否有错字等
+      -注意检查cluster以及cellOntology部分，set（）出来查看一下
+      -还要注意检查细胞数量是否与矩阵和文章中一致
 
-    - 使用代码，调用计算脚本画出tSNE的图
+    - 使用代码，调用计算脚本画出tSNE/UMAP的图,或者可以直接使用my_builder.tSNEplot()和my_builder.UMPAplot()来画图，但是图比较小不太好观察
         import seaborn as sns
         import matplotlib.pyplot as plt #下一行开始需要在两个不同的block里运行
         clusterName = df_cell['clusterName'].tolist()
@@ -513,16 +516,22 @@ sequencingPlatform:
 
 3.	矩阵检查
 - 1）	TPM 检查
-读取 expressionMatrix_TPM.tsv 这个文件，检验各行基因的和相加是否为100 000。
+  -读取 expressionMatrix_TPM.tsv 这个文件，检验各行基因的和相加是否为100 000。
+  -检查normalizationMethod书写是否规范，规范写法例如：TPM from FPKM; TPM from log2(TPM+1), ect。
+  -检查cellID和cellAnnotation中的cellID是否完全一致，包括顺序和数量和字符。
+  -检查gene和geneAnnotation.tsv中的是否一致，是否有重复的gene？注意当genes在矩阵中作者给的为ensemblID时，转换成geneSymbol
 - 2）	rawCounts矩阵检查
-读取expressionMatrix_rawCounts.tsv 文件，看是否有把normalized矩阵和rawCounts矩阵弄混。还需要去源代码script.ipynb 中检查是否有矩阵拼接上的错误。cellAnnotation中的细胞数量（即，有多少行）应该和矩阵里的细胞数量都是一样的。
+  -读取expressionMatrix_rawCounts.tsv 文件，看是否有把normalized矩阵和rawCounts矩阵弄混。
+  -还需要去源代码script.ipynb 中检查是否有矩阵拼接上的错误。cellAnnotation中的细胞数量（即，有多少行）应该和矩阵里的细胞数量都是一样的。
+  -其他cellID和gene的检查要注意的事情跟TPM一样
 - 3）	Normalized矩阵检查
-读取expressionMatrix_normalized.tsv 文件， 看是否有把normalized矩阵和rawCounts矩阵弄混。
-cellAnnotation中的细胞数量（即有多少行）应该和矩阵里的细胞数量都是一样的。
+  -读取expressionMatrix_normalized.tsv 文件， 看是否有把normalized矩阵和rawCounts矩阵弄混。
+  -cellAnnotation中的细胞数量（即有多少行）应该和矩阵里的细胞数量都是一样的。
+  -其他cellID和gene的检查要注意的事情跟TPM一样
 - 4）	如何检查矩阵的正确性？ 
 分为两个层面：
-    - 第一看作者提供的原始数据，（downloaded data）看看实习生在拼接过程中是否有出错。
-    - 第二，找一个文章里的marker gene在测试网站上画一下图，如果跟文章的图差不多，就问题不大了。
+    - 第一看作者提供的原始数据，（downloaded data里）看看实习生在拼接过程中是否有出错。
+    - 第二，找到文章里的marker gene在画一下图，如果跟文章的图差不多，就问题不大了。记得存成genesPlot.pdf存在
 
 
 ## 三审
@@ -544,7 +553,7 @@ cellAnnotation中的细胞数量（即有多少行）应该和矩阵里的细胞
 周期：每周更新一次数据集回收情况
 流程
 1. 每月生成一张新的dataset_inspection.xlsx表格记录整个月的数据集标注情况，
-2．每周下发数据集时，由一审负责人更新excel表格中数据集编号和title信息。
+2．每周五下发数据集时，由一审负责人更新excel表格中数据集编号和title信息。
 3. 收包时由二审负责人更新完成的信息到excel表格中，包括三道审查中改出的错误用“×”记录，还要填写标注人员的信息，每周五收集各个二审和三审人员的本地记录表格，完成汇总后每周并上传至Github，共享给组员。
 4. 除此之外，管理员需每周回收数据集的时候查看各个实习生完成的数据集数量，若是超过两个周的时间中完成不超过两个数据集，需要沟通了解情况。
 下发数据及之后长时间不做怎么办？
