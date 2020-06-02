@@ -170,6 +170,9 @@ http://118.190.148.166/biodb/dataset_curation/
 #### 从 Matrix_rawCounts 或 Matrix_normalized 生成 TPM
 注意：Matrix_normalized 优先于 Matrix_rawCounts 使用生成TPM。
 
+#### 若作者只提供了TPM 矩阵：
+需要把矩阵存到tpm和norm矩阵里面，normalizationMethod分别填写:TPM from author; TPM
+
 ### Cell number, 即有效细胞数的判断：
 （有效细胞数即数据整合后或经过 normalization 后被使用的细胞数。）
 1.	文章中给出，可以是几种细胞数的和。
@@ -358,11 +361,10 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 
 ### (2) cellAnnotation（以下情形为矩阵未改动的情形，如矩阵变动参考1.1）
 ### (2.1) clusterName改动，需要重新运行：
-  -my_builder.auto_calculation()
-  -my_downsample.downsample(tpm_downsampled = True)
+    my_builder.auto_calculation()
+    my_downsample.downsample(tpm_downsampled = True)
 ### (2.2) clusterName没变，其他部分变动
-  -不需要运行其他代码
-  -(当细胞超过4000个时运行)my_downsample.downsample(tpm_downsampled = True)
+    my_downsample.downsample(tpm_downsampled = True)  # 当细胞超过4000个时运行，不需要运行其他代码
 ### (2.3) 其他
 cluster如果是用函数生成的话会多出两列：clusteringMethod和clusterName_scibet。
 所以如果是后面找到原文提供的cluster信息填入之后，需要将原来这两列删除。
@@ -493,6 +495,7 @@ sequencingPlatform:
 - 8）	如果有优秀的实习生，并且其本人有意愿，可以让他们接触审核工作，帮忙分担工作压力，但是质量控制要把握好。
 
 ### 补充教程：
+可以跟管理员要inspection_template.ipynb
 1.	Unstructured Data 
 在 inspection.ipynb 中参照 实习生数据标注指南 核验 unstructured data 中每一项是否有错误，需要看文献，并点开填写的各个网址查看，还需要确认markergene是否文章中给了却没有填写等待这些情况。如有错误，随时记录在redmine相应的任务下。
 
