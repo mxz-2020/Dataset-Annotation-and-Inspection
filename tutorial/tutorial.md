@@ -505,6 +505,7 @@ sequencingPlatform:
     - cellAnnotation
       -重点检查meta部分,包括是否是有效信息，有无缺漏，表头填写是否正确，是否有错字等
       -注意检查cluster以及cellOntology部分，set（）出来查看一下
+      -对于自动生成cluster信息的数据集，需要检查所有途径是否真的没有提供此信息，包括检查CodeAvailability里面是否有github链接提供此代码等。
       -还要注意检查细胞数量是否与矩阵和文章中一致
 
     - 使用代码，调用计算脚本画出tSNE/UMAP的图,或者可以直接使用my_builder.tSNEplot()和my_builder.UMPAplot()来画图，但是图比较小不太好观察
@@ -518,7 +519,7 @@ sequencingPlatform:
 
     - 检查tSNE图质量，不同颜色的点不可过多重合，过多重合即为 isBadtSNE：True
         使用代码画图查看某个基因在细胞中表达的情况
-
+    
 3.	矩阵检查（最重要的部分，需要着重检查）
 - 1）	TPM 检查
    -读取 expressionMatrix_TPM.tsv 这个文件，检验各行基因的和相加是否为100 000。着重检查不是从rawdata来的矩阵，其转换成TPM的算法是否正确。
