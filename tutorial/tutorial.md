@@ -502,23 +502,25 @@ sequencingPlatform:
 在 inspection.ipynb 中参照 实习生数据标注指南 核验 unstructured data 中每一项是否有错误，需要看文献，并点开填写的各个网址查看，还需要确认markergene是否文章中给了却没有填写等待这些情况。如有错误，随时记录在redmine相应的任务下。
 
 2.	Cell Annotation 和tSNE 检查
-    - cellAnnotation
-      -重点检查meta部分,包括是否是有效信息，有无缺漏，表头填写是否正确，是否有错字等
-      -注意检查cluster以及cellOntology部分，set（）出来查看一下
-      -对于自动生成cluster信息的数据集，需要检查所有途径是否真的没有提供此信息，包括检查CodeAvailability里面是否有github链接提供此代码等。
-      -还要注意检查细胞数量是否与矩阵和文章中一致
+- 1）cellAnnotation
+   -重点检查meta部分,包括是否是有效信息，有无缺漏，表头填写是否正确，是否有错字等
+   -注意检查cluster以及cellOntology部分，set（）出来查看一下
+   -对于自动生成cluster信息的数据集，需要检查所有途径是否真的没有提供此信息，包括检查CodeAvailability里面是否有github链接提供此代码等。
+   -还要注意检查细胞数量是否与矩阵和文章中一致
 
-    - 使用代码，调用计算脚本画出tSNE/UMAP的图,或者可以直接使用my_builder.tSNEplot()和my_builder.UMPAplot()来画图，但是图比较小不太好观察
-        import seaborn as sns
-        import matplotlib.pyplot as plt #下一行开始需要在两个不同的block里运行
-        clusterName = df_cell['clusterName'].tolist()
-        tsne1 = df_cell['tSNE1'].tolist()
-        tsne2 = df_cell['tSNE2'].tolist()
-        plt.figure(figsize=(10,10))
-        sns.scatterplot(x = tsne1, y = tsne2, hue = clusterName)
+- 2）使用代码，调用计算脚本画出tSNE/UMAP的图,或者可以直接使用my_builder.tSNEplot()和my_builder.UMPAplot()来画图，但是图比较小不太好观察
 
-    - 检查tSNE图质量，不同颜色的点不可过多重合，过多重合即为 isBadtSNE：True
-        使用代码画图查看某个基因在细胞中表达的情况
+    import seaborn as sns
+    import matplotlib.pyplot as plt #下一行开始需要在两个不同的block里运行
+    clusterName = df_cell['clusterName'].tolist()
+    tsne1 = df_cell['tSNE1'].tolist()
+    tsne2 = df_cell['tSNE2'].tolist()
+    plt.figure(figsize=(10,10))
+    sns.scatterplot(x = tsne1, y = tsne2, hue = clusterName)
+    
+- 3）检查tSNE图质量，不同颜色的点不可过多重合，过多重合即为 isBadtSNE：True
+
+- 4）使用代码画图查看某个基因在细胞中表达的情况
     
 3.	矩阵检查（最重要的部分，需要着重检查）
 - 1）	TPM 检查
