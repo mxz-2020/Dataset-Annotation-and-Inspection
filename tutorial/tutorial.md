@@ -519,24 +519,24 @@ sequencingPlatform:
     - 检查tSNE图质量，不同颜色的点不可过多重合，过多重合即为 isBadtSNE：True
         使用代码画图查看某个基因在细胞中表达的情况
 
-3.	矩阵检查
+3.	矩阵检查（最重要的部分，需要着重检查）
 - 1）	TPM 检查
-  -读取 expressionMatrix_TPM.tsv 这个文件，检验各行基因的和相加是否为100 000。
-  -检查normalizationMethod书写是否规范，规范写法例如：TPM from FPKM; TPM from log2(TPM+1), ect。
-  -检查cellID和cellAnnotation中的cellID是否完全一致，包括顺序和数量和字符。
-  -检查gene和geneAnnotation.tsv中的是否一致，是否有重复的gene？注意当genes在矩阵中作者给的为ensemblID时，转换成geneSymbol
+   -读取 expressionMatrix_TPM.tsv 这个文件，检验各行基因的和相加是否为100 000。着重检查不是从rawdata来的矩阵，其转换成TPM的算法是否正确。
+   -检查normalizationMethod书写是否规范，规范写法例如：TPM from FPKM; TPM from log2(TPM+1), ect。
+   -检查cellID和cellAnnotation中的cellID是否完全一致，包括顺序和数量和字符。
+   -检查gene和geneAnnotation.tsv中的是否一致，是否有重复的gene？注意当genes在矩阵中作者给的为ensemblID时，转换成geneSymbol
 - 2）	rawCounts矩阵检查
-  -读取expressionMatrix_rawCounts.tsv 文件，看是否有把normalized矩阵和rawCounts矩阵弄混。
-  -还需要去源代码script.ipynb 中检查是否有矩阵拼接上的错误。cellAnnotation中的细胞数量（即，有多少行）应该和矩阵里的细胞数量都是一样的。
-  -其他cellID和gene的检查要注意的事情跟TPM一样
+   -读取expressionMatrix_rawCounts.tsv 文件，看是否有把normalized矩阵和rawCounts矩阵弄混。
+   -还需要去源代码script.ipynb 中检查是否有矩阵拼接上的错误。cellAnnotation中的细胞数量（即，有多少行）应该和矩阵里的细胞数量都是一样的。
+   -其他cellID和gene的检查要注意的事情跟TPM一样
 - 3）	Normalized矩阵检查
-  -读取expressionMatrix_normalized.tsv 文件， 看是否有把normalized矩阵和rawCounts矩阵弄混。
-  -cellAnnotation中的细胞数量（即有多少行）应该和矩阵里的细胞数量都是一样的。
-  -其他cellID和gene的检查要注意的事情跟TPM一样
+   -读取expressionMatrix_normalized.tsv 文件， 看是否有把normalized矩阵和rawCounts矩阵弄混。
+   -cellAnnotation中的细胞数量（即有多少行）应该和矩阵里的细胞数量都是一样的。
+   -其他cellID和gene的检查要注意的事情跟TPM一样
 - 4）	如何检查矩阵的正确性？ 
 分为两个层面：
-    - 第一看作者提供的原始数据，（downloaded data里）看看实习生在拼接过程中是否有出错。
-    - 第二，找到文章里的marker gene在画一下图，如果跟文章的图差不多，就问题不大了。记得存成genesPlot.pdf存在
+   - 第一看作者提供的原始数据，（downloaded data里）看看实习生在拼接过程中是否有出错。
+   - 第二，找到文章里的marker gene在画一下图，如果跟文章的图差不多，就问题不大了。记得存成genesPlot.pdf存在
 
 
 ## 三审
