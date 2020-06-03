@@ -145,14 +145,16 @@ http://118.190.148.166/biodb/dataset_curation/
    1） 首先要在文章中的supplemental information栏下查找作者是否给了是否有相应的聚类信息（包括clusterName/clusterID，tSNE1/2, UMAP1/2等）。
 
    2） 还可以在读取作者提供的矩阵（文章对应的GEO网址下载的）中查找。
+   
+   3） 作者还喜欢在文章中的CodeAvailability中提供github链接或者dropbox链接，里面一般会有metadata和cluster信息。
 
-   3） 如果都没有，需要发邮件给作者。（如果没有得到回复，审核人员可以再发一遍试试）
+   4） 如果都没有，需要发邮件给作者。（如果没有得到回复，审核人员可以再发一遍试试）
 
-   4） 最后也没找到clusterName/clusterID的可以先空中，之后运行我们自己的计算脚本，自动生成为数字编号的clusterName/ID、tSNE1/2、UMAP1/2。这部分代码出现在template/script.ipynb中的6.使用脚本自动生成其他项中的6.4，同时cellAnnotation的表格中会多出来两列：clusteringMethod 和 clusterName_scibet。如下图：
+   5） 最后也没找到clusterName/clusterID的可以先空中，之后运行我们自己的计算脚本，自动生成为数字编号的clusterName/ID、tSNE1/2、UMAP1/2。这部分代码出现在template/script.ipynb中的6.使用脚本自动生成其他项中的6.4，同时cellAnnotation的表格中会多出来两列：clusteringMethod 和 clusterName_scibet。如下图：
 
    ![](figure-4.png)
 
-   5）若tsne和umap作者也没有提供，跟cluster一样，实在不行可以运行自己的脚本自动计算。6.3中的代码生成2D（第一行代码） 和3D的图（第二行代码）
+   6）若tsne和umap作者也没有提供，跟cluster一样，实在不行可以运行自己的脚本自动计算。6.3中的代码生成2D（第一行代码） 和3D的图（第二行代码）
 
    ![](figure-5.png)
 
