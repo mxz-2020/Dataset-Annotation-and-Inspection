@@ -539,7 +539,7 @@ part_n 仅一个part省去 subDataset 和 description
     
 - 3）检查tSNE图质量，不同颜色的点不可过多重合，过多重合即为 isBadtSNE：True
 
-- 4）使用代码画图查看某个基因在细胞中表达的情况
+- 4）使用代码画图查看某个基因在细胞中表达的情况 3.矩阵检查 中第四部分也有提到。
     
 3.	矩阵检查（最重要的部分，需要着重检查）
 - 1）	TPM 检查
@@ -558,10 +558,11 @@ part_n 仅一个part省去 subDataset 和 description
 - 4）	如何检查矩阵的正确性？ 
 分为两个层面：
    - 第一看作者提供的原始数据，（downloaded data里）看看实习生在拼接过程中是否有出错。
-   - 第二，找到文章里的marker gene然后画一下图，如果跟文章的图差不多，就问题不大了。记得存成genesPlot.pdf存在
+   - 第二，找到文章里的marker gene然后画一下图，如果跟文章的图差不多，就问题不大了。
      - 只有clusterAvailability为True的数据集需要保存genesPlot.pdf
-     - 基因的选取，当文章中有画gene在tsne上的表达图时，复现出与原文献相同的gene在细胞上的表达；当文章没有画marker gene 的表达图时，需要自己根据genelist选取重要基因画图（genelist正在不断更新），画图直接调用函数画即可。
-     - 调用函数把所有图合并成一个名为genesPlot.pdf的形式存储在processed_data/文件夹下
+     - 基因的选取，当文章中有画gene在tsne上的表达图时，复现出与原文献相同的gene在细胞上的表达；当文章没有画marker gene 的表达图时也不需要画图。
+     - 调用函数把所有图合并成一个名为genesPlot.png的形式存储在processed_data/文件夹下
+     - pipeline中有函数可以直接调用
 
 
 ## 三审
