@@ -94,7 +94,7 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 - libraryPreparationMethod：是指细胞测序所使用的技术，可在文章中查找；也可以在文章相应的GEO网址中（即在GEO网站首页输入GSE编码即可）查找。文章中的技术，使用my_inspector.libmethod_keywords调出关键词： 10x chromium(注意不要随便更改大小写！), drop-seq, microwell-seq, C1 Fluidigm, inDrops, Smart-seq2, Smart-seq, CEL-seq, CEL-seq2, MARS-seq, msSCRB-seq, SCRB-seq基本上都出自于上面几种测序技术。
 - sequencingPlatform：这里填写测序平台。可以在文章相应的GEO网址中找到。如，Illumina HiSeq 2500，Illumina HiSeq 500，Illumina HiSeq 2000等。
 - clusteringMethod：这里填写聚类分析的所使用的方法，可在文章中查找。聚类分析常用方法：k-means, affinity propagation, mean-shift, spectral clustering, Ward hierarchical clustering, agglomerative clustering, DBSCAN, Gaussian mixtures, birch.
-    ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial//images/figure-1.png)
+    ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-1.png)
 
     想要更详细的了解可以参考以下网址：https://blog.csdn.net/ztf312/article/details/97951928
 - biomarkerDerivationMethod：是指marker gene的算法，一般在文章的method里面有，是找cluster下游的特异基因的方法。一般是t-test或者wilcoxon之类的，尽量在文章中找到对应的marker genes的算法。
@@ -127,9 +127,9 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 - （新加入）isCultured：填True or False，意思是scRNA-seq所用的细胞是作者自己传代培养的细胞系（True）的还是原代细胞（False）。
 - （新加入）isTPMNotAvailable：填True or False。这个字段的意思时问这个数据集中的TPM矩阵是否是真正的TPM矩阵？因为：Some articles provide norm matrix only and cannot generate TPM (we can only treat the norm as if it is TPM)，找不到真正的TPM矩阵的时候填上True。但在矩阵的normalizationMethod这一列里要标注清楚'Copied from norm'，表示这个不是TPM矩阵！
 - （新加入）diseaseOntology：在https://www.ebi.ac.uk/ols/ontologies/doid中寻找disease_name。
-    ![](figure-2.png)
+    ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-2.png)
 - （当cancer为True时需要填写）cancerDescription：按照script脚本里面的要求填写，文章不是cancer相关可以不填
-   ![](figure-3.png)
+   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-3.png)
 
 ### 对于各字段的说明：
 - disease：是指文章研究内容是否与疾病有关，例如研究某种疾病、从疾病患者采样等，但对于一般性的研究某一通路、细胞等作用，最后认为可能与某种疾病有关时需要多加判断，准则是此篇文章出发的目的和主题内容是否是与疾病相关，此外，cancer必为disease；
@@ -168,16 +168,16 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 
    5） 最后也没找到clusterName/clusterID的可以先空中，之后运行我们自己的计算脚本，自动生成为数字编号的clusterName/ID、tSNE1/2、UMAP1/2。这部分代码出现在template/script.ipynb中的6.使用脚本自动生成其他项中的6.4，同时cellAnnotation的表格中会多出来两列：clusteringMethod 和 clusterName_scibet。如下图：
 
-   ![](figure-4.png)
+   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-4.png)
 
    6）若tsne和umap作者也没有提供，跟cluster一样，实在不行可以运行自己的脚本自动计算。6.3中的代码生成2D（第一行代码） 和3D的图（第二行代码）
 
-   ![](figure-5.png)
+   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-5.png)
 
 - 填写cellOntologyName和cellOntologyID：这两项与clusterName是相对应的
    1） 如果文中提供clusterName等相关内容，cellOntologyName/ID可以在https://www.ebi.ac.uk/ols/index网址搜索细胞信息，并输入与clusterName最相近的cellOntologyName和ID (id现在已经不需要填写，运行6.5代码根据cellOntologyName自动生成)
 
-   ![](figure-6.png)
+   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-6.png)
 
    2） 如果文章没有找到clusterName，那么就只能在文章中寻找进行聚类分析的是什么细胞，有时候只能找到这篇文章是研究**细胞的，如骨髓细胞，那就只查找骨髓细胞相应的cellOntology信息并全部填上即可。目的就是填上就好，能填就填，轻易不要填notAvailable，更不可以空着。
 
@@ -259,7 +259,7 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 4. clustering计算，在6.4中，仅在找不到作者又未回复时使用，记得运行第二行代码来判断isbadtSNE，来判断tSNE图上的细胞簇点是否能分得开。
 5. cellOntologyID，在6.5中运行后根据cellOntologyName自动填写
 6. 还添加了一些需要运行的代码在6.6-6.8中
-   ![](figure-7.png)
+   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-7.png)
 7. 填写README:
    - 第一个block里面运行的代码用来赋值和读取readme.json
    - 第二个block里面填写信息
@@ -277,12 +277,12 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 常见报错：
 1.	 unstructuredData中缺少内容：
 
-   ![](figure-8.png)
+   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-8.png)
 
  只需要补充上即可。
 
 2.	markergenes
-   ![](figure-9.png)
+   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-9.png)
 
  markergenes中缺少ensemblID,这个ID是有内置函数换算的，是跟gene一一对应的。
  这里报错是因为cluster里的ensemblID都为notAvailable，这可能是因为函数没有运行正确，也有可能是基因库没有对应的。可以重新运行试试，如果还是没有，可以在群里询问。
@@ -307,15 +307,15 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
    - 答：这种情况一般是因为运行的文件占用内存太大，被程序自动kill了，可以尝试在人少的时候再试试，是在不行就联系发任务的人。 
 
 6)	在运行auto_calculation的时候，显示clusterName Error！怎么办？
-   ![](figure-10.png)
+   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-10.png)
  
    - 答：没有cluster的信息时要先填上notAvailable，再用我们自己的脚本计算cluster，不能留下NaN。
 
 7)	在运行calculate_cluster（RUN = True）的时候报错，是什么原因？
 
-   ![](figure-11.png)
+   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-11.png)
  
-   ![](figure-12.png)
+   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-12.png)
  
    - 答：
       （1）第一张图报错中显示细胞数只有47个，细胞数太少的时候不需要进行细胞聚类。
