@@ -108,7 +108,7 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 - annotation: 是指基因的注释信息是什么
 - journal： 使用内置函数获取，引号内填pubmedID，如无法获取，使用命令my_inspector.journal_keywords调用journal的列表查看，列表中没有该杂志名称的话就自己填写。
 - citation: 指引用次数
-- tissue：文中选填,填为list格式。需要在https://www.ebi.ac.uk/ols/ontologies/bto这个网址查询是否有填写的tissue。tissue这个字段的设置是为了之后做筛选时能快速筛选出相应组织的所有数据集，例如melanoma这种黑色素瘤疾病，我们可以填写skin为tissue。冠状动脉可以填写成heart，可以填写的大一点。
+- tissue：文中选填,填为list格式。需要在https://www.ebi.ac.uk/ols/ontologies/bto 这个网址查询是否有填写的tissue。tissue这个字段的设置是为了之后做筛选时能快速筛选出相应组织的所有数据集，例如melanoma这种黑色素瘤疾病，我们可以填写skin为tissue。冠状动脉可以填写成heart，可以填写的大一点。
 - tissueOntology: 不填写，向下运行代码自动生成
 - clusterAvailability：填True or False，意思是能否找到对应的cluster信息
 
@@ -127,9 +127,9 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 - （新加入）isCultured：填True or False，意思是scRNA-seq所用的细胞是作者自己传代培养的细胞系（True）的还是原代细胞（False）。
 - （新加入）isTPMNotAvailable：填True or False。这个字段的意思时问这个数据集中的TPM矩阵是否是真正的TPM矩阵？因为：Some articles provide norm matrix only and cannot generate TPM (we can only treat the norm as if it is TPM)，找不到真正的TPM矩阵的时候填上True。但在矩阵的normalizationMethod这一列里要标注清楚'Copied from norm'，表示这个不是TPM矩阵！
 - （新加入）diseaseOntology：在https://www.ebi.ac.uk/ols/ontologies/doid中寻找disease_name。
-    ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-2.png)
+    ![](images/figure-2.png)
 - （当cancer为True时需要填写）cancerDescription：按照script脚本里面的要求填写，文章不是cancer相关可以不填
-   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-3.png)
+   ![](images/figure-3.png)
 
 ### 对于各字段的说明：
 - disease：是指文章研究内容是否与疾病有关，例如研究某种疾病、从疾病患者采样等，但对于一般性的研究某一通路、细胞等作用，最后认为可能与某种疾病有关时需要多加判断，准则是此篇文章出发的目的和主题内容是否是与疾病相关，此外，cancer必为disease；
@@ -168,16 +168,16 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 
    5） 最后也没找到clusterName/clusterID的可以先空中，之后运行我们自己的计算脚本，自动生成为数字编号的clusterName/ID、tSNE1/2、UMAP1/2。这部分代码出现在template/script.ipynb中的6.使用脚本自动生成其他项中的6.4，同时cellAnnotation的表格中会多出来两列：clusteringMethod 和 clusterName_scibet。如下图：
 
-   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-4.png)
+   ![](images/figure-4.png)
 
    6）若tsne和umap作者也没有提供，跟cluster一样，实在不行可以运行自己的脚本自动计算。6.3中的代码生成2D（第一行代码） 和3D的图（第二行代码）
 
-   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-5.png)
+   ![](images/figure-5.png)
 
 - 填写cellOntologyName和cellOntologyID：这两项与clusterName是相对应的
    1） 如果文中提供clusterName等相关内容，cellOntologyName/ID可以在https://www.ebi.ac.uk/ols/index网址搜索细胞信息，并输入与clusterName最相近的cellOntologyName和ID (id现在已经不需要填写，运行6.5代码根据cellOntologyName自动生成)
 
-   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-6.png)
+   ![](images/figure-6.png)
 
    2） 如果文章没有找到clusterName，那么就只能在文章中寻找进行聚类分析的是什么细胞，有时候只能找到这篇文章是研究**细胞的，如骨髓细胞，那就只查找骨髓细胞相应的cellOntology信息并全部填上即可。目的就是填上就好，能填就填，轻易不要填notAvailable，更不可以空着。
 
@@ -259,7 +259,7 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 4. clustering计算，在6.4中，仅在找不到作者又未回复时使用，记得运行第二行代码来判断isbadtSNE，来判断tSNE图上的细胞簇点是否能分得开。
 5. cellOntologyID，在6.5中运行后根据cellOntologyName自动填写
 6. 还添加了一些需要运行的代码在6.6-6.8中
-   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-7.png)
+   ![](images/figure-7.png)
 7. 填写README:
    - 第一个block里面运行的代码用来赋值和读取readme.json
    - 第二个block里面填写信息
@@ -277,12 +277,12 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 常见报错：
 1.	 unstructuredData中缺少内容：
 
-   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-8.png)
+   ![](images/figure-8.png)
 
  只需要补充上即可。
 
 2.	markergenes
-   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-9.png)
+   ![](images/figure-9.png)
 
  markergenes中缺少ensemblID,这个ID是有内置函数换算的，是跟gene一一对应的。
  这里报错是因为cluster里的ensemblID都为notAvailable，这可能是因为函数没有运行正确，也有可能是基因库没有对应的。可以重新运行试试，如果还是没有，可以在群里询问。
@@ -307,15 +307,15 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
    - 答：这种情况一般是因为运行的文件占用内存太大，被程序自动kill了，可以尝试在人少的时候再试试，是在不行就联系发任务的人。 
 
 6)	在运行auto_calculation的时候，显示clusterName Error！怎么办？
-   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-10.png)
+   ![](images/figure-10.png)
  
    - 答：没有cluster的信息时要先填上notAvailable，再用我们自己的脚本计算cluster，不能留下NaN。
 
 7)	在运行calculate_cluster（RUN = True）的时候报错，是什么原因？
 
-   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-11.png)
+   ![](images/figure-11.png)
  
-   ![](https://github.com/mxz-2020/Dataset-Annotation-and-Inspection/edit/master/tutorial/images/figure-12.png)
+   ![](images/figure-12.png)
  
    - 答：
       （1）第一张图报错中显示细胞数只有47个，细胞数太少的时候不需要进行细胞聚类。
