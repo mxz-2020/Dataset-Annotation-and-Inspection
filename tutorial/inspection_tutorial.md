@@ -1,92 +1,95 @@
 # 审核人员审核指南
 审核人员拿到实习生标注过的数据集之后，需要在每个数据集code文件夹下建立新的python3文件，命名为inspection.ipynb 不可以直接在别人的代码上改动！负责人不代表工作内容只有一个人干，如果一下子需要审核太多数据集，请及时求助其他组员，保证项目进行的的流畅性。
 ## 一审
-负责人：张萌栩
+负责人：张天然
 派发步骤：
-### 初筛
-- 前一周周五下发下一周需要的筛选的数据集总表，周日晚九点完成填写。预计平均每人每次有15-25个需要分类的文章。
-- 一审同学可通过浏览文章 title 和 abstract 确定文章是否符合相关主题，是否可以使用。
-- 列表回收后负责人会检查文章分类和可用性，并根据数据集是否已经被标注筛选可以使用的文章。
-- 对于可以使用的文章，请填写表格中需要填写的空白项目，包括：PMID, accessionNumber, topic, queue, featurePublication, isDiscarded, - discardedReason, others.
-- 一审同学将对个人初筛的文章进行一审。在最终确定文章是否是用前，初筛不需要检查 cluster、tSNE、UMAP 等信息。
+### 初筛流程
+- 每周五下发下一周需要的筛选的数据集总表，周日晚九点完成初筛表格的填写。预计平均每人每次有15-25个需要分类的文章。
+### 初筛内容
+- 通过浏览文章 title 和 abstract 确定文章是否符合相关主题，是否可以使用，并根据数据集是否已经被标注筛选新的下发文章。在最终确定文章是否是用前，初筛不需要检查 cluster、tSNE、UMAP 等信息。
+- 当前数据收集目录：scRNA-seq, snRNA-seq, CITE-seq, TCR-seq (CAR-T), BCR-seq.
+  - snRNA-seq 测神经细胞 (轴比较长，一般只测核) 或冷冻肿瘤细胞核内 RNA，scRNA-seq 测新鲜样本的所有 RNA (主要还是核里的); TCR、BCR 除了检测T/B细胞RNA,还测T/B细胞表面受体clonotypes; CITE-seq 测单个细胞 RNA 加细胞表面蛋白质的检测。
 
-- 当前数据收集目录：scRNA-seq, snRNA-seq, CITE-seq, CAR-T, TCR-seq, BCR-seq.
+- 对于可以使用的文章，请填写表格中需要填写的空白项目，包括：PMID, accessionNumber, topic, queue, featurePublication, isDiscarded, discardedReason, others.
 
 ##### 表格填写指南
-- accessionNumber: 填写文章做tSNE、UMAP 或者基因热图使用的所有数据编号（一般就是所有作者自己产生的新数据，如果是用了别人的数据做了以上三种图，请一并填写，并在 others 列里备注哪个数据属于别人，e.g. GSE12345 from PMID:13579 for fig.1-a）。accessionNumber 用英文逗号隔开，中间没有空格。如果涉及网址，请粘贴网址。如果文章属于可使用文章，但没有数据号且未提供下载链接，则填写notAvailable；如果文章不属于可使用文章则 accessionNumber 填写“-”。填写示例：GSE12345,GSE67890,GSE13579 全为英文符号且中间没有空格。
+- accessionNumber: 填写文章做tSNE、UMAP 或者基因热图使用的所有数据编号（一般就是所有作者自己产生的新数据，如果是用了别人的数据做了以上三种图，请一并填写，并在 others 列里备注哪个数据属于别人，e.g. GSE12345 from PMID:13579 for fig.1-a）。如果作者使用别人的数据做参考，但并没有用旧数据做自己文章的新图则无需填写旧数据号。accessionNumber 用英文逗号隔开，中间没有空格。如果涉及网址，请粘贴网址。如果文章属于可使用文章，但没有数据号且未提供下载链接，请填写 request 并给作者发送邮件询问，如果作者两次不回邮件或者告知数据不公开或者需特别申请访问权限，则将 request 改写为 notAvailable (其余各选填项无需变更)；如果文章主题不符，不属于可使用文章则 accessionNumber 填写“-”。 填写示例：GSE12345,GSE67890,GSE13579 全为英文符号且中间没有空格。
 
-- topic: 仅填写文章主题关键词即可，例如：cancer, liver, heart, aorta, eye, brain, neuroscience, immunology, cell atlas, etc. 
-  - queue 1: cancer, immunology, organs (e.g. heart, lung, liver…), neuroscience, cell atlas, regeneration 等等，检测、治疗学相关，或者其他所有看起来有商业价值的东西. 
-  - queue 2: differentiation (mammal), differentiation (non-mammal, 但是仅限于nature, cell, science上关于脊椎动物的研究), somatic, 等等其他不是很重要的东西。
-  - queue 3: 作者自己产生了新数据的方法学研究。
+
+- topic: 仅填写文章主题关键词即可，例如：cancer, liver, heart, aorta, eye, brain, neuroscience, immunology, cell atlas, cell landscape, etc. 根据文章主题给文章排序
+  - queue 1: cancer, immunology, organs (e.g. heart, lung, liver…), neuroscience, cell atlas, regeneration 等等，检测、治疗学相关，或者其他所有看起来有商业价值的东西都是 queue 1. 
+  - queue 2: somatic cells，differentiation (mammal), differentiation (non-mammal, 但是仅限于 nature, cell, science 上关于脊椎动物的研究。对于非 CNS 的 non-mammal 文章，脊椎动物去 queue 4，无脊椎动物去 queue 5), 等等其他不是很重要的东西。 
+  - queue 3: 作者自己产生了新数据的方法学研究（方法学主要包括测序方法的研究和数据分析算法的研究）。
   - queue 4-5: 其他各种不重要的东西，比如关于线虫的研究可以是 queue 5。
-  - queue 6: methodology，方法学，且作者只用了别人的数据。
-  - 另：每篇文章可以有多个topic，比如 (cancer, cancer immunology), (eye, neurosciences), 等等组合。
+  - queue 6: methodology，即方法学，且作者只用了别人的数据。
+  - queue 7: 文章有新数据，但不可直接获得，需要特别询问数据。请向此类文章作者发送邮件。
+  - queue 8: 数据在未来对公众开放。
+  - queue 9: 作者仅提供 fastq 文件。
+  - 另：每篇文章可以有多个topic，比如 (cancer, cancer immunology), (eye, neuroscience), 等等组合。
+  - queue: 参见 topic queue。所有未经过初筛或者被 discarded 的文章是 queue 100。
 
-- queue: 参见 topic queue
 
-- featurePublication: therapy, therapy resistance, testing or prediction 等等很有医学或药物研究、检测用处的相关文章，填写 TRUE or FALSE。
+- featurePublication: cell atlas, cell landscape, therapy, therapy resistance, testing or prediction 等等很有医学或药物研究、检测用处的，很有参考性 (广泛测序的样本) 或很有商业价值相关文章，填写 TRUE/FALSE。
 
-- isDiscarded: TRUE/FALSE
+- isDiscarded: TRUE/FALSE，所有作者自己测了新数据的文章不分主题 discarded 都为False（除非是研究了微生物之类的），因为我们可以通过 queue 来选择使用数据。
 
-- discardedReason: 被discaded的文章填写此项。参考以下字段填写：not scRNA-seq, ATAC-seq only,… 一切数据不能使用的原因，可以是主题过差，比如研究了蟒蛇、酵母…。被保留的文章填写“-”。
+- discardedReason: 填写数据不能使用的原因，可以是主题过差，比如研究了 yeast… 被保留的文章填写“-”。当isDiscaded为TRUE时，文章参考以下字段填写：review only, not scRNA-seq, ATAC-seq only, yeast, etc. 
 
-- others: 如果某数据在未来公开则需填写此项，e.g. GSE12345 available on 2020.06.01。对于方法学的文章，如果作者只用了别人的数据，则把被使用的数据号填写在这里。方法学文章如果找不到accessionNumber则 others 空着。对于其他类型的文章，如果作者借鉴了别人用到数据，但是借鉴的数据并没有用于 tSNE、UMAP 或者基因热图，则不用填写。
+- others: 
+  - 如果某数据现在未公开但是将在未来公开则需填写此项，e.g. GSE12345 available on 2020.06.01。
+  - 对于方法学的文章，如果作者用了别人的数据，则把被使用的数据号填写在这里，不过不需要填写具体每个数据是怎么使用的。方法学文章如果找不到 accessionNumber 则 others 空着。
+  - 对于非方法学的文章，如果作者使用了别人的数据来作 tSNE、UMAP 或者基因热图，则需要在此处填写该数据在哪个图中使用；如果借鉴的数据并没有用于作新图，则不用在此填写。
 
-- Literature alignment, 包括根据作者聚类进行的 part 划分，data/code availability or supplementary files 中附加数据的检查和每个 part 使用数据的整理 (相应 part 文件夹中应仅包含该 part 使用的数据)。
 
-- 注意除了 data availability 和 supplementary files 以外，需要特别查看 code availability 里面有没有 GitHub 或者其他可能有数据的网站链接，里面有时会有诸如 cluster 信息、tSNE、UMAP 坐标等等的东西，请进行下载，并加入 downloaded data 文件夹。
+##### Literature alignment
+- 包括根据作者聚类进行的 part 划分，文献data/code availability or supplementary files 部分里附加数据的检查和每个 part 使用数据的整理 (相应 part 文件夹中应仅包含该 part 使用的数据)。注意查看文章附录的聚类图。所有附件或链接均需打开查看可用信息。
+
+- 注意除了 data availability 和 supplementary files 以外，需要特别查看 code availability 里面有没有 GitHub 或者其他可能有数据的网站链接，里面有时会有诸如 cluster 信息、tSNE、UMAP 坐标等等的东西，请进行下载，并加入 downloaded data 文件夹。对于可能有划分 part 问题的文章请联系管理员确认。
 
 - 对于可能有划分 part 问题的文章请联系负责人确认。一审结束后交由张萌栩下发标注，会有无规律一审质检。
 
 - 聚类的意义：所有实验的最终目的是区分不同的细胞并找到它们之间的差异基因 (candidate drug targets marker genes)。tSNE 和 UMAP 的作用就是通过调节参数把不同类型的细胞分开，同类型细胞归为一组。每一类细胞有他们的特异基因，作者的 tSNE 和 UMAP 的好坏标志着细胞分类是否正确合理，同时展现了根据该聚类结果得到的 marker genes 的正确性。
 
-### 一审内容：
-1.	一审人员在确定每周要发包的数据集有哪些之后，需要给每个数据集分part，并保证每个数据集下面只有相应的part需要用的GEO数据信息，并写出一部分unstructuredData的内容在数据集文件夹下的descriptio.txt中。
-2.	由实习生标注的时候把相应内容黏贴到数据集里，防止直接写到文简里被随意更改掉。
-3.	记录到本地检查表格中，并把表格交给二审负责人，并把分好part的数据集，放入二审负责人用户下文件夹里
+### 一审流程：
+1. 一审人员在确定每周要发包的数据集有哪些之后，需要给每个数据集分part，并保证每个数据集下面只有相应的part需要用的GEO数据信息，并写出一部分unstructuredData的内容在数据集文件夹下的descriptio.txt中。
+2. 之后由标注实习生标注的时候把相应内容黏贴到数据集里，防止格式上的差异。
+3. 一审负责人记录好每周一下发一审的数据集的pmid和GEO编号生成表格，并把表格交给二审负责人之后由二审负责人每周五调配下发标注任务。
 
-- Part 分类方法(在把数据集下发给实习生之前就已分好)：
-  - 分part实际操作：和原作者一致即可，避免 part 划分人员的主观判断。
-    - 1) 最主要根据文章中的聚类分析来进行分part，不管分了几次聚类分析，只要cluster和tSNE/UMAP等的相关信息齐全，就可以算是一个part。
-    - 2） 如果信息不那么齐全 
-        - 若是文中进行了2次独立的聚类分析，那么应该将数据拆分成2个part。
-        - 但是，如果part2的聚类分析是对part1聚类中的某一簇细胞进行的再聚类，只算一个part。
-        - 如果多次聚类，都是对同一组细胞的，那么只保留一次。
-        - 例：如果一篇文章涉及 T cell 和 B cell，作者仅做了一次整体聚类，那么我们不需将 T cell 和 B cell 再聚类。如果作者后续单独对 T cell 的集合做了新的聚类，那么我们就新增细化的 T cell part。
-    - 3） 如果实在不知道该不该分part，那就分就可以了。
-    - 4) 划分 part 后，在数据集文件夹(../GSE*****/)下新建一个description.txt文档,写入每个part对应的 description，subDataset，和 correspondingFigure。
+### 一审内容：填写description.txt文件
+1. Part 划分方法：
+- 最主要根据文章中的聚类分析来进行分part，不管分了几次聚类分析，只要cluster和tSNE/UMAP等的相关信息齐全且cell type 信息不重复，就可以算是一个part。
+  - 注意区分作者给的图到底是同一个 tSNE 遮盖部分细胞后分别显示控制组和实验组，还是真正的分别聚类。(比如总聚类之后，作者把细胞又按照处理时间的不哦那个，分成了2周的细胞，4周的细胞再聚类，其实细胞类型完全重复，不需要再把4周或2周的分part)。一般如果作者没有特别声明，且两个图中同类型细胞的位置相差无几，那么它们大概率是遮盖部分细胞显示，不需要分。(调参工作复杂漫长，一般在两个不同图的调参中很难保持各类型细胞的绝对位置。)
 
-    - 保证part_1, part_2, part_3 文件中仅含该 part 所需 GSE 数据信息，如果需要 数据标注人员从同一个 GSE 中挑选该part 所用细胞时，一审人员需要在 description中添加描述。
+- 判断是否可以把某一个聚类图作为一个 part 的方法：
+  - supplementary files 里面的 reclustering 的 tSNE、UMAP 图，如果没有给出 cluster name 和 marker genes，就不把它们单分成一个 part。比如有的作者为了让自己的数据看起来很丰富，他把一个大聚类里的 T cell 单挑出来 reclustering，又细分出了 cluster 1、cluster 2、cluster 3... 这种只有 cluster ID 的东西，同时又没有在附件里给 cluster 信息、图的坐标或者 marker genes，还看起来没什么价值，那么我们就不把这个再聚类作为一个独立的 part。但是如果作者把来自很多 tissue 的 T cell 在附件里的再聚类，同时这篇文章又在研究免疫，那么即使少信息，也要作为一个 part。也就是说，附录里的图如果再聚类对文章主题有价值，就可以要，如果没什么价值，可以省去。但需要在 part description 里写明省去该部分 (聚类) 的原因，以免后续审查时对 part 划分产生歧义。
 
-- unstructuredData填写三项：
-    
-    - subDataset：如果有不只一个part，则根据part_n填为SubDataset-n。只有一个part就空着即可，不可以填。
+  - 不过请注意，文章正文部分的所有再聚类图且cell type信息不重复的即使少信息也算作一个新 part (除非因为没有 cluster 信息或其他原因无法挑选细胞或 sample，此类情况同样需要在 part description 中备注)。附件里的整体聚类图（整体聚类图，即对样本的聚类，而不是对某一类或几小类细胞的再聚类）即使少信息也可以算作一个part。
 
-    - description：填写对part，即subDataset的描述。只有一个part就空着即可，不可以填。格式：description: The original article contains ? subdatasets, based on e.g. species, cell type(s). This subdataset is based on e.g. Mouse, cell A, B and C.  (should match the initial description).
+- 各 part 使用细胞的挑选：
+各 part 使用细胞与文章保持一致，即 cell type 和 cell number 均要保持一致。如果存在我们下载的数据和作者回复 cluster、tSNE、UMAP 信息的邮件中的数据有差异的情况，或者几个相似文件都有相关细胞，但它们之间又有些许差异的情况，那么首先要对比几个数据间 cell number 是否一致，如果不一致，要查几个数据间 cellID 是否一样。如果发现 cellID 存在差异，请尽量使用细胞数和文章中使用的细胞数一致的数据。如果所有数据的 cell number 都和文章不一致，那么使用作者 data availability 里提到的 accession number 所使用的数据生成矩阵，并尽量根据 cluster 信息挑选细胞使其和文章最为接近。生成矩阵后，使用 cellID 完善 cluster 信息，并把没有对应 cluster 的 cell 补上 cluster name “notAvailable”。
 
-    - correspondingFigure：这里填写该数据对应的文章tSNE聚类图，格式为形如"1-a"，意思为figure1的图a，如果是附录里面的图，可以填写成“s1-a”的形式，ExtendedData里面发现的图可以填写成：”'extended2-a' 这种形式，没有对应的图填notAvailable。
+- 如果实在不知道该不该分part，那就分就可以了。
+- 划分 part 后，在数据集文件夹(../GSE*****/)下新建一个description.txt文档,写入每个part对应的 description，subDataset，和 correspondingFigure等信息。
 
+2. 填写 description 文件，内容及格式如下：
+- 特别注意填写每一项时不要在冒号后面加空格，各项填写不能使用任何非英文字符，但是可以用中文在每一项之外备注。各 part 需要描述清楚应该使用的数据。如果是 GSE 数据，可以清晰地根据 GSM info 得知各 sample 的确切信息，比如使用模版 script.ipynb 中的 sample = my_builder.sample_info(GSE = ‘') 查看各 sample 基本信息。part description 中要写清楚每个 part 对应文件里的 xxx 细胞，或者要使用使用了 xxx 测序方法的文件，或者直接写出要使用的文件名。可以不把数据/文件拆分放到相应 part 的 downloaded data，但需要描述清楚应该使什么文件/数据。注意所有给标注同学提供的字段和正式标注要求的 controlled vocabulary 一致
 
-4. 一审进行时需填写 description 文件，内容及格式如下：
-- title:
+- title:注意粘贴的时候在最后不能有”.”
 - PMID:
+- accessionNumber:
 - subDataset-n
 - description:The original article contains N subDatasets, which are different by species/library preparation method/tissues/cells/protocols (放用于区分part的关键词). This subDataset is based on human/mouse data/xxx tissue/xxx cells/xxx method (填写part间的区别信息).
-part_n 仅一个part省去 subDataset 和 description
-- correspondingFigure:1-a
-- tissue:
 
-- clusterAvailability:
-- tSNEAvailability:
-- UMAPAvailability:
+- part_n 仅一个part不需要填写 subDataset 和 description
+- correspondingFigure:填写每个part对应的聚类图。需要注意格式。如：1-a(代表Figure 1.a),supplementary/extended files 里的相关图命名格式写 s1-a/extended1-a，没有对应的图填notAvailable
 
- 以上三项如果是 TRUE 则需要在 downloaded data 里面有相应文件，可以自行下载后上传，或者使用 linux 命令 nohup wget xxxx(网址链接) > log.txt & 后台下载到 downloaded data 文件夹，生成的 log.txt 日志请检查是否显示 100% 下载完成，确认下载无误请删去 log.txt。如有下载问题请联系我们。非后台下载：cd 到 downloaded data 文件夹直接使用 wget xxxx(链接) 会自动显示下载百分比。
+- tissue:填写
 
-- genomeBuild:
-- taxonomyID:
-- libraryPreparationMethod:
-- sequencingPlatform:
+- 以下三项如果是 TRUE 则需要注明要使用的相应文件名。附件可以自行下载后上传，或者使用 linux 命令 nohup wget xxxx(网址链接) > log.txt & 后台下载到 downloaded data 文件夹，生成的 log.txt 日志请检查是否显示 100% 下载完成，确认下载无误请删去 log.txt。如有下载问题请联系我们。非后台下载：cd 到 downloaded data 文件夹直接使用 wget xxxx(链接) 会自动显示下载百分比。
+  - clusterAvailability:
+  - tSNEAvailability:
+  - UMAPAvailability:
+
 
 ## 二审：
 负责人：张萌栩 
