@@ -149,7 +149,7 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 这里需要查看一些矩阵里的信息来完善cellAnnotation表格，需要用到代码
 注意：没有的数据，不要留下NaN，若找不到信息就填成notAvailable。 
 - 填写CellID: 一般在Matrix_rawCounts或者Matrix_normalized有对细胞的编号，只需要取出后安进cellAnnotation表格中的cellID这一列就可以了。
-- 填写meta_字段：可以在读取了sample信息后查找是否有值得填写的字段，一般可以查看文章对应的GEO网址里面characteristic一栏中的信息来填写这一部分，注意需要与细胞一一对应。
+- 填写meta_字段：可以在读取了sample信息后查找是否有值得填写的字段，一般可以查看文章对应的GEO网址里面characteristic一栏中的信息来填写这一部分，注意需要与细胞一一对应。在填写sampleID的时候，需要注意GEO网站上的sampleID是GSM开头的，EBI网站上的sampleID是ERS开头。
 - sample表格中的信息如何与CellID找到关系来填写cellAnnotation表格里的内容？
 一般是通过sample表格中title这一列来寻找关系的：
 
@@ -166,7 +166,7 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 
    4） 如果都没有，需要发邮件给作者。（如果没有得到回复，审核人员可以再发一遍试试）
 
-   5） 最后也没找到clusterName/clusterID的可以先空中，之后运行我们自己的计算脚本，自动生成为数字编号的clusterName/ID、tSNE1/2、UMAP1/2。这部分代码出现在template/script.ipynb中的6.使用脚本自动生成其他项中的6.4，同时cellAnnotation的表格中会多出来两列：clusteringMethod 和 clusterName_scibet。如下图：
+   5） 最后也没找到clusterName/clusterID的可以先填写上notAvailable，之后运行我们自己的计算脚本，自动生成为数字编号的clusterName/ID、tSNE1/2、UMAP1/2。这部分代码出现在template/script.ipynb中的6.使用脚本自动生成其他项中的6.4，同时cellAnnotation的表格中会多出来两列：clusteringMethod 和 clusterName_scibet。如下图：
 
    ![](images/figure-4.png)
 
@@ -219,7 +219,7 @@ Matrix_normalized 中数据往往是对 Matrix_rawCounts 数据做出某些处�
   2)	TPM矩阵：
    - 如果由rawcounts矩阵转化而来，填写：TPM from raw counts
    - 如果由normalized矩阵转化而来，填写： TPM from FPKM （根据normalized矩阵的方法而改变，如：TPM from log2（TPM+1） ）
-  3)	如果遇到无法转换成TPM的，TPM的normalizationMethod一定要强调这个不是TPM！并且一定要很详细的注明这个矩阵的标准化方法是什么, 如：矩阵不是TPM! 是TMM矩阵。
+  3)	如果遇到无法转换成TPM的，TPM的normalizationMethod一定要强调这个不是TPM！并且一定要很详细的注明这个矩阵的标准化方法是什么, 如：矩阵不是TPM! 是TMM矩阵。如果是mtx格式，需要再在uns里面加一个字段写清楚:TPMNormalizationMethod: directly copied from TMM, not TPM.
 
 ### 检查TPM矩阵正确与否方法：
 TPM中横行代表基因，纵列代表细胞。对于任意单个细胞，当其对应横行中的基因值相加和为1000 000 (10^6)，则TPM正确。如果文章提到使用UMI, 那么CPM（也叫RPM） = TPM, 行和都是一百万，M代表million。
