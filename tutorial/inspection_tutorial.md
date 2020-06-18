@@ -41,22 +41,19 @@
   - 对于非方法学的文章，如果作者使用了别人的数据来作 tSNE、UMAP 或者基因热图，则需要在此处填写该数据在哪个图中使用；如果借鉴的数据并没有用于作新图，则不用在此填写。
 
 
-##### Literature alignment
-- 包括根据作者聚类进行的 part 划分，文献data/code availability or supplementary files 部分里附加数据的检查和每个 part 使用数据的整理 (相应 part 文件夹中应仅包含该 part 使用的数据)。注意查看文章附录的聚类图。所有附件或链接均需打开查看可用信息。
-
-- 注意除了 data availability 和 supplementary files 以外，需要特别查看 code availability 里面有没有 GitHub 或者其他可能有数据的网站链接，里面有时会有诸如 cluster 信息、tSNE、UMAP 坐标等等的东西，请进行下载，并加入 downloaded data 文件夹。对于可能有划分 part 问题的文章请联系管理员确认。
-
-- 对于可能有划分 part 问题的文章请联系负责人确认。一审结束后交由张萌栩下发标注，会有无规律一审质检。
-
-- 聚类的意义：所有实验的最终目的是区分不同的细胞并找到它们之间的差异基因 (candidate drug targets marker genes)。tSNE 和 UMAP 的作用就是通过调节参数把不同类型的细胞分开，同类型细胞归为一组。每一类细胞有他们的特异基因，作者的 tSNE 和 UMAP 的好坏标志着细胞分类是否正确合理，同时展现了根据该聚类结果得到的 marker genes 的正确性。
-
 ### 一审流程：
 1. 一审人员在确定每周要发包的数据集有哪些之后，需要给每个数据集分part，并保证每个数据集下面只有相应的part需要用的GEO数据信息，并写出一部分unstructuredData的内容在数据集文件夹下的descriptio.txt中。
 2. 之后由标注实习生标注的时候把相应内容黏贴到数据集里，防止格式上的差异。
 3. 一审负责人记录好每周一下发一审的数据集的pmid和GEO编号生成表格，并把表格交给二审负责人之后由二审负责人每周五调配下发标注任务。
+4. 注意一审质量，会有无规律一审质检。
 
 ### 一审内容：填写description.txt文件
-1. Part 划分方法：
+1. 查看数据来源：
+- 文献data availability or supplementary files 部分里附加数据的检查，还需注意查看文章附录的聚类图。所有附件或链接均需打开查看可用信息。
+- 除了 data availability 和 supplementary files 以外，需要特别查看 code availability 里面有没有 GitHub 或者其他可能有数据的网站链接，里面有时会有诸如 cluster 信息、tSNE、UMAP 坐标等等的东西，请进行下载，并加入 downloaded data 文件夹。对于可能有划分 part 疑问的文章请联系管理员确认
+- GEO网站数据经常有一系列GSE编号的数据集，注意查看不要漏掉。
+
+2. Part 划分方法：
 - 最主要根据文章中的聚类分析来进行分part，不管分了几次聚类分析，只要cluster和tSNE/UMAP等的相关信息齐全且cell type 信息不重复，就可以算是一个part。
   - 注意区分作者给的图到底是同一个 tSNE 遮盖部分细胞后分别显示控制组和实验组，还是真正的分别聚类。(比如总聚类之后，作者把细胞又按照处理时间的不哦那个，分成了2周的细胞，4周的细胞再聚类，其实细胞类型完全重复，不需要再把4周或2周的分part)。一般如果作者没有特别声明，且两个图中同类型细胞的位置相差无几，那么它们大概率是遮盖部分细胞显示，不需要分。(调参工作复杂漫长，一般在两个不同图的调参中很难保持各类型细胞的绝对位置。)
 
@@ -71,7 +68,7 @@
 - 如果实在不知道该不该分part，那就分就可以了。
 - 划分 part 后，在数据集文件夹(../GSE*****/)下新建一个description.txt文档,写入每个part对应的 description，subDataset，和 correspondingFigure等信息。
 
-2. 填写 description 文件，内容及格式如下：
+3. 填写 description 文件，内容及格式如下（一审人员需要把名字写在description.txt里面）：
 - 特别注意填写每一项时不要在冒号后面加空格，各项填写不能使用任何非英文字符，但是可以用中文在每一项之外备注。各 part 需要描述清楚应该使用的数据。如果是 GSE 数据，可以清晰地根据 GSM info 得知各 sample 的确切信息，比如使用模版 script.ipynb 中的 sample = my_builder.sample_info(GSE = ‘') 查看各 sample 基本信息。part description 中要写清楚每个 part 对应文件里的 xxx 细胞，或者要使用使用了 xxx 测序方法的文件，或者直接写出要使用的文件名。可以不把数据/文件拆分放到相应 part 的 downloaded data，但需要描述清楚应该使什么文件/数据。注意所有给标注同学提供的字段和正式标注要求的 controlled vocabulary 一致
 
 - title:注意粘贴的时候在最后不能有”.”
@@ -89,7 +86,7 @@
   - clusterAvailability:
   - tSNEAvailability:
   - UMAPAvailability:
-
+- 当数据不是GEO来源的时候，需要填写dataURL:
 
 ## 二审：
 负责人：张萌栩 
