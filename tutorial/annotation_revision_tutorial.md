@@ -81,16 +81,19 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 每新标注一个数据集，都要把自己写的代码，每一个表格尽可能的展开，把网页打印-选择生成pdf版，并把文件重新命名为report_数据集编号_用户名和名字_日期.pdf, 然后预备役实习生交给二审人员
 如，report_GSE*****_user_72_zhangsan_20200320.pdf，正式实习生直接贴在redmine任务平台相应任务下。
 ## 2.	unstructuredData需要摘录的信息：
+#### title/abstract/sourceID/journal/publicationDate/authors/keywords/citation这几项现在可以调运函数自动生成了，但是需要检查生成的内容中是否有乱码。
+
 - subDataset：由一审人员写在description.txt上，请复制过来
 - description：由一审人员写在description.txt上，请复制过来
 - correspondingFigure：由一审人员写在description.txt上，请复制过来
-- title：注意这里填写的是文章的title，不是GSE界面的title！注意不要title不要加句号
+- title：注意这里填写的是文章的title，不是GSE界面的title！注意不要title不要加句号,可以调用函数自动生成
 - authors：使用内置函数获取，script中的引号内填pubmedID
 - accessionNumber：这里填写GSE开头的编码,可以在pubmed网站中文章下面的Associated data这一栏获取，一般GSE三个字母后面有5位数。
 - pubmedID：填写pubmed编号，pubmed网站上文章题目下面的PMID就是。
 - keywords： 使用内置函数获取，script中的引号内填pubmedID
 - abstract：把文中的abstract一段复制下来，注意不要多了或少了。不要填写GSE界面的summary!
 - sourceID：出现在pubmed网站中文章题目下方。DOI的网络连接，如一篇文章的DOI为10.1038/nature12172，那么它的网络链接为https://doi.org/10.1038/nature12172
+
 - libraryPreparationMethod：是指细胞测序所使用的技术，可在文章中查找；也可以在文章相应的GEO网址中（即在GEO网站首页输入GSE编码即可）查找。文章中的技术，使用my_inspector.libmethod_keywords调出关键词： 10x chromium(注意不要随便更改大小写！), drop-seq, microwell-seq, C1 Fluidigm, inDrops, Smart-seq2, Smart-seq, CEL-seq, CEL-seq2, MARS-seq, msSCRB-seq, SCRB-seq基本上都出自于上面几种测序技术。
 - sequencingPlatform：这里填写测序平台。可以在文章相应的GEO网址中找到。如，Illumina HiSeq 2500，Illumina HiSeq 500，Illumina HiSeq 2000等。
 - clusteringMethod：这里填写聚类分析的所使用的方法，可在文章中查找。聚类分析常用方法：k-means, affinity propagation, mean-shift, spectral clustering, Ward hierarchical clustering, agglomerative clustering, DBSCAN, Gaussian mixtures, birch.
@@ -107,7 +110,7 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 - genomeBuild：可查看文章相应的GEO网址中是否有相应字段。人为hg/GRCh，小鼠为mm/GRCm这类格式，其他物种可以填notAvailable。
 - annotation: 是指基因的注释信息是什么
 - journal： 使用内置函数获取，引号内填pubmedID，如无法获取，使用命令my_inspector.journal_keywords调用journal的列表查看，列表中没有该杂志名称的话就自己填写。
-- citation: 指引用次数
+- citation: 指引用次数,可调用函数自动生成 metadata['citation'] = my_builder.get_citation(metadata['sourceID'])
 - tissue：文中选填,填为list格式。需要在https://www.ebi.ac.uk/ols/ontologies/bto 这个网址查询是否有填写的tissue。tissue这个字段的设置是为了之后做筛选时能快速筛选出相应组织的所有数据集，例如melanoma这种黑色素瘤疾病，我们可以填写skin为tissue。冠状动脉可以填写成heart，可以填写的大一点。
 - tissueOntology: 不填写，向下运行代码自动生成
 - clusterAvailability：填True or False，意思是能否找到对应的cluster信息
