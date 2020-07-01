@@ -74,7 +74,7 @@
 - title:注意粘贴的时候在最后不能有”.”
 - PMID:
 - accessionNumber:
-- subDataset-n
+- subDataset: 如果有不只一个part，则根据part_n填为SubDataset-n；只有一个part不填。注意！不要填写part_n
 - description:The original article contains N subDatasets, which are different by species/library preparation method/tissues/cells/protocols (放用于区分part的关键词). This subDataset is based on human/mouse data/xxx tissue/xxx cells/xxx method (填写part间的区别信息).
 
 - part_n 仅一个part不需要填写 subDataset 和 description
