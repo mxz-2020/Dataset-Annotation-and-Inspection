@@ -103,8 +103,8 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 - biomarkerDerivationMethod：是指marker gene的算法，一般在文章的method里面有，是找cluster下游的特异基因的方法。一般是t-test或者wilcoxon之类的，尽量在文章中找到对应的marker genes的算法。
 - fastqURL：在EBI网址上查找文章名字，然后点击相应链接，查看data信息，链接就会跳转到一个有大写字母PRJNA和一串数字结尾的地址，如 ：https://www.ebi.ac.uk/ena/data/view/PRJNA542142其实只要网页里面有文章的fastq相关信息即可
 - figureURL：填写文章的摘要图网址。对于明确表示有graphic abstract 的文章，我们需要把这张图放在展示页面上，如果没有graphic abstract，那么放文章的第一张图。可以在文章页面访问原图，使用原图链接，或者访问杂志网站，使用杂志提供的图片链接。图片链接结尾一般是*.jpg .png .gif之类的文件形式。链接需能在浏览器中打开，但不可使用只自动下载的图片。
-- codeURL: 如果作者提供了代码，需要把链接填写在这里。一般会在文献中的codeAvailability中找到github链接或者dropbox链接，里面有时会有cluster信息，请仔细查看。
-- dataURL: 非GSE数据没办法填写GSE开头的accession number的数据集需要填写此项。
+- codeURL: 如果作者提供了代码，需要把链接填写在这里。一般会在文献中的codeAvailability中找到github链接或者dropbox链接，里面有时会有cluster信息，请仔细查看。当没有内容可以填写的时候，需要填写notAvailable。
+- dataURL: 非GSE数据没办法填写GSE开头的accession number的数据集需要填写此项。如果这一项没有可以填写的内容时，填写notAvailable。
 - isFigurePublic：填True or False, 是否对所有网络均公开可见，如一般abstract中的figure为公开的，就填写True。
 - taxonomyID：可查看文章相应的GEO网址中的sample里的信息，一般人填9606， 鼠填10090（只用填写了这个才能生成geneannotation）
 - genomeBuild：可查看文章相应的GEO网址中是否有相应字段。人为hg/GRCh，小鼠为mm/GRCm这类格式，其他物种可以填notAvailable。
@@ -114,6 +114,7 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 - tissue：文中选填,填为list格式。需要在https://www.ebi.ac.uk/ols/ontologies/bto 这个网址查询是否有填写的tissue。tissue这个字段的设置是为了之后做筛选时能快速筛选出相应组织的所有数据集，例如melanoma这种黑色素瘤疾病，我们可以填写skin为tissue。冠状动脉可以填写成heart，可以填写的大一点。
 - tissueOntology: 不填写，向下运行代码自动生成
 - clusterAvailability：填True or False，意思是能否找到对应的cluster信息
+- otherDataType：该字段被存储为list类型，这个字段里面填写文献中是否有出现除了scRNA-seq的数据类型如TCR, BCR, CyTOF, CITE-seq,spatial transcriptomics，total-seq，REAP-seq，一般可以在以上数据类型中挑选。已形成controlled vocabulary在inspector中可以使用Tab键查看。
 
 ### 以下字段为文章的研究主题
 - disease：填True or False
@@ -145,7 +146,7 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 
 
 ### markergene
--markergene 的填写一般是在文章supplementary information 里面查找存有markergene的excel表格。然后把excel表格里的markergene信息依次填写进字典中。
+-markergene 的填写一般是在文章supplementary information 里面查找存有markergene的excel表格。然后把excel表格里的markergene信息依次填写进字典中。如果cluster是自己计算的，markergene是作者提供的，有时候会出现inspector报错说markergene里面的cluster和cellAnnotation里面的cluster不对应，这种情况下，我们只需要把作者给的markergene塞到unstructuredData里面相应位置就好了，只要知道报错原因就可以了。
 可以参考新手代码教程填写
 
 ## 3.	cellAnnotation
@@ -262,7 +263,8 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 4. clustering计算，在6.4中，仅在找不到作者又未回复时使用，记得运行第二行代码来判断isbadtSNE，来判断tSNE图上的细胞簇点是否能分得开。
 5. cellOntologyID，在6.5中运行后根据cellOntologyName自动填写
 6. 还添加了一些需要运行的代码在6.6-6.8中
-   ![](images/figure-7.png)
+
+    ![](images/figure-7.png)
 7. 填写README:
    - 第一个block里面运行的代码用来赋值和读取readme.json
    - 第二个block里面填写信息
