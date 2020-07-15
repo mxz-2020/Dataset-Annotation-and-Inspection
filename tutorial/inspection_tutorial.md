@@ -94,22 +94,22 @@
 
 ### 二审 修改回收步骤：
 负责人分配任务，
-- 1）	二审（可以找优秀的实习生帮忙了），首先把数据集标注的任务在redmine上asign给空闲的实习生，把数据集scp 到修改人的目录中(针对在node02服务器上审核的人)或者move到修改人的目录下面（针对在阿里云服务器上修改的人）
+- 1）	二审目前由full-time员工指派，进行二审的实习生会被分配一些数据集，并在redmine的相应数据集下被设置成watcher，被设置成watcher之后关于任务的所有的变动都会收到邮件提醒，二审人员接到任务后自行去user文件夹下寻找数据集进行审核，请不要把inspection.ipynb留在code文件夹里。
 
-- 2）	之后等实习生做完标注并上传report在redmine上，就需要在report和数据集的基础上进行审核，如果有错误，记录在redmine上并在report中使用修订模式指出，然后返回实习生修改。除metadata的错误可由审查人员直接在原文件中自行改动之外，其余错误均需按照以下步骤！
+- 2）report一般会在redmine上，就需要在report和数据集的基础上进行审核，如果有错误，记录在redmine上，然后返回实习生修改。除metadata的错误可由审查人员直接在原文件中自行改动之外，其余错误均需按照以下步骤！
 
 - 3）	当修改人在redmine上反馈修改完成之后，审查人去该目录下进行二次检查。除了原有问题之外，需重点看以下几点：
     - 如果是矩阵需要改动，需检查其相应的自动生成函数是否都运行了（可根据文件更新时间进行判断），包括：tsne, cluster, auto_calculation, downsample（downsample这个只有回溯时会有）等；
     - metadata里面的research topic，clusterAvailability以及tSNEAvailability需进行二次核查，tissue，journal，libraryPreparationMethod需要确保格式正确
 
-- 4）	如果没有错误，把report一起保存在数据集中，并回收数据集到：
-针对在node02服务器上修改的人：将数据集打包压缩(如果数据集较小可不打包压缩，但还是建议先打包压缩)，并scp回来，拷贝到路径：/home/biodb/data/dataset_collection/datasets/2_inspection_stage/revised/；针对在阿里云服务器上修改的人：将数据集move到路径：/home/biodb/data/3rd_inspection/。在数据改完之后均需要放在以上这个路径中。
+- 4）	如果没有错误，或者修改好了没有其他错误了就可以把数据集放到3rd_inspection这个文件夹里面并把redmine上的状态改成Feedback状态：
+针对在node02服务器上修改的人：将数据集打包压缩(如果数据集较小可不打包压缩，但还是建议先打包压缩)，并scp回到阿里云，拷贝到路径：/home/biodb/data/3rd_inspection/，如果太大，可以联系管理员单独回收；针对在阿里云服务器上修改的人：将数据集move到路径：/home/biodb/data/3rd_inspection/。在数据改完之后均需要放在以上这个路径中。
 
 - 5）	确认数据集已拷贝至指定路径后，需要删除原来的修改人目录中的数据（不要留有冗余数据）。
 
-- 6）	在redmine上更改任务情况的状态为Feedback,非紧急任务时需要在本地表格记录审核情况，每周五交给数据集流程管理人员进行汇总。错误记录只需简略提及要点即可，标注人、审核人（在二审表格中）一定要写清楚。
+- 6）	在redmine上更改任务情况的状态为Feedback，审核人员要及时查看自己负责的审核任务是否有更新，及时审核修改。
 
-- 7）	最后由三审人员在指定3rd_inspection文件夹下做最后审查。小错误自己改改就好的，可以在直接改完后移动到correct文件夹下。做好本地表格记录即可！
+- 7）	最后由三审人员在指定3rd_inspection文件夹下做最后审查。小错误自己改改就好的，可以在直接改完后移动到correct文件夹下。
 
 - 8）	如果有优秀的实习生，并且其本人有意愿，可以让他们接触审核工作，帮忙分担工作压力，但是质量控制要把握好。
 
