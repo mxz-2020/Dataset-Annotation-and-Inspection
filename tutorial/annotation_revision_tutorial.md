@@ -37,15 +37,6 @@
 - 二审 修改回收步骤：	30
 - 补充教程：	32
 3. 三审	35
-- 三审 修改回收步骤：	35
-4. 审核的汇总表格流程	36
-
-
-
-## 如何给新实习生注册用户？
-Redmine用户注册：需要由管理员权限的人在administration中的user选项卡中添加用户。
-Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
-
 ## 注册好的实习生该做些什么？
 1.	安装软件登陆账户
 2.	教程：
@@ -115,7 +106,7 @@ Linux用户注册：由李玥负责提供 端口号、密码和服务器IP。
 - tissueOntology: 不填写，向下运行代码自动生成
 - clusterAvailability：填True or False，意思是能否找到对应的cluster信息
 - otherDataType：该字段被存储为list类型，这个字段里面填写文献中是否有出现除了scRNA-seq的数据类型如TCR, BCR, CyTOF, CITE-seq,spatial transcriptomics，total-seq，REAP-seq，一般可以在以上数据类型中挑选。已形成controlled vocabulary在inspector中可以使用Tab键查看。
-
+- isDiseaseTreated: 这个字段只在disease为True的时候填写，填写True or False。当这个数据集中使用的sample，包含有treated的sample，那么填写True，反之填写False，disease不为True的这个字段，空着即可，不需要填写任何内容。
 ### 以下字段为文章的研究主题
 - disease：填True or False
 - methodology：填True or False （True 仅包括本身研究测序方法的文章）
