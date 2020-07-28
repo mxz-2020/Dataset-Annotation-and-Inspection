@@ -179,6 +179,7 @@
 
 ## 4.	Matrix
 ### 注：当文献里面细胞数目超过1 万时，需要把矩阵存成mtx格式，一旦存了mtx格式，所有矩阵都需要存成mtx格式。 
+### 我们不对作者给的原始数据进行任何筛选。如果细胞数目超过过大，如几十万或上百万这种，做之前请咨询管理员。
 
 #### 从 Matrix_rawCounts 或 Matrix_normalized 生成 TPM
 注意：Matrix_normalized 优先于 Matrix_rawCounts 使用生成TPM。
