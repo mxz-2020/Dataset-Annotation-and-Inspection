@@ -166,6 +166,7 @@
    ![](images/figure-4.png)
    
    6）注意clusterName中不可以出现”.“,要用”_“来替代。
+   
    7）若tsne和umap作者也没有提供，跟cluster一样，实在不行可以运行自己的脚本自动计算。6.3中的代码生成2D（第一行代码） 和3D的图（第二行代码）
 
    ![](images/figure-5.png)
