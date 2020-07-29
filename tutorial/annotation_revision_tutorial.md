@@ -259,6 +259,8 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 6. 还添加了一些需要运行的代码在6.6-6.8中
 
     ![](images/figure-7.png)
+    ![](images/figure-13.jpg)
+    
 7. 填写README:
    - 第一个block里面运行的代码用来赋值和读取readme.json
    - 第二个block里面填写信息
