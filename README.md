@@ -10,3 +10,5 @@
 ## 数据审核查看：
 - tutorial/inspection_tutorial.md
 
+## 代码不会写请优先查看：
+- 数据处理代码-新手教程.md
