@@ -18,25 +18,20 @@
 - [如何给新实习生注册用户？ ](#head1)
 - [注册好的实习生该做些什么？](#head2)
 - [实习生数据集标注以及修改指南](#head3)
-- [数据集标注指南](#head4)
-	- [1.	Report](#head5)
-	- [2.	unstructuredData需要摘录的信息](#head6)
-	- [3.	cellAnnotation](#head7)
-	- [4.	Matrix](#head8)
-	- [5.	生成的其他文件](#head9)
-	- [6.	运行检查器（之后可以让陈淳继续添加）](#head10)
-	- [7.	遇到的问题与解答](#head11)
-- [实习生数据集修改指南](#head12)
-	- [1. 以下代码是运行配置项，需要在修改数据集的时候运行](#head13)
-	- [2. 以下三个部分的数据如果进行了修改，需要注意运行下面的自动化函数](#head14)
-- [审核人员审核指南](#head15)
-	- [1. 一审](#head16)
-	- [2. 二审](#head17)
-  - [二审 修改回收步骤](#head18)
-  - [补充教程](#head19)
-	- [3. 三审](#head20)
+	- [数据集标注指南](#head4)
+		- [1.	Report](#head5)
+		- [2.	unstructuredData需要摘录的信息](#head6)
+		- [3.	cellAnnotation](#head7)
+		- [4.	Matrix](#head8)
+		- [5.	生成的其他文件](#head9)
+		- [6.	运行检查器（之后可以让陈淳继续添加）](#head10)
+		- [7.	遇到的问题与解答](#head11)
+	- [实习生数据集修改指南](#head12)
+		- [1. 以下代码是运行配置项，需要在修改数据集的时候运行](#head13)
+		- [2. 以下三个部分的数据如果进行了修改，需要注意运行下面的自动化函数](#head14)
+		
  
-## 注册好的实习生该做些什么？
+## <span id="head2">注册好的实习生该做些什么？ </span>
 1.	安装软件登陆账户
 2.	教程：
 1)  pdf版教程（包含流程步骤及注意事项）
@@ -61,16 +56,17 @@
 
 
 
-# 实习生数据集标注以及修改指南
+# <span id="head3">实习生数据集标注以及修改指南 </span>
 
-# 数据集标注指南
+# <span id="head4">数据集标注指南 </span>
+
 ### 注：文献具有时效性，实习生若是在一周内无法完成分配的数据集，需要及时向管理人员汇报。进行数据标注，需要从data/tutorial/template/code/文件夹下复制script.ipynb代码文件模板到自己的文件夹下参考运行. 不可以直接在模板中运行！！！脚本会随时更新，请随时关注新加入的字段，不要一直使用自己存在文件夹下面的script，每次用都从template下复制最好。
 
 ## 流程：审核人员下发任务到redmine——拿到数据集——进行标注——生成pdf版本的report——redmine回复完成并附件添加report——等待二审和修改
-## 1.	Report：
+## <span id="head5">1.	Report： </span>
 每新标注一个数据集，都要把自己写的代码，每一个表格尽可能的展开，把网页打印-选择生成pdf版，并把文件重新命名为report_数据集编号_用户名和名字_日期.pdf, 然后预备役实习生交给二审人员
 如，report_GSE*****_user_72_zhangsan_20200320.pdf，正式实习生直接贴在redmine任务平台相应任务下。
-## 2.	unstructuredData需要摘录的信息：
+## <span id="head6">2.	unstructuredData需要摘录的信息： </span>
 #### title/abstract/sourceID/journal/publicationDate/authors/keywords/citation这几项现在可以调运函数自动生成了，但是需要检查生成的内容中是否有乱码。
 
 - subDataset：由一审人员写在description.txt上，请复制过来
@@ -139,7 +135,7 @@
 -markergene 的填写一般是在文章supplementary information 里面查找存有markergene的excel表格。然后把excel表格里的markergene信息依次填写进字典中。如果cluster是自己计算的，markergene是作者提供的，有时候会出现inspector报错说markergene里面的cluster和cellAnnotation里面的cluster不对应，这种情况下，我们只需要把作者给的markergene塞到unstructuredData里面相应位置就好了，只要知道报错原因就可以了。
 可以参考新手代码教程填写
 
-## 3.	cellAnnotation
+## <span id="head7">3.	cellAnnotation: </span>
 这里需要查看一些矩阵里的信息来完善cellAnnotation表格，需要用到代码
 注意：没有的数据，不要留下NaN，若找不到信息就填成notAvailable。 
 - 填写CellID: 一般在Matrix_rawCounts或者Matrix_normalized有对细胞的编号，只需要取出后安进cellAnnotation表格中的cellID这一列就可以了。
@@ -178,7 +174,7 @@
    2） 如果文章没有找到clusterName，那么就只能在文章中寻找进行聚类分析的是什么细胞，有时候只能找到这篇文章是研究**细胞的，如骨髓细胞，那就只查找骨髓细胞相应的cellOntology信息并全部填上即可。目的就是填上就好，能填就填，轻易不要填notAvailable，更不可以空着。
 
 
-## 4.	Matrix
+## <span id="head8">4.	Matrix: </span>
 ### 注：当文献里面细胞数目超过1 万时，需要把矩阵存成mtx格式，一旦存了mtx格式，所有矩阵都需要存成mtx格式。 
 ### 我们不对作者给的原始数据进行任何筛选。如果细胞数目过大，如几十万或上百万这种，做之前请咨询管理员。
 
@@ -249,7 +245,7 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
     df_tpm = fpkm_array / b.values.reshape(-1,1) * 1e6          
     #1e6代表1 million
 
-## 5.	生成的其他文件：
+## <span id="head9">5.	生成的其他文件：</span>
 1. TPM需要从rawcounts生成时，运行6.1（注意：只有当libraryPreparationMethod填写完了之后才能运行成功）
 2. geneAnnotation文件：这个是运行代码自动生成的，在script.ipynb中的6.2可见。（注意：只有taxonomy填写了物种的编码之后才能成功生成）
 3. 当真的没有tsne和umap坐标没办法从作者那里得到回复时，可以运行我们自己的计算脚本，计算tSNE和UMAP的二维和三维， 运算脚本在script.ipynb中的6.3可见。
@@ -271,7 +267,7 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
     Readme['otherComments'] = ''
 - 最后记得保存
 
-## 6.	运行检查器（之后可以让陈淳继续添加）
+## <span id="head10">6.	运行检查器(之后可以让陈淳继续添加): </span>
 运行代码my_inspector.inspect()
 在运行检查器后经常会出现报错，这时就需要根据检查器报错来排查错误信息
 常见报错：
@@ -289,7 +285,7 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 
 3.	如果没填写libraryPreparationMehtod或者taxonomy就想生成toTPM或者geneAnnotation，也会报错提示
 
-## 7.	遇到的问题与解答
+## <span id="head11">7.	遇到的问题与解答: </span>
 1）	rawcounts文件太大，生成TPM总是崩溃怎么办？
    - 答：可以试试存成sparse matrix，这样会小一点，然后再转成TPM。细胞超过5万以上的就不要存成tsv格式了。现在如果只提供rawcounts，都需要生成mtx格式的矩阵。
 
@@ -340,10 +336,10 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 
 
 
-# 实习生数据集修改指南
+# <span id="head12">实习生数据集修改指南 </span>
 ### 标注数据集之后的修改注意事项从2开始，不用新建文档，在自己的代码中修改即可(新标注数据集都不需要运行downsample相关的函数！！！)
 ### 回溯型数据集的修改注意事项从1开始，需要新建文档，不可以在别人的代码上修改！！（当有回溯型的数据集需要修改的时候，再放出给实习生）实习生收到修改意见后，需要另外新建一个phthon3的文件，命名为revision.ipynb，在这个文件中修改标注的数据。
-## 1. 以下代码是运行配置项，需要在修改数据集的时候运行
+## <span id="head13"> 1. 以下代码是运行配置项，需要在修改数据集的时候运行： </span>
     import importlib.util
     import sys
     import os 
@@ -364,7 +360,7 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
     my_builder = datasetBuilder.DatasetBuilder(starting_dir)
     my_downsample = downsample.Downsample(starting_dir)
 
-## 2. 以下三个部分的数据如果进行了修改，需要注意运行下面的自动化函数：
+## <span id="head14"> 2. 以下三个部分的数据如果进行了修改，需要注意运行下面的自动化函数： </span>
 
 ### (1) 矩阵
 ### (1.1) raw counts, normalized变动，需要考虑重新生成TPM矩阵；（注意TPM如果重新生成了，参考1.2运行自动生成函数）
