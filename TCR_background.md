@@ -22,4 +22,4 @@
 
 ## 10x format TCR Data
   You only need to understand the table of TCR produceed by 10X Genomics.
-  - ![](TCR_images/10x_table.png)
+  - ![](TCR_images/10x_table.PNG)
