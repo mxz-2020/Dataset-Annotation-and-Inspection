@@ -101,9 +101,9 @@
 - tissueOntology: 不填写，向下运行代码自动生成
 - clusterAvailability：填True or False，意思是能否找到对应的cluster信息
 - otherDataType：该字段被存储为list类型，这个字段里面填写文献中是否有出现除了scRNA-seq的数据类型如TCR, BCR, CyTOF, CITE-seq,spatial transcriptomics，total-seq，REAP-seq，一般可以在以上数据类型中挑选。已形成controlled vocabulary在inspector中可以使用Tab键查看。
-- isDiseaseTreated: 这个字段只在disease为True的时候填写，填写True or False。当这个数据集中使用的sample，包含有treated的sample，那么填写True，反之填写False，disease不为True的这个字段，空着即可，不需要填写任何内容。
 ### 以下字段为文章的研究主题
 - disease：填True or False
+- isDiseaseTreated: 这个字段只在disease为True的时候填写，填写True or False。当这个数据集中使用的sample，包含有treated的sample，那么填写True，反之填写False，disease不为True的这个字段，空着即可，不需要填写任何内容。
 - methodology：填True or False （True 仅包括本身研究测序方法的文章）
 - cancer：填True or False
 - neuroscience：填True or False
@@ -114,9 +114,9 @@
 - isBadtSNE: 填True or False,由6中的tSNEplot画出图形判断
 - UMAPAvailability: 填True or False,意思是能否找到UMAP的坐标信息，同样需要发邮件
 - isBadUMAP: 填True or False,由6中的UMAPplot画出图形判断
-- （新加入）isCultured：填True or False，意思是scRNA-seq所用的细胞是作者自己传代培养的细胞系（True）的还是原代细胞（False）。
-- （新加入）isTPMNotAvailable：填True or False。这个字段的意思时问这个数据集中的TPM矩阵是否是真正的TPM矩阵？因为：Some articles provide norm matrix only and cannot generate TPM (we can only treat the norm as if it is TPM)，找不到真正的TPM矩阵的时候填上True。但在矩阵的normalizationMethod这一列里要标注清楚'Copied from norm'，表示这个不是TPM矩阵！
-- （新加入）diseaseOntology：在https://www.ebi.ac.uk/ols/ontologies/doid中寻找disease_name。
+- isCultured：填True or False，意思是scRNA-seq所用的细胞是作者自己传代培养的细胞系（True）的还是原代细胞（False）。
+- isTPMNotAvailable：填True or False。这个字段的意思时问这个数据集中的TPM矩阵是否是真正的TPM矩阵？因为：Some articles provide norm matrix only and cannot generate TPM (we can only treat the norm as if it is TPM)，找不到真正的TPM矩阵的时候填上True。但在矩阵的normalizationMethod这一列里要标注清楚'Copied from norm'，表示这个不是TPM矩阵！
+- diseaseOntology：在https://www.ebi.ac.uk/ols/ontologies/doid中寻找disease_name。
     ![](images/figure-2.png)
 - （当cancer为True时需要填写）cancerDescription：按照script脚本里面的要求填写，文章不是cancer相关可以不填
    ![](images/figure-3.png)
@@ -178,46 +178,57 @@
 ### 注：当文献里面细胞数目超过1 万时，需要把矩阵存成mtx格式，一旦存了mtx格式，所有矩阵都需要存成mtx格式。 
 ### 我们不对作者给的原始数据进行任何筛选。如果细胞数目过大，如几十万或上百万这种，做之前请咨询管理员。
 
-#### 从 Matrix_rawCounts 或 Matrix_normalized 生成 TPM
-注意：Matrix_normalized 优先于 Matrix_rawCounts 使用生成TPM。
+### 什么是filtered matrix，什么是没有filter过的矩阵？
+- 根据作者在文章中提供的tSNE/UMAP等图的注释信息，一般可以得到降维图中的细胞数量的信息，如果矩阵中的细胞数目和文章中不相符，即为没有filter的矩阵，一般这种矩阵极大，有时有几十万甚至几千万细胞，无法运算。
 
-#### 若作者只提供了TPM 矩阵：
-需要把矩阵存到tpm和norm矩阵里面，normalizationMethod分别填写:TPM from author; TPM
+### 1. filtered 矩阵怎么处理？
+- Priority: filtered TPM> filtered norm matrix > filtered raw_Counts matrix
+- a) 提供了filtered TPM矩阵是最好的情况，用这个处理就好
+- b）当没有filtered TPM 但是提供了filtered norm matrix 或者 filtered raw_Counts matrix，使用相应的filtered norm/raw 转置成TPM，当norm和rawCounts同时出现时，需要使用norm矩阵转置成TPM. 
+- c) 注意：norm矩阵的normlization method需要写清楚，当文章中没有详细描述的时候，需要去GEO的网站看一下GSE相应内容，若是两个地方都没有描述，需要自己尝试是否是熟知的标化方法，即假定norm矩阵的标化的方式为熟知的log2(TPM+1)，通过去log并且减去1的计算后，查看矩阵的行和是否为100万。如果是100万，那么就是norm矩阵的normalization Method假定的标化方法log2(TPM+1)；如果不是100万，需要另外多尝试几次其他的标化方法。有的时候norm的标化方法为FPKM, log2(TP10K+1), log2(TP20K+1), etc. 自己多尝试。
+- d) 恢复不成TPM的norm矩阵，除了要把norm矩阵填写好，还需要把norm矩阵原封不动复制到TPM矩阵里面，并且在normalization Method里面写清楚，具体参考下方***如何填写normalization method?
+- e) 从raw_Counts生成TPM只需要运行自动函数即可。
 
-### Cell number, 即有效细胞数的判断：
-（有效细胞数即数据整合后或经过 normalization 后被使用的细胞数。）
-1.	文章中给出，可以是几种细胞数的和。
-2.	通过 Matrix_normalized 的 row number 数判断：cell number = row numbers (有时需要根据情况随机应变)
-建议用方法2复查方法1中作者提供的有效细胞数。
+### 2. 没有filtered的矩阵怎么处理？
+- a) 当作者没有提供任何 filtered 矩阵的时候，只能先找cluster信息；如果找得到，就把最原始的没有filter过的raw_Counts或norm存储到expression_rawCounts.tsv/mtx 或 expression_norm.tsv/mtx，并且根据cluster信息把细胞筛选后存储到TPM, **cell Annotation和gene Annotation中的细胞与基因始终与TPM保持一致**，所以当TPM为mtx格式时也无需另外存储CellID和GeneNames.
+- b) 如果没有cluster的信息，也没联系上作者，需要联系管理管，查看数据集的优先级，优先级不高的可以直接放弃，以后再做。
 
-### 为什么要用 TPM：
-在大数据中查询基因表达时，不同数据集在同一个scale上便于比较，因而要有统一的标准。
-
-### 为什么尽可能不用 rawCounts 生成 TPM：
-Matrix_normalized 中数据往往是对 Matrix_rawCounts 数据做出某些处理后所得，尤其是经过 gene or cell filtering。因此，通常 Matrix_rawCounts 可能有更多的 cell，即存在无效细胞。因而 Matrix_rawCounts 列表就可能和后面的 cellAnnotation 不对应，故后续无法用其向 cellAnnotaion 表格中插入数据。
-
-### 判断 downloaded data 是 Matrix_rawCounts 还是 Matrix_normalized：
-根据测序原理，检测结果 Matrix_rawCounts 中一定全为整数，有负数则不是 Matrix_rawCounts。当算法为pseudo alignment（kallisto等，这种算法越来越受欢迎）时，会出现小数。
-
-### 判断是否直接使用 Matrix_rawCounts 生成 TPM：
-当且仅当文章未提供 Matrix_normalized 数据，可以直接用 matrix_rawCounts 生成TPM。
-
-### 判断下载的 Matrix_normalized 是否可以直接用于生成 TPM：
-作者在文章 method、analysis 部分可能提及使用 multi-step normalization strategy，诸如使用 previously described method, reduse batch effects, use ComBat method, etc. 
-如若不确定直接下载的 Matrix_normalized 数据是否经过 logarithm transciption，则使用下载的 Matrix_normalized 数据生成TPM矩阵，并检查TPM的正确性。TPM 正确即表明 Matrix_normalized 中数据可以直接使用。若 TPM不正确，则需间接使用 Matrix_rawCounts 生成 TPM。
-
-### 如何填写normalization method?
+### 3. 如何填写normalization method?
 下载的normalized矩阵和生成的TPM矩阵都需要填写一列normalizationMethod。
   1)	Normalized矩阵：一般是下载得来，需要在文献中找出normalized Matrix是怎样被标准化的，有的是FPKM,有的是RPKM,还有log2（TPM+1）等等形式，载入normalizedMatrix的时候需要在第一列标明normalizedMethod。格式： 如，FPKM。（直接填写原文作者把rawcounts标准化的方法，不要添加其他字符。）
   2)	TPM矩阵：
    - 如果由rawcounts矩阵转化而来，填写：TPM from raw counts
    - 如果由normalized矩阵转化而来，填写： TPM from FPKM （根据normalized矩阵的方法而改变，如：TPM from log2（TPM+1） ）
   3)	如果遇到无法转换成TPM的，TPM的normalizationMethod一定要强调这个不是TPM！并且一定要很详细的注明这个矩阵的标准化方法是什么, 如：矩阵不是TPM! 是TMM矩阵。如果是mtx格式，需要再在uns里面加一个字段写清楚:TPMNormalizationMethod: directly copied from TMM, not TPM.
+  
+  
+### 4. 注意：
+**若作者只提供了TPM 矩阵：**
+- 需要把矩阵存到tpm和norm矩阵里面，normalizationMethod分别填写:TPM from author; TPM
+
+**Cell number, 即有效细胞数的判断：**
+- 跟TPM保持一致即可。
+
+**为什么要用 TPM：**
+在大数据中查询基因表达时，不同数据集在同一个scale上便于比较，因而要有统一的标准。
+
+**为什么尽可能不用 rawCounts 生成 TPM：**
+Matrix_normalized 中数据往往是对 Matrix_rawCounts 数据做出某些处理后所得，尤其是经过 gene or cell filtering。因此，通常 Matrix_rawCounts 可能有更多的 cell，即存在无效细胞。因而 Matrix_rawCounts 列表就可能和后面的 cellAnnotation 不对应，故后续无法用其向 cellAnnotaion 表格中插入数据。
+
+**判断 downloaded data 是 Matrix_rawCounts 还是 Matrix_normalized：**
+根据测序原理，检测结果 Matrix_rawCounts 中一定全为整数，有负数则不是 Matrix_rawCounts。当算法为pseudo alignment（kallisto等，这种算法越来越受欢迎）时，会出现小数。
+
+**判断是否直接使用 Matrix_rawCounts 生成 TPM：**
+当且仅当文章未提供 Matrix_normalized 数据，可以直接用 matrix_rawCounts 生成TPM。
+
+**判断下载的 Matrix_normalized 是否能还原成 TPM：**
+作者在文章 method、analysis 部分可能提及使用 multi-step normalization strategy，诸如去除批次效应 reduse batch effects, use ComBat method；使用中数标化等待. 一般是还原不成TPM
+如若不确定直接下载的 Matrix_normalized 数据是否经过 logarithm transciption，则假定一种标化方法尝试还原成TPM，并检查TPM的正确性。还原不回去的，使用rawCounts矩阵。
 
 ### 检查TPM矩阵正确与否方法：
 TPM中横行代表基因，纵列代表细胞。对于任意单个细胞，当其对应横行中的基因值相加和为1000 000 (10^6)，则TPM正确。如果文章提到使用UMI, 那么CPM（也叫RPM） = TPM, 行和都是一百万，M代表million。
 
-### 间接使用 Matrix_rawCounts 生成 TPM：
+### 使用 Matrix_rawCounts 生成 TPM：
 注：当需要用Matrix_rawCounts自动生成TPM时需要先填写unstructuredData中的libraryPreparationMethod。
 在文章作者给出 Matrix_normalized 情况下，判断是否可以直接用 Matrix_normalized 生成 TPM，或者仍需使用 Matrix_rawCounts 部分数据生成 TPM 的方法：
 1.	作者于文章 data analysing/processing 中明确指出 median normalize (to zero)，或者 Z-Score、TMM，以及一些依赖函数库的结果不能使用 Matrix_normalized 生成 TPM，要根据 matrix_normarlized 中的的 cell ID 挑选出 Matrix_rawCounts 中的的有效 cell ID，使用有效cell ID生成仅包含有效细胞的新Matrix_rawCounts，用其生成 TPM。
