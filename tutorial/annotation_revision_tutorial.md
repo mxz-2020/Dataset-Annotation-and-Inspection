@@ -191,7 +191,7 @@
 
 ### 2. 没有filtered的矩阵怎么处理？
 - a) 当作者没有提供任何 filtered 矩阵的时候，只能先找cluster信息；如果找得到，就把最原始的没有filter过的raw_Counts或norm存储到expression_rawCounts.tsv/mtx 或 expression_norm.tsv/mtx，并且根据cluster信息把细胞筛选后存储到TPM, **cell Annotation和gene Annotation中的细胞与基因始终与TPM保持一致**，所以当TPM为mtx格式时也无需另外存储CellID和GeneNames.
-- b) 如果没有cluster的信息，也没联系上作者，需要联系管理管，查看数据集的优先级，优先级不高的可以直接放弃，以后再做。
+- b) 如果没有cluster的信息，也没联系上作者，首先查看细胞数量：不超过10万的可以尝试自动运算脚本；超过10万的需要联系管理管，查看数据集的优先级，优先级不高的可以直接放弃，以后再做。
 
 ### 3. 如何填写normalization method?
 下载的normalized矩阵和生成的TPM矩阵都需要填写一列normalizationMethod。
