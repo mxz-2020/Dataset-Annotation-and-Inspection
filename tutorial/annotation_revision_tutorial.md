@@ -119,7 +119,27 @@
 - diseaseOntology：在https://www.ebi.ac.uk/ols/ontologies/doid中寻找disease_name。
     ![](images/figure-2.png)
 - （当cancer为True时需要填写）cancerDescription：按照script脚本里面的要求填写，文章不是cancer相关可以不填
-   ![](images/figure-3.png)
+   {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 若cancer为True需要填写以下字段\n",
+    "cancerDescription = {}\n",
+    "cancerDescription['TIL'] = '' # 填 True or False.Tumor Infiltrating Lymphocyte肿瘤浸润淋巴细胞的缩写\n",
+    "cancerDescription['TIM'] = '' # 填 True or False.tumour infiltrating myeloid cell肿瘤浸润髓样细胞的缩写,与TIL并称为 tumour infiltrating immune cells (TII)\n",
+    "cancerDescription['TME'] = '' # 填 True or False.Tumor Micro-environment肿瘤微环境的缩写(non-immune cells, which we mean by cancer\ fibroblast, etc)\n",
+    "cancerDescription['NCIBodyLocation'] = '' # 从给的keywords选填, 如: Head and Neck\n",
+    "cancerDescription['NCIBodyLocationSubtype'] = '' # 根据NCIBodyLocatio对应的keywords选填, 如: Hypopharyngeal Cancer\n",
+    "cancerDescription['TCGAStudyAbbreviation'] = '' # 从给的keywords选填, 如: LAML\n",
+    "cancerDescription['TCGAStudyName'] = '' # TCGAStudyAbbreviation对应的全称如: LAML对应的全称为: Acute Myeloid Leukemia\n",
+    "\n",
+    "\n",
+    "# 运行 my_inspector.nci_cancer_typing 查看 NCIBodyLocatio的keywords\n",
+    "# 运行 my_inspector.tcga_cancer_typing 查看 TCGAStudy的keywords"
+   ]
+  },
 
 ### 对于各字段的说明：
 - disease：是指文章研究内容是否与疾病有关，例如研究某种疾病、从疾病患者采样等，但对于一般性的研究某一通路、细胞等作用，最后认为可能与某种疾病有关时需要多加判断，准则是此篇文章出发的目的和主题内容是否是与疾病相关，此外，cancer必为disease；
@@ -260,7 +280,8 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 1. TPM需要从rawcounts生成时，运行6.1（注意：只有当libraryPreparationMethod填写完了之后才能运行成功）
 2. geneAnnotation文件：这个是运行代码自动生成的，在script.ipynb中的6.2可见。（注意：只有taxonomy填写了物种的编码之后才能成功生成）
 3. 当真的没有tsne和umap坐标没办法从作者那里得到回复时，可以运行我们自己的计算脚本，计算tSNE和UMAP的二维和三维， 运算脚本在script.ipynb中的6.3可见。
-4. clustering计算，在6.4中，仅在找不到作者又未回复时使用，记得运行第二行代码来判断isbadtSNE，来判断tSNE图上的细胞簇点是否能分得开。
+4. clustering计算，在6.4中，仅在找不到作者又未回复时使用，记得运行第二行代码来判断isbadtSNE/UMAP，来判断tSNE/UMAP图上的细胞簇点是否能分得开。
+- 现在新增了genes_plot的计算，需要根据文章中给出的某些基因的tSNE/UMAP图，画出相同基因在被标注数据中的tSNE/UMAP图，只需要填写文章中使用的基因的即可，格式为list，若是没有基因可选，再尝试使用默认参数T_cell=True, B_cell=True画图。
 5. cellOntologyID，在6.5中运行后根据cellOntologyName自动填写
 6. 还添加了一些需要运行的代码在6.6-6.8中
 
