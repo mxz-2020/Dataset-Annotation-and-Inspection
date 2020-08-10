@@ -274,11 +274,23 @@ logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
 3. 当真的没有tsne和umap坐标没办法从作者那里得到回复时，可以运行我们自己的计算脚本，计算tSNE和UMAP的二维和三维， 运算脚本在script.ipynb中的6.3可见。
 4. clustering计算，在6.4中，仅在找不到作者又未回复时使用，记得运行第二行代码来判断isbadtSNE/UMAP，来判断tSNE/UMAP图上的细胞簇点是否能分得开。
 - 现在新增了genes_plot的计算，需要根据文章中给出的某些基因的tSNE/UMAP图，画出相同基因在被标注数据中的tSNE/UMAP图，只需要填写文章中使用的基因的即可，格式为list，若是没有基因可选，再尝试使用默认参数T_cell=True, B_cell=True画图。
+```
+my_builder.genes_plot([''], house_keeping=True, T_cell=False, B_cell=False)#['']中填写gene名字"
+```
 5. cellOntologyID，在6.5中运行后根据cellOntologyName自动填写
 6. 还添加了一些需要运行的代码在6.6-6.8中
-
-    ![](images/figure-7.png)
-    ![](images/figure-13.jpg)
+```
+   6.6 有rawCounts需要计算qc
+   my_builder.calc_qc_value()
+  
+   6.7 自动生成其他文件
+   my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True)
+  
+   6.8 若物种为人需要运行以下代码"
+   my_builder.calc_cell_cycle_score()
+   my_builder.cpdb_statistical_analysis()
+```
+   
     
 7. 填写README:
    - 第一个block里面运行的代码用来赋值和读取readme.json
