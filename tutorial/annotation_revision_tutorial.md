@@ -119,18 +119,18 @@
 - diseaseOntology：在https://www.ebi.ac.uk/ols/ontologies/doid中寻找disease_name。
     ![](images/figure-2.png)
 - （当cancer为True时需要填写）cancerDescription：按照script脚本里面的要求填写，文章不是cancer相关可以不填
-        '''
-	"cancerDescription = {}
-        "cancerDescription['TIL'] = '' # 填 True or False.Tumor Infiltrating Lymphocyte肿瘤浸润淋巴细胞的缩写,
-        "cancerDescription['TIM'] = '' # 填 True or False.tumour infiltrating myeloid cell肿瘤浸润髓样细胞的缩写,与TIL并称为 tumour infiltrating immune cells (TII),
-        "cancerDescription['TME'] = '' # 填 True or False.Tumor Micro-environment肿瘤微环境的缩写(non-immune cells, which we mean by cancer\ fibroblast, etc),
-        "cancerDescription['NCIBodyLocation'] = '' # 从给的keywords选填, 如: Head and Neck,
-        "cancerDescription['NCIBodyLocationSubtype'] = '' # 根据NCIBodyLocatio对应的keywords选填, 如: Hypopharyngeal Cancer,
-        "cancerDescription['TCGAStudyAbbreviation'] = '' # 从给的keywords选填, 如: LAML,
-        "cancerDescription['TCGAStudyName'] = '' # TCGAStudyAbbreviation对应的全称如: LAML对应的全称为: Acute Myeloid Leukemia,
-        # 运行 my_inspector.nci_cancer_typing 查看 NCIBodyLocatio的keywords
-        # 运行 my_inspector.tcga_cancer_typing 查看 TCGAStudy的keywords
-	'''
+```
+"cancerDescription = {}
+"cancerDescription['TIL'] = '' # 填 True or False.Tumor Infiltrating Lymphocyte肿瘤浸润淋巴细胞的缩写,
+"cancerDescription['TIM'] = '' # 填 True or False.tumour infiltrating myeloid cell肿瘤浸润髓样细胞的缩写,与TIL并称为 tumour infiltrating immune cells (TII),
+"cancerDescription['TME'] = '' # 填 True or False.Tumor Micro-environment肿瘤微环境的缩写(non-immune cells, which we mean by cancer\ fibroblast, etc),
+"cancerDescription['NCIBodyLocation'] = '' # 从给的keywords选填, 如: Head and Neck,
+"cancerDescription['NCIBodyLocationSubtype'] = '' # 根据NCIBodyLocatio对应的keywords选填, 如: Hypopharyngeal Cancer,
+"cancerDescription['TCGAStudyAbbreviation'] = '' # 从给的keywords选填, 如: LAML,
+"cancerDescription['TCGAStudyName'] = '' # TCGAStudyAbbreviation对应的全称如: LAML对应的全称为: Acute Myeloid Leukemia,
+	# 运行 my_inspector.nci_cancer_typing 查看 NCIBodyLocatio的keywords
+	# 运行 my_inspector.tcga_cancer_typing 查看 TCGAStudy的keywords
+```
  
 
 ### 对于各字段的说明：
