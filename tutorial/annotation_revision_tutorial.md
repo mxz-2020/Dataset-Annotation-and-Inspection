@@ -131,7 +131,7 @@
 	# 运行 my_inspector.nci_cancer_typing 查看 NCIBodyLocatio的keywords
 	# 运行 my_inspector.tcga_cancer_typing 查看 TCGAStudy的keywords
 ```
-    ![](images/Leukocytes.png)
+   ![](images/Leukocytes.png)
 
 ### 对于各字段的说明：
 - disease：是指文章研究内容是否与疾病有关，例如研究某种疾病、从疾病患者采样等，但对于一般性的研究某一通路、细胞等作用，最后认为可能与某种疾病有关时需要多加判断，准则是此篇文章出发的目的和主题内容是否是与疾病相关，此外，cancer必为disease；
