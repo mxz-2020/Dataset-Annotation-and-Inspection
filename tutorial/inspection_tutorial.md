@@ -17,41 +17,51 @@
 负责人：张天然
 派发步骤：
 ### <span id="head3">初筛流程 </span>
-- 每周五下发下一周需要的筛选的数据集总表，周日晚九点完成初筛表格的填写。预计平均每人每次有15-25个需要分类的文章。
+- 每周一更新总表，周一筛选最新发表的文章，下载发放一审；
+- 优先筛选新文章，完成后可根据情况筛选旧文章，周五可再次发放一审
 ### <span id="head4">初筛内容 </span>
 - 通过浏览文章 title 和 abstract 确定文章是否符合相关主题，是否可以使用，并根据数据集是否已经被标注筛选新的下发文章。在最终确定文章是否是用前，初筛不需要检查 cluster、tSNE、UMAP 等信息。
 - 当前数据收集目录：scRNA-seq, snRNA-seq, CITE-seq, TCR-seq (CAR-T), BCR-seq.
   - snRNA-seq 测神经细胞 (轴比较长，一般只测核) 或冷冻肿瘤细胞核内 RNA，scRNA-seq 测新鲜样本的所有 RNA (主要还是核里的); TCR、BCR 除了检测T/B细胞RNA,还测T/B细胞表面受体clonotypes; CITE-seq 测单个细胞 RNA 加细胞表面蛋白质的检测。
 
-- 对于可以使用的文章，请填写表格中需要填写的空白项目，包括：PMID, accessionNumber, topic, queue, featurePublication, isDiscarded, discardedReason, others.
+- 筛选列表步骤
+  - 新文章根据列impact factor筛选10分以上或10分左右的文章
+  - 新文章中主题较好的impact factor在五分以上的，也需要查看
+  - 旧文章中可优先筛选origin较多的行以及impact factor10分以上的
+  - 查看的文章都需要填写对应的表格中的内容，包括：PMID, accessionNumber, topic, queue, featurePublication, isDiscarded, discardedReason, others.
 
 ##### 表格填写指南
 - accessionNumber: 填写文章做tSNE、UMAP 或者基因热图使用的所有数据编号（一般就是所有作者自己产生的新数据，如果是用了别人的数据做了以上三种图，请一并填写，并在 others 列里备注哪个数据属于别人，e.g. GSE12345 from PMID:13579 for fig.1-a）。如果作者使用别人的数据做参考，但并没有用旧数据做自己文章的新图则无需填写旧数据号。accessionNumber 用英文逗号隔开，中间没有空格。如果涉及网址，请粘贴网址。如果文章属于可使用文章，但没有数据号且未提供下载链接，请填写 request 并给作者发送邮件询问，如果作者两次不回邮件或者告知数据不公开或者需特别申请访问权限，则将 request 改写为 notAvailable (其余各选填项无需变更)；如果文章主题不符，不属于可使用文章则 accessionNumber 填写“-”。 填写示例：GSE12345,GSE67890,GSE13579 全为英文符号且中间没有空格。
 
-
 - topic: 仅填写文章主题关键词即可，例如：cancer, liver, heart, aorta, eye, brain, neuroscience, immunology, cell atlas, cell landscape, etc. 根据文章主题给文章排序
+  - 每篇文章可以有多个topic，比如 (cancer, cancer immunology), (eye, neuroscience), 等等组合。
+- queue
   - queue 1: cancer, immunology, organs (e.g. heart, lung, liver…), neuroscience, cell atlas, regeneration 等等，检测、治疗学相关，或者其他所有看起来有商业价值的东西都是 queue 1. 
-  - queue 2: somatic cells，differentiation (mammal), differentiation (non-mammal, 但是仅限于 nature, cell, science 上关于脊椎动物的研究。对于非 CNS 的 non-mammal 文章，脊椎动物去 queue 4，无脊椎动物去 queue 5), 等等其他不是很重要的东西。 
+  - queue 2: somatic cells，differentiation (mammal), differentiation (non-mammal, 但是仅限于 nature, cell, science 上关于脊椎动物的研究。对于非 CNS 的 non-mammal 文章，脊椎动物去queue 4，无脊椎动物去 queue 5), 等等其他不是很重要的东西。 
   - queue 3: 作者自己产生了新数据的方法学研究（方法学主要包括测序方法的研究和数据分析算法的研究）。
   - queue 4-5: 其他各种不重要的东西，比如关于线虫的研究可以是 queue 5。
-  - queue 6: methodology，即方法学，且作者只用了别人的数据。
-  - queue 7: 文章有新数据，但不可直接获得，需要特别询问数据。请向此类文章作者发送邮件。
-  - queue 8: 数据在未来对公众开放。
-  - queue 9: 作者仅提供 fastq 文件。
   - 另：每篇文章可以有多个topic，比如 (cancer, cancer immunology), (eye, neuroscience), 等等组合。
-  - queue: 参见 topic queue。所有未经过初筛或者被 discarded 的文章是 queue 100。
 
+- 注：被discarded的文章queue不需要填写，只有可以处理的文章才需要填写queue和topic等
 
 - featurePublication: cell atlas, cell landscape, therapy, therapy resistance, testing or prediction 等等很有医学或药物研究、检测用处的，很有参考性 (广泛测序的样本) 或很有商业价值相关文章，填写 TRUE/FALSE。
 
-- isDiscarded: TRUE/FALSE，所有作者自己测了新数据的文章不分主题 discarded 都为False（除非是研究了微生物之类的），因为我们可以通过 queue 来选择使用数据。
+- isDiscarded: TRUE/FALSE，不处理的文章，包括：无自己的数据，fastq，数据未公开，无权限下载，review等。
 
-- discardedReason: 填写数据不能使用的原因，可以是主题过差，比如研究了 yeast… 被保留的文章填写“-”。当isDiscaded为TRUE时，文章参考以下字段填写：review only, not scRNA-seq, ATAC-seq only, yeast, etc. 
+- discardedReason: 填写数据不能使用的原因，如上. 
 
 - others: 
   - 如果某数据现在未公开但是将在未来公开则需填写此项，e.g. GSE12345 available on 2020.06.01。
-  - 对于方法学的文章，如果作者用了别人的数据，则把被使用的数据号填写在这里，不过不需要填写具体每个数据是怎么使用的。方法学文章如果找不到 accessionNumber 则 others 空着。
-  - 对于非方法学的文章，如果作者使用了别人的数据来作 tSNE、UMAP 或者基因热图，则需要在此处填写该数据在哪个图中使用；如果借鉴的数据并没有用于作新图，则不用在此填写。
+  - 不是文本格式或者mtx格式的数据，需要在此注明，如：rds等。
+  - 文章如果没有权限打开，也需要注明在此。
+  -  细胞数少于100个，也需注明
+ 
+- 其他列
+  - requester：指的是数据要求来源，2为研究院，其他要求可以填写具体的人或者主题等
+
+- 注
+  - 被discarded的文章只需填写discardedReason即可，其他列可不用填写，requester需要填写（如果有的话）
+  - 筛选列表的时候，需要看一眼文件大小，表达文件小于5m的，需要查看细胞数，少于100的先不要发放安排，注明others里面即可（重要！！！）
 
 ## <span id="head5">一审 </span>
 ### <span id="head6">一审流程： </span>
