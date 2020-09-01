@@ -399,22 +399,25 @@ my_builder.genes_plot([''], house_keeping=True, T_cell=False, B_cell=False)#['']
 ## <span id="head14"> 2. 以下三个部分的数据如果进行了修改，需要注意运行下面的自动化函数： </span>
 
 ### (1) 矩阵
-### (1.1) raw counts, normalized变动，需要考虑重新生成TPM矩阵；（注意TPM如果重新生成了，参考1.2运行自动生成函数）
-### (1.2) TPM矩阵如果变化了，所有自动生成函数都需重新运行，包括：
-    my_builder.generate_geneAnno()
-    my_builder.calculate_dim_red(tSNE = True, UMAP = True)
-    my_builder.calculate_cluster(RUN = True) #注意参数RUN=True会将原cluster信息删除并更新，所以如果原文提供cluster信息的时候不要运行该行！
+#### (1.1) raw counts, normalized变动，需要考虑重新生成TPM矩阵；（注意TPM如果重新生成了，参考1.2运行自动生成函数）
+#### (1.2) TPM矩阵如果变化了，所有自动生成函数都需重新运行，包括：
+    	my_builder.generate_geneAnno()
+    	my_builder.calculate_dim_red(tSNE = True, UMAP = True)
+    	my_builder.calculate_cluster(RUN = True) #注意参数RUN=True会将原cluster信息删除并更新，所以如果原文提供cluster信息的时候不要运行该行！
 
-    #以下两个函数最后运行
-    my_builder.auto_calculation()
-    my_downsample.downsample() #如果需要运行该函数，必须先将原来的downsample_data文件夹删除！
-
+    	#以下两个函数最后运行
+    	my_builder.auto_calculation()
+    	my_downsample.downsample() #如果需要运行该函数，必须先将原来的downsample_data文件夹删除！
+#### (1.3) 如果矩阵的值没有变化，只是更改了gene的名称（如去掉小数点或添加下划线等）：
+	my_builder.generate_geneAnno()
+	my_builder.auto_calculation()  #需要重新计算markergene等
+	my_downsample.downsample(tpm_downsampled = True)
 ### (2) cellAnnotation（以下情形为矩阵未改动的情形，如矩阵变动参考1.1）
 ### (2.1) clusterName改动，需要重新运行：
-    my_builder.auto_calculation()
-    my_downsample.downsample(tpm_downsampled = True)
-### (2.2) clusterName没变，其他部分变动
-    my_downsample.downsample(tpm_downsampled = True)  # 当细胞超过4000个时运行，不需要运行其他代码
+    	my_builder.auto_calculation() #需要重新计算所有东西
+    	my_downsample.downsample(tpm_downsampled = True)
+### (2.2) clusterName没变，其他部分变动（如clusterID, tSNE坐标等）
+    	my_downsample.downsample(tpm_downsampled = True)  # 当细胞超过4000个时运行，不需要运行其他代码
 ### (2.3) 其他
 cluster如果是用函数生成的话会多出两列：clusteringMethod和clusterName_scibet。
 所以如果是后面找到原文提供的cluster信息填入之后，需要将原来这两列删除。
