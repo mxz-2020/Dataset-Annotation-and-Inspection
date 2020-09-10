@@ -402,39 +402,35 @@ my_builder.genes_plot([''], house_keeping=True, T_cell=False, B_cell=False)#['']
 #### (1.1) raw counts, normalized变动，需要考虑重新生成TPM矩阵；（注意TPM如果重新生成了，参考1.2运行自动生成函数）
 	
 #### (1.2) TPM矩阵如果变化了，所有自动生成函数都需重新运行，包括：
-    	my_builder.generate_geneAnno()
-	
-	#以下两个函数最后运行只在cluster为自动计算时运行，注意仔细判断param里面的参数！！！
-	param = [
-    	{'cluster': {'over_write': True}},  #注意参数'over_write': True会将原clusterName/ID信息覆盖，所以如果原文提供cluster信息的时候注意修改成False再运行！
+    my_builder.generate_geneAnno()
+    #以下两个函数最后运行只在cluster为自动计算时运行，注意仔细判断param里面的参数！！！
+    param = [
+    {'cluster': {'over_write': True}},  #注意参数'over_write': True会将原clusterName/ID信息覆盖，所以如果原文提供cluster信息的时候注意修改成False再运行！
     
-    	{'tSNE': {'method': 'net_tsne', 'dim_2': True, 'dim_3': True, 'over_write': True}}, #dim2为计算二维坐标，dim3为计算三维坐标
+    {'tSNE': {'method': 'net_tsne', 'dim_2': True, 'dim_3': True, 'over_write': True}}, #dim2为计算二维坐标，dim3为计算三维坐标
     
-    	{'UMAP': {'method': 'umap', 'dim_2': True, 'dim_3': True, 'over_write': False}},
-    
-	]
-	my_builder.auto_run(param) 
-	my_builder.cpdb_statistical_analysis()#物种为人时计算，修改了
+    {'UMAP': {'method': 'umap', 'dim_2': True, 'dim_3': True, 'over_write': False}},
+    ]
+    my_builder.auto_run(param) 
+    my_builder.cpdb_statistical_analysis()#物种为人时计算，修改了
 	
 	
-    	#以下两个函数最后运行
-    	my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True)
-	my_builder.calc_cell_cycle_score()# 如果物种为人需要计算
-    	my_downsample.downsample() #如果需要运行该函数，必须先将原来的downsample_data文件夹删除！
+    #以下两个函数最后运行
+    my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True)
+    my_builder.calc_cell_cycle_score()# 如果物种为人需要计算
+    my_downsample.downsample() #如果需要运行该函数，必须先将原来的downsample_data文件夹删除！
 #### (1.3) 如果矩阵的值没有变化，只是更改了gene的名称（如去掉小数点或添加下划线等）：
-	my_builder.generate_geneAnno()
-	my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True)  #需要重新计算markergene等
-	my_downsample.downsample(tpm_downsampled = True)
+    my_builder.generate_geneAnno()
+    my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True)  #需要重新计算markergene等
+    my_downsample.downsample(tpm_downsampled = True)
 ### (2) cellAnnotation（以下情形为矩阵未改动的情形，如矩阵变动参考1.1）
 ### (2.1) clusterName改动，需要重新运行：
-    	my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True) #需要重新计算所有东西
-	
+	my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True) #需要重新计算所有东西
 	my_builder.cpdb_statistical_analysis()#物种为人时计算
-	
-    	my_downsample.downsample(tpm_downsampled = True)
+	my_downsample.downsample(tpm_downsampled = True)
 ### (2.2) clusterName没变，其他部分变动（如clusterID, tSNE坐标等）
-    	my_downsample.downsample(tpm_downsampled = True)  # 当细胞超过4000个时运行，不需要运行其他代码
-	#cellAnnotation保存时自动计算confusion meta信息，不需要自动计算
+    my_downsample.downsample(tpm_downsampled = True)  # 当细胞超过4000个时运行，不需要运行其他代码
+    #cellAnnotation保存时自动计算confusion meta信息，不需要自动计算
 ### (2.3) 其他
 cluster如果是用函数生成的话会多出两列：clusteringMethod和clusterName_scibet。
 所以如果是后面找到原文提供的cluster信息填入之后，需要将原来这两列删除。
