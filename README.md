@@ -17,3 +17,15 @@
 ## 最新的标注流程视频，可以参考看一下：
 - 链接: https://pan.baidu.com/s/1aHk9ObSIbFV28WZIw-62eA 
 - 提取码: yir6 
+
+## 有用的教程
+- Linux（只看前四章就可以满足基本需求）： 
+  - http://c.biancheng.net/linux_tutorial/
+
+- Python： 
+  - http://c.biancheng.net/python/
+
+- scRNA-seq analysis： 
+  - https://scrnaseq-course.cog.sanger.ac.uk/website/index.html
+  - https://scanpy-tutorials.readthedocs.io/en/latest/pbmc3k.html
+  - https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html
