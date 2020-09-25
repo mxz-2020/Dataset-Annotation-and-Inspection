@@ -203,7 +203,7 @@
 
 ### 2. 没有filtered的矩阵怎么处理？
 - a) 当作者没有提供任何 filtered 矩阵的时候，只能先找cluster信息；如果找得到，就把最原始的没有filter过的raw_Counts或norm存储到expression_rawCounts.tsv/mtx 或 expression_norm.tsv/mtx，并且根据cluster信息把细胞筛选后存储到TPM, **cell Annotation和gene Annotation中的细胞与基因始终与TPM保持一致**，所以当TPM为mtx格式时也无需另外存储CellID和GeneNames.
-- b) 如果没有cluster的信息，也没联系上作者，首先查看细胞数量：不超过10万的可以尝试自动运算脚本；超过10万的需要联系管理管，查看数据集的优先级，优先级不高的可以直接放弃，以后再做。
+- b) 如果没有cluster的信息，也没联系上作者，首先查看细胞数量：不超过10万的可以尝试自动运算脚本；超过10万的需要联系管理员，查看数据集的优先级，优先级不高的可以直接放弃，以后再做。
 
 ### 3. 如何填写normalization method?
 下载的normalized矩阵和生成的TPM矩阵都需要填写一列normalizationMethod。
@@ -247,8 +247,8 @@ TPM中横行代表基因，纵列代表细胞。对于任意单个细胞，当�
 2.	作者文章 data analysis/process 部分未发现不可用 normalized data 生成 TPM 的条件，则可做一个 Matrix_normalized。如果该 Matrix 里有负数，则作者 normalization 方法可能为 median normalize (to zero)，或者 z-score 等等。此时同样需从下载的 Matrix_rawCounts 中根据 cell ID 挑选出 Matrix_normalized 中使用的有效细胞，再使用筛选细胞后的新 Matrix_rawCounts 生成 TPM。
 
 ### 从 logarithmic transformed Matrix_normalized 到 TPM：
-若作者明确提供的 Matrix_normalized 已经经过log变换, 如log2（TPM+1），则需逆推原始 Matrix_normalized，再使用原始 Matrix_normalized 生成 TPM。
-logaN, a = 2, 10, e..., TPM = a^N /100 000，normalizationMethod: loga(TPM+1)
+若作者明确提供的 normalized，标化的形式如log2（TPM+1）或者loge(TPM+1)等，则需逆推 normalized矩阵生成 TPM。
+logaN, a = 2, 10, e..., TPM = a^N /1e6，(1e6 = 1 million), norm 矩阵的normalizationMethod: loga(TPM+1)
 特例：如果文章写明使用 logarithmic transformed data，但并未指出是何种log变换，尝试用log2、log10、ln等等变换后 Matrix 每行基因和均不为1000 000，且每行基因的和相近，则可以直接在 Matrix_normalized 基础上进行归一化，即每个基因除以该行基因的和，再乘上1000 000。
 
 ### 从FPKM, RPKM到TPM的转换：
