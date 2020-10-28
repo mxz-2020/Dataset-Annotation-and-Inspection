@@ -88,7 +88,7 @@
 - 各 part 使用细胞的挑选：
 各 part 使用细胞与文章保持一致，即 cell type 和 cell number 均要保持一致。如果存在我们下载的数据和作者回复 cluster、tSNE、UMAP 信息的邮件中的数据有差异的情况，或者几个相似文件都有相关细胞，但它们之间又有些许差异的情况，那么首先要对比几个数据间 cell number 是否一致，如果不一致，要查几个数据间 cellID 是否一样。如果发现 cellID 存在差异，请尽量使用细胞数和文章中使用的细胞数一致的数据。如果所有数据的 cell number 都和文章不一致，那么使用作者 data availability 里提到的 accession number 所使用的数据生成矩阵，并尽量根据 cluster 信息挑选细胞使其和文章最为接近。生成矩阵后，使用 cellID 完善 cluster 信息，并把没有对应 cluster 的 cell 补上 cluster name “notAvailable”。
 
-- 如果实在不知道该不该分part，那就分就可以了。
+- 如果实在不知道该不该分part，需要询问管理员寻求建议。
 - 划分 part 后，在数据集文件夹(../GSE*****/)下新建一个description.txt文档,写入每个part对应的 description，subDataset，和 correspondingFigure等信息。
 
 3. 填写 description 文件，内容及格式如下（一审人员需要把名字写在description.txt里面）：
