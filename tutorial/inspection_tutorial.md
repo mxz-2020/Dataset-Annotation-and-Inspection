@@ -91,8 +91,12 @@
 - 如果实在不知道该不该分part，需要询问管理员寻求建议。
 - 划分 part 后，在数据集文件夹(../GSE*****/)下新建一个description.txt文档,写入每个part对应的 description，subDataset，和 correspondingFigure等信息。
 
-3. 填写 description 文件，内容及格式如下（一审人员需要把名字写在description.txt里面）：
+3. 如果有分part（特别是同一个cellID在不同part中出现时），需要在每个study的part_1/processed_data/README.json文件里面加一个字段，relationship来描述这个study中各个part之间的关系，如："relationship": "part_2是part_1的子集，part_5是part_3/4中部分细胞的并集"等的描述。
+
+4. 填写 description 文件，内容及格式如下（一审人员需要把名字写在description.txt里面）：
 - 特别注意填写每一项时不要在冒号后面加空格，各项填写不能使用任何非英文字符，但是可以用中文在每一项之外备注。各 part 需要描述清楚应该使用的数据。如果是 GSE 数据，可以清晰地根据 GSM info 得知各 sample 的确切信息，比如使用模版 script.ipynb 中的 sample = my_builder.sample_info(GSE = ‘') 查看各 sample 基本信息。part description 中要写清楚每个 part 对应文件里的 xxx 细胞，或者要使用使用了 xxx 测序方法的文件，或者直接写出要使用的文件名。可以不把数据/文件拆分放到相应 part 的 downloaded data，但需要描述清楚应该使什么文件/数据。注意所有给标注同学提供的字段和正式标注要求的 controlled vocabulary 一致
+
+
 
 - title:注意粘贴的时候在最后不能有”.”
 - PMID:
