@@ -71,12 +71,12 @@
 4. 注意一审质量，会有无规律一审质检。
 
 ### <span id="head7">一审内容（description.txt的整理）： </span>
-##### 1. 查看数据来源：
+#### 1. 查看数据来源：
 - 文献data availability or supplementary files 部分里附加数据的检查，还需注意查看文章附录的聚类图。所有附件或链接均需打开查看可用信息。
 - 除了 data availability 和 supplementary files 以外，需要特别查看 code availability 里面有没有 GitHub 或者其他可能有数据的网站链接，里面有时会有诸如 cluster 信息、tSNE、UMAP 坐标等等的东西，请进行下载，并加入 downloaded data 文件夹。对于可能有划分 part 疑问的文章请联系管理员确认
 - GEO网站数据经常有一系列GSE编号的数据集，注意查看不要漏掉。
 
-##### 2. Part 划分方法：
+#### 2. Part 划分方法：
 - 最主要根据文章中的聚类分析来进行分part，不管分了几次聚类分析，只要cluster和tSNE/UMAP等的相关信息齐全且cell type 信息不重复，就可以算是一个part。
   - 注意区分作者给的图到底是同一个 tSNE 遮盖部分细胞后分别显示控制组和实验组，还是真正的分别聚类。(比如总聚类之后，作者把细胞又按照处理时间的不同，分成了2周的细胞，4周的细胞再聚类，其实细胞类型完全重复，不需要再把4周或2周的分part)。一般如果作者没有特别声明，且两个图中同类型细胞的位置相差无几，那么它们大概率是遮盖部分细胞显示，不需要分。(调参工作复杂漫长，一般在两个不同图的调参中很难保持各类型细胞的绝对位置。)
 
@@ -91,9 +91,9 @@
 - 如果实在不知道该不该分part，需要询问管理员寻求建议。
 - 划分 part 后，在数据集文件夹(../GSE*****/)下新建一个description.txt文档,写入每个part对应的 description，subDataset，和 correspondingFigure等信息。
 
-##### 3. 如果有分part（特别是同一个cellID在不同part中出现时），需要在每个study的part_1/processed_data/README.json文件里面加一个字段，relationship来描述这个study中各个part之间的关系，如："relationship": "part_2是part_1的子集，part_5是part_3/4中部分细胞的并集"等的描述。
+#### 3. 如果有分part（特别是同一个cellID在不同part中出现时），需要在每个study的part_1/processed_data/README.json文件里面加一个字段，relationship来描述这个study中各个part之间的关系，如："relationship": "part_2是part_1的子集，part_5是part_3/4中部分细胞的并集"等的描述。
 
-##### 4. 填写 description 文件，内容及格式如下（一审人员需要把名字写在description.txt里面）：
+#### 4. 填写 description 文件，内容及格式如下（一审人员需要把名字写在description.txt里面）：
 - 特别注意填写每一项时不要在冒号后面加空格，各项填写不能使用任何非英文字符，但是可以用中文在每一项之外备注。各 part 需要描述清楚应该使用的数据。如果是 GSE 数据，可以清晰地根据 GSM info 得知各 sample 的确切信息，比如使用模版 script.ipynb 中的 sample = my_builder.sample_info(GSE = ‘') 查看各 sample 基本信息。part description 中要写清楚每个 part 对应文件里的 xxx 细胞，或者要使用使用了 xxx 测序方法的文件，或者直接写出要使用的文件名。可以不把数据/文件拆分放到相应 part 的 downloaded data，但需要描述清楚应该使什么文件/数据。注意所有给标注同学提供的字段和正式标注要求的 controlled vocabulary 一致
 
 
