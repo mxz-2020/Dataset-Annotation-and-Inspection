@@ -79,22 +79,23 @@
 - keywords： 使用内置函数获取，script中的引号内填pubmedID
 - abstract：把文中的abstract一段复制下来，注意不要多了或少了。不要填写GSE界面的summary!
 - sourceID：出现在pubmed网站中文章题目下方。DOI的网络连接，如一篇文章的DOI为10.1038/nature12172，那么它的网络链接为https://doi.org/10.1038/nature12172
-
+##### libraryPreparationMethod/sequencingPlatform/clusteringMethod/biomarkerDerivationMethod/genomeBuild/annotation这6个字段有控制字段可查看参考，调用my_inspector.show_controlled_vocabulary()这一命令即可查看字段。
 - libraryPreparationMethod：是指细胞测序所使用的技术，可在文章中查找；也可以在文章相应的GEO网址中（即在GEO网站首页输入GSE编码即可）查找。文章中的技术，使用my_inspector.libmethod_keywords调出关键词： 10x chromium(注意不要随便更改大小写！), drop-seq, microwell-seq, C1 Fluidigm, inDrops, Smart-seq2, Smart-seq, CEL-seq, CEL-seq2, MARS-seq, msSCRB-seq, SCRB-seq基本上都出自于上面几种测序技术。
 - sequencingPlatform：这里填写测序平台。可以在文章相应的GEO网址中找到。如，Illumina HiSeq 2500，Illumina HiSeq 500，Illumina HiSeq 2000等。
 - clusteringMethod：这里填写聚类分析的所使用的方法，可在文章中查找。聚类分析常用方法：k-means, affinity propagation, mean-shift, spectral clustering, Ward hierarchical clustering, agglomerative clustering, DBSCAN, Gaussian mixtures, birch.
     ![](images/figure-1.png)
-
     想要更详细的了解可以参考以下网址：https://blog.csdn.net/ztf312/article/details/97951928
 - biomarkerDerivationMethod：是指marker gene的算法，一般在文章的method里面有，是找cluster下游的特异基因的方法。一般是t-test或者wilcoxon之类的，尽量在文章中找到对应的marker genes的算法。
+- genomeBuild：可查看文章相应的GEO网址中是否有相应字段。人为hg/GRCh，小鼠为mm/GRCm这类格式，其他物种可以填notAvailable。
+- annotation: 是指基因的注释信息是什么
+
 - fastqURL：在EBI网址上查找文章名字，然后点击相应链接，查看data信息，链接就会跳转到一个有大写字母PRJNA和一串数字结尾的地址，如 ：https://www.ebi.ac.uk/ena/data/view/PRJNA542142其实只要网页里面有文章的fastq相关信息即可
 - figureURL：填写文章的摘要图网址。对于明确表示有graphic abstract 的文章，我们需要把这张图放在展示页面上，如果没有graphic abstract，那么放文章的第一张图。可以在文章页面访问原图，使用原图链接，或者访问杂志网站，使用杂志提供的图片链接。图片链接结尾一般是*.jpg .png .gif之类的文件形式。链接需能在浏览器中打开，但不可使用只自动下载的图片。
 - codeURL: 如果作者提供了代码，需要把链接填写在这里。一般会在文献中的codeAvailability中找到github链接或者dropbox链接，里面有时会有cluster信息，请仔细查看。当没有内容可以填写的时候，需要填写notAvailable。
 - dataURL: 非GSE数据没办法填写GSE开头的accession number的数据集需要填写此项。如果这一项没有可以填写的内容时，填写notAvailable。
 - isFigurePublic：填True or False, 是否对所有网络均公开可见，如一般abstract中的figure为公开的，就填写True。
 - taxonomyID：可查看文章相应的GEO网址中的sample里的信息，一般人填9606， 鼠填10090（只用填写了这个才能生成geneannotation）
-- genomeBuild：可查看文章相应的GEO网址中是否有相应字段。人为hg/GRCh，小鼠为mm/GRCm这类格式，其他物种可以填notAvailable。
-- annotation: 是指基因的注释信息是什么
+
 - journal： 使用内置函数获取，引号内填pubmedID，如无法获取，使用命令my_inspector.journal_keywords调用journal的列表查看，列表中没有该杂志名称的话就自己填写。
 - citation: 指引用次数,可调用函数自动生成 metadata['citation'] = my_builder.get_citation(metadata['sourceID'])
 - tissue：文中选填,填为list格式。需要在https://www.ebi.ac.uk/ols/ontologies/bto 这个网址查询是否有填写的tissue。tissue这个字段的设置是为了之后做筛选时能快速筛选出相应组织的所有数据集，例如melanoma这种黑色素瘤疾病，我们可以填写skin为tissue。冠状动脉可以填写成heart，可以填写的大一点。
