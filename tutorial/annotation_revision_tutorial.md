@@ -125,10 +125,10 @@
 "cancerDescription['TIL'] = '' # 填 True or False.Tumor Infiltrating Lymphocyte肿瘤浸润淋巴细胞的缩写,
 "cancerDescription['TIM'] = '' # 填 True or False.tumour infiltrating myeloid cell肿瘤浸润髓样细胞的缩写,与TIL并称为 tumour infiltrating immune cells (TII),
 "cancerDescription['TME'] = '' # 填 True or False.Tumor Micro-environment肿瘤微环境的缩写(non-immune cells, which we mean by cancer\ fibroblast, etc),
-"cancerDescription['NCIBodyLocation'] = '' # 从给的keywords选填, 如: Head and Neck,
-"cancerDescription['NCIBodyLocationSubtype'] = '' # 根据NCIBodyLocatio对应的keywords选填, 如: Hypopharyngeal Cancer,
-"cancerDescription['TCGAStudyAbbreviation'] = '' # 从给的keywords选填, 如: LAML,
-"cancerDescription['TCGAStudyName'] = '' # TCGAStudyAbbreviation对应的全称如: LAML对应的全称为: Acute Myeloid Leukemia,
+"cancerDescription['NCIBodyLocation'] = '' # 从给的keywords选填, 如: Head and Neck,没有就填notAvailable
+"cancerDescription['NCIBodyLocationSubtype'] = '' # 根据NCIBodyLocatio对应的keywords选填, 如: Hypopharyngeal Cancer,没有就填notAvailable
+"cancerDescription['TCGAStudyAbbreviation'] = '' # 从给的keywords选填, 如: LAML,没有就填notAvailable
+"cancerDescription['TCGAStudyName'] = '' # TCGAStudyAbbreviation对应的全称如: LAML对应的全称为: Acute Myeloid Leukemia,没有就填notAvailable
 	# 运行 my_inspector.nci_cancer_typing 查看 NCIBodyLocatio的keywords
 	# 运行 my_inspector.tcga_cancer_typing 查看 TCGAStudy的keywords
 ```
