@@ -199,7 +199,7 @@
 - a) 提供了filtered TPM矩阵是最好的情况，用这个处理就好
 - b）当没有filtered TPM 但是提供了filtered norm matrix 或者 filtered raw_Counts matrix，使用相应的filtered norm/raw 转置成TPM，当norm和rawCounts同时出现时，需要使用norm矩阵转置成TPM. 
 - c) 注意：norm矩阵的normlization method需要写清楚，当文章中没有详细描述的时候，需要去GEO的网站看一下GSE相应内容，若是两个地方都没有描述，需要自己尝试是否是熟知的标化方法，即假定norm矩阵的标化的方式为熟知的log2(TPM+1)，通过去log并且减去1的计算后，查看矩阵的行和是否为100万。如果是100万，那么就是norm矩阵的normalization Method假定的标化方法log2(TPM+1)；如果不是100万，需要另外多尝试几次其他的标化方法。有的时候norm的标化方法为FPKM, log2(TP10K+1), log2(TP20K+1), etc. 自己多尝试。
-- d) 恢复不成TPM的norm矩阵，除了要把norm矩阵填写好，还需要把norm矩阵原封不动复制到TPM矩阵里面，如果norm恢复不成TPM并且存在raw，可以使用raw矩阵，根据norm矩阵筛选细胞和基因后生成TPM（但是当多个数据整合后作者自己处理了矩阵的数据时，建议直接从norm copy矩阵进TPM，不需要自己处理rawCounts）。并且在normalization Method里面写清楚，具体参考下方***如何填写normalization method?
+- d) 恢复不成TPM的norm矩阵，除了要把norm矩阵填写好，还需要把norm矩阵原封不动复制到TPM矩阵里面，如果norm恢复不成TPM并且存在raw，可以使用raw矩阵，根据norm矩阵筛选细胞和基因后生成TPM，TPMNormalizationMethod: TPM from raw,filtered as norm; 如果没有细胞基因不需要根据norm过滤，则TPMNormalizationMethod填写成TPM from raw（但是当多个数据整合后作者自己处理了矩阵的数据时，建议直接从norm copy矩阵进TPM，不需要自己处理rawCounts）。并且在normalization Method里面写清楚，具体参考下方***如何填写normalization method?
 - e) 从raw_Counts生成TPM只需要运行自动函数即可。
 
 ### 2. 没有filtered的矩阵怎么处理？
@@ -239,7 +239,7 @@ Matrix_normalized 中数据往往是对 Matrix_rawCounts 数据做出某些处�
 
 **判断下载的 Matrix_normalized 是否能还原成 TPM：**
 作者在文章 method、analysis 部分可能提及使用 multi-step normalization strategy，诸如去除批次效应 reduse batch effects, use ComBat method；使用中数标化等待. 一般是还原不成TPM
-如若不确定直接下载的 Matrix_normalized 数据是否经过 logarithm transciption，则假定一种标化方法尝试还原成TPM，并检查TPM的正确性。还原不回去的，使用rawCounts矩阵根据norm矩阵筛选细胞和基因后生成TPM（但是当多个数据整合后作者自己处理了矩阵的数据时，建议直接从norm copy矩阵进TPM，不需要自己处理rawCounts）。
+如若不确定直接下载的 Matrix_normalized 数据是否经过 logarithm transciption，则假定一种标化方法尝试还原成TPM，并检查TPM的正确性。还原不回去的，使用rawCounts矩阵根据norm矩阵筛选细胞和基因后生成TPM,TPMNormalizationMethod: TPM from raw,filtered as norm; 如果没有细胞基因不需要根据norm过滤，则TPMNormalizationMethod填写成TPM from raw（但是当多个数据整合后作者自己处理了矩阵的数据时，建议直接从norm copy矩阵进TPM，不需要自己处理rawCounts）。
 
 ### 检查TPM矩阵正确与否方法：
 TPM中横行代表基因，纵列代表细胞。对于任意单个细胞，当其对应横行中的基因值相加和为1000 000 (10^6)，则TPM正确。如果文章提到使用UMI, 那么CPM（也叫RPM） = TPM, 行和都是一百万，M代表million。但是有些实习生在从norm矩阵生成TPM时算不出TPM，但是强行除以行和并乘以一百万，导致行和依旧为一百万，这种情况需要仔细检查。
