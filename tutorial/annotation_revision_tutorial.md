@@ -180,7 +180,7 @@
    ![](images/figure-5.png)
 
 - 填写cellOntologyName和cellOntologyID：这两项与clusterName是相对应的
-   1） 如果文中提供clusterName等相关内容，cellOntologyName/ID可以在https://www.ebi.ac.uk/ols/index网址搜索细胞信息，并输入与clusterName最相近的cellOntologyName和ID (id现在已经不需要填写，运行6.5代码根据cellOntologyName自动生成)
+   1） 如果文中提供clusterName等相关内容，cellOntologyName/ID可以在https://www.ebi.ac.uk/ols/index网址搜索细胞信息，并输入与clusterName的cellOntologyName和ID (id现在已经不需要填写，运行6.5代码根据cellOntologyName自动生成)如果找不到一样的cellOntologyName，就在关系树上向上找最接近的cellOntologyName。
 
    ![](images/figure-6.png)
 
