@@ -422,7 +422,7 @@ my_builder.genes_plot([''], house_keeping=True, T_cell=False, B_cell=False)#['']
     my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True)
     my_builder.calc_cell_cycle_score()# 如果物种为人需要计算
     my_builder.cpdb_statistical_analysis()#物种为人时，且修改了clusterName时计算
-    my_downsample.downsample() #如果需要运行该函数，必须先将原来的downsample_data文件夹删除！
+    my_downsample.downsample() #如果需要运行该函数
 #### (1.3) 如果矩阵的值没有变化，只是更改了gene的名称（如去掉小数点或添加下划线等）：
     my_builder.generate_geneAnno()
     my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True)  #需要重新计算markergene等
