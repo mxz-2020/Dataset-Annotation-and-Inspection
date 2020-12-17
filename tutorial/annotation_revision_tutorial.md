@@ -89,7 +89,8 @@
 - genomeBuild：可查看文章相应的GEO网址中是否有相应字段。人为hg/GRCh，小鼠为mm/GRCm这类格式，其他物种可以填notAvailable。
 - annotation: 是指基因的注释信息是什么,在GEO网站搜索，大多数时候是基因的版本号，但也有出现其他信息的情况，似乎被作者当作note信息来使用。
 - numberOfCell:填写这个subdataset中的细胞数量，根据cellAnnotation中的cellID这一列中的细胞，计数填写。
-- numberOfSample: 填写这个subdataset中的样本数量，根据cellAnnotation中的sampleID这一列中的种类计数填写。
+- numberOfSample: 填写这个subdataset中的样本数量，根据cellAnnotation中的sampleID这一列中的种类计数填写。注意，如果sampleID为notAvailable，需要填写为0。可以直接运行代码
+	numberOfSample = len(set(df_cell['sampleID'].tolist())-{'notAvailable})
 - fastqURL：在EBI网址上查找文章名字，然后点击相应链接，查看data信息，链接就会跳转到一个有大写字母PRJNA和一串数字结尾的地址，如 ：https://www.ebi.ac.uk/ena/data/view/PRJNA542142其实只要网页里面有文章的fastq相关信息即可
 - figureURL：填写文章的摘要图网址。对于明确表示有graphic abstract 的文章，我们需要把这张图放在展示页面上，如果没有graphic abstract，那么放文章的第一张图。可以在文章页面访问原图，使用原图链接，或者访问杂志网站，使用杂志提供的图片链接。图片链接结尾一般是*.jpg .png .gif之类的文件形式。链接需能在浏览器中打开，但不可使用只自动下载的图片。
 - codeURL: 如果作者提供了代码，需要把链接填写在这里。一般会在文献中的codeAvailability中找到github链接或者dropbox链接，里面有时会有cluster信息，请仔细查看。当没有内容可以填写的时候，需要填写notAvailable。
