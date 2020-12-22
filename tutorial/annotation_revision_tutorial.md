@@ -88,8 +88,8 @@
 - biomarkerDerivationMethod：是指marker gene的算法，一般在文章的method里面有，是找cluster下游的特异基因的方法。一般是t-test或者wilcoxon之类的，尽量在文章中找到对应的marker genes的算法。
 - genomeBuild：可查看文章相应的GEO网址中是否有相应字段。人为hg/GRCh，小鼠为mm/GRCm这类格式，其他物种可以填notAvailable。
 - annotation: 是指基因的注释信息是什么,在GEO网站搜索，大多数时候是基因的版本号，但也有出现其他信息的情况，似乎被作者当作note信息来使用。
-- numberOfCell:填写这个subdataset中的细胞数量，根据cellAnnotation中的cellID这一列中的细胞，计数填写。
-- numberOfSample: 填写这个subdataset中的样本数量，根据cellAnnotation中的sampleID这一列中的种类计数填写。注意，如果sampleID为notAvailable，需要填写为0。可以直接运行代码
+- numberOfCells:填写这个subdataset中的细胞数量，根据cellAnnotation中的cellID这一列中的细胞，计数填写。
+- numberOfSamples: 填写这个subdataset中的样本数量，根据cellAnnotation中的sampleID这一列中的种类计数填写。注意，如果sampleID为notAvailable，需要填写为0。可以直接运行代码
 
 			number_of_cells = my_builder.read_template_tsv(cellAnnotation).shape[0]
 			metadata['numberOfCells'] = number_of_cells
