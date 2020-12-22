@@ -98,7 +98,7 @@
 - fastqURL：在EBI网址上查找文章名字，然后点击相应链接，查看data信息，链接就会跳转到一个有大写字母PRJNA和一串数字结尾的地址，如 ：https://www.ebi.ac.uk/ena/data/view/PRJNA542142其实只要网页里面有文章的fastq相关信息即可
 - figureURL：填写文章的摘要图网址。对于明确表示有graphic abstract 的文章，我们需要把这张图放在展示页面上，如果没有graphic abstract，那么放文章的第一张图。可以在文章页面访问原图，使用原图链接，或者访问杂志网站，使用杂志提供的图片链接。图片链接结尾一般是*.jpg .png .gif之类的文件形式。链接需能在浏览器中打开，但不可使用只自动下载的图片。
 - codeURL: 如果作者提供了代码，需要把链接填写在这里。一般会在文献中的codeAvailability中找到github链接或者dropbox链接，里面有时会有cluster信息，请仔细查看。当没有内容可以填写的时候，需要填写notAvailable。
-- dataURL: 非GSE数据没办法填写GSE开头的accession number的数据集需要填写此项。如果这一项没有可以填写的内容时，填写notAvailable。
+- dataURL: 非GSE数据没办法填写GSE开头的accession number的数据集填写此项。数据来源有多个，或不是从GEO下载的都需要填写上非GEO的那个数据来源。如果这一项没有可以填写的内容时，填写notAvailable。
 - isFigurePublic：填True or False, 是否对所有网络均公开可见，如一般abstract中的figure为公开的，就填写True。
 - taxonomyID：可查看文章相应的GEO网址中的sample里的信息，一般人填9606， 鼠填10090（只用填写了这个才能生成geneannotation）
 
