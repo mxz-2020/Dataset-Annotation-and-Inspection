@@ -68,6 +68,7 @@
 如，report_GSE*****_user_72_zhangsan_20200320.pdf，正式实习生直接贴在redmine任务平台相应任务下。
 ## <span id="head6">2.	unstructuredData需要摘录的信息： </span>
 #### title/abstract/sourceID/journal/publicationDate/authors/keywords/citation这几项现在可以调运函数自动生成了，但是需要检查生成的内容中是否有乱码。
+#### 当某个字段没有内容可以填写时，若是字符串形式，空着即可；若是整数形式，0即可。
 
 - subDataset：由一审人员写在description.txt上，请复制过来
 - description：由一审人员写在description.txt上，请复制过来
