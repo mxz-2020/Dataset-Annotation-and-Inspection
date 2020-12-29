@@ -216,17 +216,17 @@
 ### 3. 如何填写normalization method?
 下载的normalized矩阵和生成的TPM矩阵都需要填写一列normalizationMethod。
   1)	Normalized矩阵：
-   	- 一般是下载得来，需要在文献中找出normalized Matrix是怎样被标准化的，有的是FPKM,有的是RPKM,还有log2（TPM+1）等等形式，载入normalizedMatrix的时候需要在第一列标明normalizedMethod。
-  	- 格式： 如，FPKM。（直接填写原文作者把rawcounts标准化的方法，不要添加其他字符。）
+   		- 一般是下载得来，需要在文献中找出normalized Matrix是怎样被标准化的，有的是FPKM,有的是RPKM,还有log2（TPM+1）等等形式，载入normalizedMatrix的时候需要在第一列标明normalizedMethod。
+  		- 格式： 如，FPKM。（直接填写原文作者把rawcounts标准化的方法，不要添加其他字符。）
   2)	TPM矩阵：
-   	- 如果由rawcounts矩阵转化而来，填写：TPM from raw counts
-   	- 如果由normalized矩阵转化而来，填写： TPM from FPKM （根据normalized矩阵的方法而改变，如：TPM from log2（TPM+1） ）
+   		- 如果由rawcounts矩阵转化而来，填写：TPM from raw counts
+   		- 如果由normalized矩阵转化而来，填写： TPM from FPKM （根据normalized矩阵的方法而改变，如：TPM from log2（TPM+1） ）
   3)	如果遇到无法转换成TPM的，TPM的normalizationMethod一定要强调这个不是TPM！并且一定要很详细的注明这个矩阵的标准化方法是什么, 如：矩阵不是TPM! 是TMM矩阵。
-   	- 如果是mtx格式，需要再在uns里面加一个字段写清楚:TPMNormalizationMethod: directly copied from TMM, not TPM.
+   		- 如果是mtx格式，需要再在uns里面加一个字段写清楚:TPMNormalizationMethod: directly copied from TMM, not TPM.
   4)	mtx格式的矩阵：
-   	- 当TPM/Normalized矩阵存储为mtx格式的时候，矩阵中不能存储英文字符，只能存储数字
-   	- 遇到这种情况，需要在unstructuredData里面自己添加字段：normalizationMethod（Normalized矩阵）/ TPMNormalizationMethod（TPM矩阵）来分别存储两个矩阵的标化方法
-	- TPM从rawCounts来的不需要填写TPMNormalizationMethod, TPM从norm和作者处来的需要填写。
+   		- 当TPM/Normalized矩阵存储为mtx格式的时候，矩阵中不能存储英文字符，只能存储数字
+   		- 遇到这种情况，需要在unstructuredData里面自己添加字段：normalizationMethod（Normalized矩阵）/ TPMNormalizationMethod（TPM矩阵）来分别存储两个矩阵的标化方法
+		- TPM从rawCounts来的不需要填写TPMNormalizationMethod, TPM从norm和作者处来的需要填写。
   
   
 ### 4. 注意：
