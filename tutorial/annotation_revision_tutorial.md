@@ -419,10 +419,11 @@ my_builder.genes_plot([''], house_keeping=True, T_cell=False, B_cell=False)#['']
 #### TPM有变化:
 
 (1) TPM里面只改normalizationMethod和cellID加前后缀的:
-    - 只需重新downsample，但如果cellID顺序改变需要重新运算所有
+
+    my_downsample.downsample() #不需要加参数，或者参数为tpm_downsampled=False 
+    但如果cellID顺序改变需要重新运算所有
     
-(2) 修改了TPM的(改动了TPM矩阵的排序或者值):
-    - 需要所有计算重新运行，
+(2) 修改了TPM的(改动了TPM矩阵的排序或者值): 需要所有计算重新运行
     
     my_builder.generate_geneAnno()
     # 如果作者没给cluster/tSNE/UMAP也需要重新计算这些，
@@ -454,6 +455,7 @@ my_builder.genes_plot([''], house_keeping=True, T_cell=False, B_cell=False)#['']
     
 ### cellAnnotation（以下情形为矩阵未改动的情形，如矩阵变动参考1.1）
 (1) cellAnnotation里面cellID加前后缀:
+    
     - (保存cellAnn时会自动重新计算confusion_meta)所以只需重新downsample
     
     my_downsample.downsample() #不需要加参数，或者参数为tpm_downsampled=False  
@@ -466,12 +468,14 @@ my_builder.genes_plot([''], house_keeping=True, T_cell=False, B_cell=False)#['']
 	my_downsample.downsample(tpm_downsampled = True)
 	
 (3) cellID,clusterName/ID没变，其他部分变动（如tSNE坐标,meta_title等）
+    
     my_downsample.downsample(tpm_downsampled = True)  # 当细胞超过4000个时运行，不需要运行其他代码
     #cellAnnotation保存时自动计算confusion meta信息，不需要自动计算
     
 (4) 其他
-cluster如果是用函数生成的话会多出两列：clusteringMethod和clusterName_scibet。
-所以如果是后面找到原文提供的cluster信息填入之后，需要将原来这两列删除。
+
+	cluster如果是用函数生成的话会多出两列：clusteringMethod和clusterName_scibet。
+	所以如果是后面找到原文提供的cluster信息填入之后，需要将原来这两列删除。
 
 ### geneAnnotation:
 (1) 如果单独改动了geneAnnotation，需要重新计算:
