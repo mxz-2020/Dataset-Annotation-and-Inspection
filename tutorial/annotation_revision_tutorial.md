@@ -413,45 +413,80 @@ my_builder.genes_plot([''], house_keeping=True, T_cell=False, B_cell=False)#['']
 
 ## <span id="head14"> 2. 以下三个部分的数据如果进行了修改，需要注意运行下面的自动化函数： </span>
 
-### (1) 矩阵
-#### (1.1) raw counts, normalized变动，需要考虑重新生成TPM矩阵；（注意TPM如果重新生成了，参考1.2运行自动生成函数）
+### 矩阵
+#### raw counts, normalized变动，需要考虑重新生成TPM矩阵；（注意TPM如果重新生成了，参考1.2运行自动生成函数）
 	
-#### (1.2) TPM矩阵如果变化了，所有自动生成函数都需重新运行，包括：
+#### TPM有变化:
+
+(1) TPM里面只改normalizationMethod和cellID加前后缀的:
+    - 只需重新downsample，但如果cellID顺序改变需要重新运算所有
+    
+(2) 修改了TPM的(改动了TPM矩阵的排序或者值):
+    - 需要所有计算重新运行，
+    
     my_builder.generate_geneAnno()
+    # 如果作者没给cluster/tSNE/UMAP也需要重新计算这些，
     #以下两个函数最后运行只在cluster and/or tSNE and/or UMAP为自动计算时运行，注意仔细判断param里面的参数！！！
     param = [
     {'cluster': {'over_write': True}},  #注意参数'over_write': True会将原clusterName/ID信息覆盖，所以如果原文提供cluster信息的时候注意修改成False再运行！
     
     {'tSNE': {'method': 'net_tsne', 'dim_2': True, 'dim_3': True, 'over_write': True}}, #dim2为计算二维坐标，dim3为计算三维坐标
     
-    {'UMAP': {'method': 'umap', 'dim_2': True, 'dim_3': True, 'over_write': False}},
+    {'UMAP': {'method': 'umap', 'dim_2': True, 'dim_3': True, 'over_write': True}},
     ]
     my_builder.auto_run(param) 
-    
-    
+
     #以下两个函数最后运行
     my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True)
-    my_builder.calc_cell_cycle_score()# 如果物种为人需要计算
+    my_builder.cello_predict(force_train_model=True) #如果原矩阵计算了CellO，则需要重新计算CellO，且要加参数运行
+    my_builder.calc_cell_cycle_score()#如果物种为人需要计算
     my_builder.cpdb_statistical_analysis()#物种为人时，且修改了clusterName时计算
-    my_downsample.downsample() #如果需要运行该函数
-#### (1.3) 如果矩阵的值没有变化，只是更改了gene的名称（如去掉小数点或添加下划线等）：
+    my_downsample.downsample() #不需要加参数，或者参数为tpm_downsampled=False   
+    
+(3) 如果单独改动了TPM矩阵的gene:
+
     my_builder.generate_geneAnno()
-    my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True)  #需要重新计算markergene等
+    #以下两个函数最后运行
+    my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True)
+    my_builder.cello_predict(force_train_model=True) #如果原矩阵计算了CellO，则需要重新计算CellO，且要加参数运行
     my_builder.calc_cell_cycle_score()# 如果物种为人需要计算
-    my_downsample.downsample(tpm_downsampled = True)
-### (2) cellAnnotation（以下情形为矩阵未改动的情形，如矩阵变动参考1.1）
-### (2.1) clusterName改动，需要重新运行：
+    my_downsample.downsample() #不需要加参数，或者参数为tpm_downsampled=False  
+    
+### cellAnnotation（以下情形为矩阵未改动的情形，如矩阵变动参考1.1）
+(1) cellAnnotation里面cellID加前后缀:
+    - (保存cellAnn时会自动重新计算confusion_meta)所以只需重新downsample
+    
+    my_downsample.downsample() #不需要加参数，或者参数为tpm_downsampled=False  
+    
+(2) cellAnnoataion的clusterName/ID如果有改动:
+
 	my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True) #需要重新计算所有东西
-	my_builder.cpdb_statistical_analysis()#物种为人时计算
+	my_builder.cello_predict(force_train_model=True) #如果原矩阵计算了CellO，则需要重新计算CellO，且要加参数运行
+    	my_builder.cpdb_statistical_analysis()#物种为人时，且修改了clusterName时计算
 	my_downsample.downsample(tpm_downsampled = True)
-### (2.2) clusterName没变，其他部分变动（如clusterID, tSNE坐标等）
+	
+(3) cellID,clusterName/ID没变，其他部分变动（如tSNE坐标,meta_title等）
     my_downsample.downsample(tpm_downsampled = True)  # 当细胞超过4000个时运行，不需要运行其他代码
     #cellAnnotation保存时自动计算confusion meta信息，不需要自动计算
-### (2.3) 其他
+    
+(4) 其他
 cluster如果是用函数生成的话会多出两列：clusteringMethod和clusterName_scibet。
 所以如果是后面找到原文提供的cluster信息填入之后，需要将原来这两列删除。
 
-### (3) metadata
+### geneAnnotation:
+(1) 如果单独改动了geneAnnotation，需要重新计算:
+
+	my_builder.auto_calculation(diff_genes=True,paga=True,scibet=True, gene_set=True) #需要重新计算所有东西
+	my_builder.cello_predict(force_train_model=True) #如果原矩阵计算了CellO，则需要重新计算CellO，且要加参数运行
+	my_builder.calc_cell_cycle_score()# 如果物种为人需要计算
+    	my_downsample.downsample() #不需要加参数，或者参数为tpm_downsampled=False  
+	
+### downsample:
+(1) 只改cellAnnoataion（clusterName/ID未改变 或者 clusterName/ID只加了前后缀）且未修改TPM， downsample需要加参数 tpm_downsampled=True
+
+(2) 修改了clusterName/ID（指重新计算cluster，重新对应作者给的cluster）无论是否修改TPM，downsample都不需要加参数，或者参数为 tpm_downsampled=False
+
+### metadata
 直接更改unstructuredData.json文件即可
 有几个字段需要格外注意下：
 - 1.关于人的数据一般都能找到tissue，不可填为notAvailable;
@@ -459,7 +494,7 @@ cluster如果是用函数生成的话会多出两列：clusteringMethod和cluste
 - 3.genomeBuild也是统一核查过的，一般没有错，注意不要改错了。
 - 4.metadata里面多出来的字段不要删掉！少的需要加上！
 
-### (4) 其他注意事项
+### 其他注意事项
 - 4.1 每改完一个问题需要进行汇报；更改数据的代码需新建一个代码脚本进行更改，不要直接在别人的代码上改，相应代码的脚本需放在code文件夹中，命名为revision，同时需要有详细的注释解释更改内容。
 - 4.2 不清楚的函数或者代码内容可以参考代码目录里面的脚本
 - 4.3 更改完成之后需通过检查器检查之后再进行报备
