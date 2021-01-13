@@ -203,7 +203,7 @@
 
 ### 1. filtered 矩阵怎么处理？
 - Priority: filtered TPM> filtered norm matrix > filtered raw_Counts matrix
-- a) 提供了filtered TPM矩阵是最好的情况，用这个处理就好
+- a) 提供了filtered TPM矩阵是最好的情况，用这个处理就好（若作者只提供TPM矩阵，需要存进norm和TPM里面才行，因为TPM也是作者标化过的矩阵）
 - b）当没有filtered TPM 但是提供了filtered norm matrix 或者 filtered raw_Counts matrix，使用相应的filtered norm/raw 转置成TPM，当norm和rawCounts同时出现时，需要使用norm矩阵转置成TPM. 
 - c) 注意：norm矩阵的normlization method需要写清楚，当文章中没有详细描述的时候，需要去GEO的网站看一下GSE相应内容，若是两个地方都没有描述，需要自己尝试是否是熟知的标化方法，即假定norm矩阵的标化的方式为熟知的log2(TPM+1)，通过去log并且减去1的计算后，查看矩阵的行和是否为100万。如果是100万，那么就是norm矩阵的normalization Method假定的标化方法log2(TPM+1)；如果不是100万，需要另外多尝试几次其他的标化方法。有的时候norm的标化方法为FPKM, log2(TP10K+1), log2(TP20K+1), etc. 自己多尝试。
 - d) 恢复不成TPM的norm矩阵，除了要把norm矩阵填写好，还需要把norm矩阵原封不动复制到TPM矩阵里面，如果norm恢复不成TPM并且存在raw，可以使用raw矩阵，根据norm矩阵筛选细胞和基因后生成TPM，TPMNormalizationMethod: TPM from raw,filtered as norm; 如果没有细胞基因不需要根据norm过滤，则TPMNormalizationMethod填写成TPM from raw（但是当多个数据整合后作者自己处理了矩阵的数据时，建议直接从norm copy矩阵进TPM，不需要自己处理rawCounts）。并且在normalization Method里面写清楚，具体参考下方***如何填写normalization method?
@@ -228,8 +228,13 @@
    		- 遇到这种情况，需要在unstructuredData里面自己添加字段：normalizationMethod（Normalized矩阵）/ TPMNormalizationMethod（TPM矩阵）来分别存储两个矩阵的标化方法
 		- TPM从rawCounts来的不需要填写TPMNormalizationMethod, TPM从norm和作者处来的需要填写。
   
-  
-### 4. 注意：
+### 4.矩阵里面的ERCC该则么处理？
+- 基本原则：作者给的矩阵(raw/norm)不进行筛选，但是生成的TPM需要删除ERCC这总内标基因。
+- 注意： 极少数情况下，作者体统TPM矩阵，且TPM中存在ERCC，这种情况下需要：
+- 1) 把作者给的存在ERCC的矩阵填写进norm矩阵里面。
+- 2) 生成一个新的没有ERCC的矩阵存进TPM里面，用于下游计算使用。
+	
+### 5. 注意：
 **若作者只提供了TPM 矩阵：**
 - 需要把矩阵存到tpm和norm矩阵里面，normalizationMethod分别填写:TPM from author; TPM
 
