@@ -229,7 +229,7 @@
 		- TPM从rawCounts来的不需要填写TPMNormalizationMethod, TPM从norm和作者处来的需要填写。
   
 ### 4.矩阵里面的ERCC该怎么处理？
-- 基本原则：作者给的矩阵(raw/norm)不进行筛选，但是生成的TPM需要删除ERCC这总内标基因。
+- 基本原则：作者给的矩阵(raw/norm)不进行筛选，但是生成的TPM需要删除ERCC这种内标基因。
 - 注意： 极少数情况下，作者只提供TPM矩阵，且TPM中存在ERCC，这种情况下需要：
 	- 1) 把作者给的存在ERCC的TPM矩阵填写进norm矩阵里面。
 	- 2) 生成一个新的没有ERCC的矩阵存进TPM里面，用于下游计算使用。
