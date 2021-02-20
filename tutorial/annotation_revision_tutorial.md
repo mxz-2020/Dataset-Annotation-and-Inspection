@@ -107,6 +107,8 @@
 - citation: 指引用次数,可调用函数自动生成 metadata['citation'] = my_builder.get_citation(metadata['sourceID'])
 - tissue：文中选填,填为list格式。需要在https://www.ebi.ac.uk/ols/ontologies/bto 这个网址查询是否有填写的tissue。tissue这个字段的设置是为了之后做筛选时能快速筛选出相应组织的所有数据集，例如melanoma这种黑色素瘤疾病，我们可以填写skin为tissue。不要在tissue中填写细胞，如oocyte卵母细胞，不应该填写到tissue里面，但是根据文章题目得知文章是研究多囊卵巢综合征的，这时就可以把tissue填写成ovary卵巢。注意：当使用细胞系且皮下注射培养肿瘤时，先都填写成notAvailable即可。但如果能够判断出具体器官/组织，如使用小鼠建造乳腺癌模型，最终取整个breast作为样本，则可以认为breast为tissue中应该填写的内容。
 - tissueOntology: 不填写，向下运行代码自动生成
+- UBERONTissue: 填写在UBERON这个库里找到对应的tissue。https://www.ebi.ac.uk/ols/ontologies/uberon
+- UBERONID: 填写UBERSON里面tissue对应的ID
 - clusterAvailability：填True or False，意思是能否找到对应的cluster信息
 - otherDataType：该字段被存储为list类型，这个字段里面填写文献中是否有出现除了scRNA-seq的数据类型如TCR, BCR, CyTOF, CITE-seq,spatial transcriptomics，total-seq，REAP-seq，一般可以在以上数据类型中挑选。已形成controlled vocabulary在inspector中可以使用Tab键查看。注意：当TCR等数据类型的样本是单独的，跟scRNA-seq的样本不一致，可以加个“_otherSample”的tag，例如：['TCR_otherSample']。
 ### 以下字段为文章的研究主题
